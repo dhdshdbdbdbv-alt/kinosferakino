@@ -13,7 +13,6 @@
     </header>
 
     <main class="content-wrapper">
-        <!-- СЕКЦИЯ ПОСТЕРОВ (Расположение из новой версии, ассортимент из старой) -->
         <section class="movies-section">
             <h2>Сегодня в кино</h2>
             <div id="movies-grid" class="movies-grid">
@@ -81,53 +80,25 @@
             </div>
         </section>
 
-        <!-- ОТДЕЛЬНОЕ ОКНО БРОНИРОВАНИЯ (Появляется после выбора фильма) -->
         <section id="booking-window" class="booking-section hidden">
-            <h2 id="booking-title">Выбор мест и услуг: </h2>
+            <h2 id="booking-title">Выбор мест и услуг</h2>
             
             <div class="hall-container">
-                <!-- Твоя белая полоса возвращена, текст приподнят через CSS -->
                 <div class="screen">ЭКРАН</div>
                 <div id="cinema-hall" class="cinema-hall"></div>
             </div>
 
-            <!-- ВЫБОР КОМБО НАБОРОВ (Цены июня 2026) -->
-            <div class="combo-container">
-                <h3>Выберите комбо-наборы</h3>
-                <div class="combo-grid">
-                    <label class="combo-item">
-                        <input type="checkbox" class="combo-checkbox" data-price="450" value="combo-classic">
-                        <span>Классик Комбо (Попкорн М + Кола 0.5) — 450 ₽</span>
-                    </label>
-                    <label class="combo-item">
-                        <input type="checkbox" class="combo-checkbox" data-price="650" value="combo-double">
-                        <span>Дабл Комбо (Попкорн L + 2 Колы 0.5) — 650 ₽</span>
-                    </label>
-                    <label class="combo-item">
-                        <input type="checkbox" class="combo-checkbox" data-price="380" value="combo-kids">
-                        <span>Детский Комбо (Попкорн S + Напиток + Игрушка) — 380 ₽</span>
-                    </label>
+            <div class="bar-container">
+                <h3>Огромный Кинобар</h3>
+                
+                <div class="bar-category">
+                    <h4>🔥 Классические Комбо</h4>
+                    <div class="bar-grid">
+                        <label class="bar-item"><input type="checkbox" class="bar-checkbox" data-price="450"> <span>Стандарт Комбо (Попкорн М + Напиток 0.5) — 450 ₽</span></label>
+                        <label class="bar-item"><input type="checkbox" class="bar-checkbox" data-price="590"> <span>Большой Комбо (Попкорн L + Напиток 0.8) — 590 ₽</span></label>
+                        <label class="bar-item"><input type="checkbox" class="bar-checkbox" data-price="380"> <span>Детский Комбо (Попкорн S + Сок + Игрушка) — 380 ₽</span></label>
+                    </div>
                 </div>
-            </div>
 
-            <div class="booking-summary">
-                <div>
-                    <p>Выбрано мест: <span id="selected-count">0</span></p>
-                    <p>Итого к оплате: <span id="total-price">0</span> ₽</p>
-                </div>
-                <button id="book-btn" class="book-button" disabled>Оформить заказ</button>
-            </div>
-
-            <!-- ЗОНА ДЛЯ ЧЕКА И ОШИБКИ ОПЛАТЫ -->
-            <div id="invoice-block" class="invoice-block hidden">
-                <div id="invoice-details" class="invoice-details"></div>
-                <div class="error-payment-msg">
-                    ⚠️ В настоящий момент привычные средсваоплаты не доступны. Уже ведется работа над исправлением поломки. Вы можете оплатить переводом на номер +79196382853 ozon. По поводу дальнейше помощи можете обратиться в нашу поддержку telegram: 
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <script src="main.js"></script>
-</body>
-</html>
+                <div class="bar-category">
+                    <h4>👥
