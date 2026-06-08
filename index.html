@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>КИНОСФЕРА - Сеть кинотеатров</title>
+    <link rel="stylesheet" href="css.css">
+</head>
+
+<body>
+
+    <!-- ШАПКА С ПОИСКОМ И ВХОДОМ -->
+    <header class="main-header">
+        <div class="logo" onclick="goBackToMenu()">🍿 КИНОСФЕРА</div>
+
+        <!-- Поиск по фильмам -->
+        <div class="search-box">
+            <input type="text" id="search-input" placeholder="Поиск фильма..." oninput="filterMovies()">
+        </div>
+
+        <nav class="nav-menu">
+            <button id="auth-btn" class="btn-login" onclick="openAuthModal()">Войти / Регистрация</button>
+        </nav>
+    </header>
+
+    <!-- МОДАЛЬНОЕ ОКНО ВХОДА / РЕГИСТРАЦИИ -->
+    <div id="auth-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeAuthModal()">&times;</span>
+            <h2 id="modal-title">Вход в аккаунт</h2>
+
+            <div class="auth-form">
+                <input type="text" id="username-input" placeholder="Введите логин">
+                <input type="password" id="password-input" placeholder="Введите пароль">
+
+                <button id="main-auth-submit" class="btn-submit" onclick="handleAuth()">Войти</button>
+
+                <p class="toggle-auth-text">
+                    <span id="auth-toggle-link" onclick="toggleAuthMode()">У меня еще нет аккаунта (Регистрация)</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- КРАСИВОЕ МОДАЛЬНОЕ ОКНО ТЕХНИЧЕСКИХ РАБОТ (ЗАГЛУШКА ОПЛАТЫ) -->
+    <div id="tech-work-modal" class="modal" style="display: none;">
+        <div class="modal-content tech-modal-content">
+            <span class="close-btn" onclick="closeTechModal()">&times;</span>
+
+            <div class="tech-icon">⚙️</div>
+            <h2>Ведутся технические работы</h2>
+            <p class="tech-description">
+                В данный момент автоматический прием платежей на сайте временно недоступен. Вы можете завершить
+                бронирование и оплатить заказ напрямую через нашу службу поддержки в Telegram.
+            </p>
+
+            <!-- Чек заказа внутри заглушки -->
+            <div id="order-summary-box" class="order-summary-box"></div>
+
+            <a href="https://t.me/kinisferaHelp" target="_blank" class="btn-telegram">
+                <span>💬 Написать в Telegram: @kinisferaHelp</span>
+            </a>
+        </div>
+    </div>
+
+    <main class="content-wrapper">
+        <!-- БЛОК 1: КАТАЛОГ ФИЛЬМОВ -->
+        <section id="catalog-section">
+            <h2 class="section-title">Сегодня в кино</h2>
+            <div class="movies-grid" id="movies-container">
+
+                <!-- Карточки фильмов из вашей папки -->
+                <div class="movie-card" data-title="Три богатыря" onclick="selectMovie('Три богатыря', 350)">
+                    <div class="card-poster" style="background-image: url('bogatyry.jpg');"></div>
+                    <div class="card-info">
+                        <h3>Три богатыря</h3>
+                        <p>350 ₽</p>
+                    </div>
+                </div>
+
+                <div class="movie-card" data-title="Братья Карамазовы" onclick="selectMovie('Братья Карамазовы', 400)">
+                    <div class="card-poster" style="background-image: url('brothers karamazovy.jpg');"></div>
+                    <div class="card-info">
+                        <h3>Братья Карамазовы</h3>
+                        <p>400 ₽</p>
+                    </div>
+                </div>
+
+                <div class="movie-card" data-title="Грязные деньги" onclick="selectMovie('Грязные деньги', 380)">
+                    <div class="card-poster" style="background-image: url('gryznyedengi.jpg');"></div>
+                    <div class="card-info">
+                        <h3>Грязные деньги</h3>
+                        <p>380 ₽</p>
+                    </div>
+                </div>
+
+                <div class="movie-card" data-title="Убить Билла" onclick="selectMovie('Убить Билла', 450)">
+                    <div class="card-poster" style="background-image: url('killbill.png');"></div>
+                    <div class="card-info">
+                        <h3>Убить Билла</h3>
+                        <p>450 ₽</p>
+                    </div>
+                </div>
+
+                <div class="movie-card" data-title="Комерс" onclick="selectMovie('Комерс', 350)">
+                    <div class="card-poster" style="background-image: url('komers.png');"></div>
+                    <div class="card-info">
+                        <h3>Комерс</h3>
+                        <p>350 ₽</p>
+                    </div>
+                </div>
+
+                <div class="movie-card" data-title="Кощей" onclick="selectMovie('Кощей', 380)">
+                    <div class="card-poster" style="background-image: url('koshey.jpg');"></div>
+                    <div class="card-info">
+                        <h3>Кощей</h3>
+                        <p>380 ₽</p>
+                    </div>
+                </div>
+
+                <div class="movie-card" data-title="Лео и Тиг" onclick="selectMovie('Лео и Тиг', 300)">
+                    <div class="card-poster" style="background-image: url('leoandtig.jpg');"></div>
+                    <div class="card-info">
+                        <h3>Лео и Тиг</h3>
+                        <p>300 ₽</p>
+                    </div>
+                </div>
+
+                <div class="movie-card" data-title="Майкл (2026)" onclick="selectMovie('Майкл (2026)', 500)">
+                    <div class="card-poster" style="background-image: url('Michael_(2026_film)_poster.jpg');"></div>
+                    <div class="card-info">
+                        <h3>Майкл (2026)</h3>
+                        <p>500 ₽</p>
+                    </div>
+                </div>
+
+                <div class="movie-card" data-title="Момо" onclick="selectMovie('Момо', 420)">
+                    <div class="card-poster" style="background-image: url('momo.jpg');"></div>
+                    <div class="card-info">
+                        <h3>Момо</h3>
+                        <p>420 ₽</p>
+                    </div>
+                </div>
+
+                <div class="movie-card" data-title="Пропасть" onclick="selectMovie('Пропасть', 390)">
+                    <div class="card-poster" style="background-image: url('propast.jpg');"></div>
+                    <div class="card-info">
+                        <h3>Пропасть</h3>
+                        <p>390 ₽</p>
+                    </div>
+                </div>
+
+            </div>
+            <p id="no-results" style="display: none; color: #a5a3b4; text-align: center; margin-top: 40px;">Ничего не
+                найдено...</p>
+        </section>
+
+        <!-- БЛОК 2: ЗАЛ И ВЫБОР МЕСТ -->
+        <section id="booking-section" style="display: none;">
+            <button class="btn-back" onclick="goBackToMenu()">← Назад к фильмам</button>
+            <h2 id="current-movie-title">Выбор места</h2>
+
+            <div class="booking-layout">
+                <!-- Схема зала -->
+                <div class="hall-wrapper">
+                    <div class="screen">ЭКРАН</div>
+                    <div id="hall-grid"></div>
+
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="seat-demo available"></div> Свободно
+                        </div>
+                        <div class="legend-item">
+                            <div class="seat-demo occupied"></div> Занято (1/5)
+                        </div>
+                        <div class="legend-item">
+                            <div class="seat-demo selected"></div> Ваш выбор
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Меню дополнительных услуг -->
+                <div class="order-panel">
+                    <h3>Добавить к заказу</h3>
+
+                    <div class="snacks-container-scroll">
+                        <!-- Попкорн -->
+                        <div class="snack-category">
+                            <h4>🍿 Попкорн</h4>
+                            <label><input type="checkbox" value="250" data-name="Попкорн Маленький"
+                                    onchange="updateTotal()"> Маленький (250 ₽)</label>
+                            <label><input type="checkbox" value="350" data-name="Попкорн Средний"
+                                    onchange="updateTotal()"> Средний (350 ₽)</label>
+                            <label><input type="checkbox" value="450" data-name="Попкорн Большой"
+                                    onchange="updateTotal()"> Большой (450 ₽)</label>
+                        </div>
+
+                        <!-- Напитки -->
+                        <div class="snack-category">
+                            <h4>🥤 Напитки</h4>
+                            <label><input type="checkbox" value="150" data-name="Добрый Кола 0.5л"
+                                    onchange="updateTotal()"> Добрый Кола 0.5л (150 ₽)</label>
+                            <label><input type="checkbox" value="220" data-name="Добрый Кола 0.8л"
+                                    onchange="updateTotal()"> Добрый Кола 0.8л (220 ₽)</label>
+
+                            <label><input type="checkbox" value="150" data-name="Лемон-Лайм 0.5л"
+                                    onchange="updateTotal()"> Лемон-Лайм 0.5л (150 ₽)</label>
+                            <label><input type="checkbox" value="220" data-name="Лемон-Лайм 0.8л"
+                                    onchange="updateTotal()"> Лемон-Лайм 0.8л (220 ₽)</label>
+
+                            <label><input type="checkbox" value="150" data-name="Фанта 0.5л" onchange="updateTotal()">
+                                Фанта 0.5л (150 ₽)</label>
+                            <label><input type="checkbox" value="220" data-name="Фанта 0.8л" onchange="updateTotal()">
+                                Фанта 0.8л (220 ₽)</label>
+                        </div>
+
+                        <!-- Комбо -->
+                        <div class="snack-category">
+                            <h4>🎁 Комбо-наборы</h4>
+                            <label><input type="checkbox" value="490" data-name="Малый комбо" onchange="updateTotal()">
+                                Малый комбо (Попкорн Ср. + 0.5л) (490 ₽)</label>
+                            <label><input type="checkbox" value="600" data-name="Большой комбо"
+                                    onchange="updateTotal()"> Большой комбо (Попкорн Б. + 0.8л) (600 ₽)</label>
+                        </div>
+                    </div>
+
+                    <hr>
+                    <div class="total-price" id="total-price-text">Итого: 0 ₽</div>
+                    <button class="btn-checkout" onclick="checkoutOrder()">Оформить заказ</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        let localUser = { login: "", password: "" };
+        let isRegistered = false;
+        let isCurrentLoggedIn = false;
+        let isRegisterMode = false;
+
+        let moviePrice = 0;
+        let currentMovieTitle = "";
+        let selectedSeat = null;
+
+        // Авторизация
+        function openAuthModal() { document.getElementById('auth-modal').style.display = 'flex'; }
+        function closeAuthModal() {
+            document.getElementById('auth-modal').style.display = 'none';
+            document.getElementById('username-input').value = "";
+            document.getElementById('password-input').value = "";
+        }
+
+        function toggleAuthMode() {
+            isRegisterMode = !isRegisterMode;
+            const title = document.getElementById('modal-title');
+            const submitBtn = document.getElementById('main-auth-submit');
+            const toggleLink = document.getElementById('auth-toggle-link');
+
+            if (isRegisterMode) {
+                title.innerText = "Регистрация";
+                submitBtn.innerText = "Зарегистрироваться";
+                toggleLink.innerText = "Уже есть аккаунт? Войти";
+            } else {
+                title.innerText = "Вход в аккаунт";
+                submitBtn.innerText = "Войти";
+                toggleLink.innerText = "У меня еще нет аккаунта (Регистрация)";
+            }
+        }
+
+        function handleAuth() {
+            const loginInp = document.getElementById('username-input').value.trim();
+            const passInp = document.getElementById('password-input').value.trim();
+
+            if (!loginInp || !passInp) { alert("Заполните все поля!"); return; }
+
+            if (isRegisterMode) {
+                localUser.login = loginInp;
+                localUser.password = passInp;
+                isRegistered = true;
+                alert("Аккаунт создан! Переключаемся на Вход.");
+                toggleAuthMode();
+            } else {
+                if (isRegistered && loginInp === localUser.login && passInp === localUser.password) {
+                    isCurrentLoggedIn = true;
+                    document.getElementById('auth-btn').innerText = `👤 ${localUser.login}`;
+                    alert(`Добро пожаловать, ${localUser.login}!`);
+                    closeAuthModal();
+                } else if (!isRegistered) {
+                    alert("Пользователей нет. Сначала зарегистрируйтесь!");
+                } else {
+                    alert("Неверный логин или пароль!");
+                }
+            }
+        }
+
+        // Поиск
+        function filterMovies() {
+            const query = document.getElementById('search-input').value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.movie-card');
+            let hasResults = false;
+
+            cards.forEach(card => {
+                const title = card.getAttribute('data-title').toLowerCase();
+                if (title.includes(query)) {
+                    card.style.display = 'block';
+                    hasResults = true;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            document.getElementById('no-results').style.display = hasResults ? 'none' : 'block';
+        }
+
+        // Логика переходов
+        function selectMovie(title, price) {
+            moviePrice = price;
+            currentMovieTitle = title;
+            selectedSeat = null;
+
+            document.getElementById('catalog-section').style.display = 'none';
+            document.getElementById('booking-section').style.display = 'block';
+            document.getElementById('current-movie-title').innerText = `Фильм: "${title}"`;
+
+            document.querySelectorAll('.order-panel input:checked').forEach(i => i.checked = false);
+
+            generateHall();
+            updateTotal();
+        }
+
+        function goBackToMenu() {
+            document.getElementById('catalog-section').style.display = 'block';
+            document.getElementById('booking-section').style.display = 'none';
+        }
+
+        function generateHall() {
+            const hall = document.getElementById('hall-grid');
+            hall.innerHTML = '';
+
+            for (let r = 1; r <= 6; r++) {
+                const row = document.createElement('div');
+                row.className = 'hall-row';
+
+                for (let s = 1; s <= 10; s++) {
+                    const seat = document.createElement('div');
+                    seat.className = 'seat';
+                    const isOccupied = Math.random() < 0.2; // 1 из 5 заняты
+
+                    if (isOccupied) {
+                        seat.classList.add('occupied');
+                    } else {
+                        seat.classList.add('available');
+                        seat.onclick = () => {
+                            const prev = document.querySelector('.seat.selected');
+                            if (prev) prev.classList.remove('selected');
+
+                            seat.classList.add('selected');
+                            selectedSeat = { row: r, seat: s };
+                            updateTotal();
+                        };
+                    }
+                    row.appendChild(seat);
+                }
+                hall.appendChild(row);
+            }
+        }
+
+        function updateTotal() {
+            let total = 0;
+            if (selectedSeat) total += moviePrice;
+
+            document.querySelectorAll('.order-panel input:checked').forEach(item => {
+                total += parseInt(item.value);
+            });
+            document.getElementById('total-price-text').innerText = `Итого: ${total} ₽`;
+        }
+
+        // ВЫЗОВ ЗАГЛУШКИ ТЕХ. РАБОТ
+        function checkoutOrder() {
+            if (!selectedSeat) {
+                alert('Пожалуйста, выберите свободное место в зале!');
+                return;
+            }
+
+            // Собираем данные чека
+            let chosenSnacks = [];
+            document.querySelectorAll('.order-panel input:checked').forEach(item => {
+                chosenSnacks.push(item.getAttribute('data-name'));
+            });
+
+            let snacksListHtml = chosenSnacks.length > 0
+                ? chosenSnacks.map(snack => `<li>🔹 ${snack}</li>`).join('')
+                : '<li>🔹 Без дополнительных услуг</li>';
+
+            let finalPriceText = document.getElementById('total-price-text').innerText;
+
+            // Вставляем детали заказа прямо в окошко тех. работ
+            const summaryBox = document.getElementById('order-summary-box');
+            summaryBox.innerHTML = `
+                <h4>Ваш предзаказ:</h4>
+                <p>🎬 <strong>Фильм:</strong> ${currentMovieTitle}</p>
+                <p>💺 <strong>Место:</strong> Ряд ${selectedSeat.row}, Место ${selectedSeat.seat}</p>
+                <ul style="list-style:none; padding:0; margin: 5px 0; color:#a5a3b4; font-size:0.85rem;">
+                    ${snacksListHtml}
+                </ul>
+                <p style="color:#ff9f43; font-weight:bold; margin-top:5px;">${finalPriceText}</p>
+            `;
+
+            // Показываем окно заглушки
+            document.getElementById('tech-work-modal').style.display = 'flex';
+        }
+
+        function closeTechModal() {
+            document.getElementById('tech-work-modal').style.display = 'none';
+        }
+    </script>
+</body>
+
+</html>
