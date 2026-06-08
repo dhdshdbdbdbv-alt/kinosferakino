@@ -29,9 +29,6 @@ h2 {
     margin-bottom: 25px;
 }
 
-/* ==========================================================================
-   СЕТКА ФИЛЬМОВ (Адаптивная, без пустых углов)
-   ========================================================================== */
 .movies-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -49,7 +46,6 @@ h2 {
     justify-content: space-between;
     transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
     border: 2px solid #232336;
-    /* Сделали рамку чуть толще для четкого фокуса */
     cursor: pointer;
     box-sizing: border-box;
 }
@@ -75,28 +71,19 @@ h2 {
     font-weight: bold;
 }
 
-.movie-card:hover {
+.movie-card:hover, .movie-card.active {
     transform: translateY(-5px);
     box-shadow: 0 12px 24px rgba(108, 92, 231, 0.25);
     background-color: #1c1c30;
     border-color: #6c5ce7;
 }
 
-/* Безопасный и чистый стиль для активного (выбранного) фильма */
-.movie-card.active {
-    background-color: #1c1c30;
-    border-color: #6c5ce7;
-    box-shadow: 0 0 15px rgba(108, 92, 231, 0.4);
-}
-
-/* ==========================================================================
-   ГЕОМЕТРИЯ СХЕМЫ ЗАЛА
-   ========================================================================== */
 .booking-section {
     background-color: #161626;
     padding: 30px;
     border-radius: 16px;
     border: 1px solid #232336;
+    margin-bottom: 50px;
 }
 
 .hall-container {
@@ -104,23 +91,27 @@ h2 {
     flex-direction: column;
     align-items: center;
     perspective: 1200px;
-    margin: 40px 0;
-    overflow-x: auto;
+    margin: 20px 0 40px 0;
     padding: 20px;
 }
 
-.screen {
+/* ИСПРАВЛЕНО: Экран больше не накладывается на текст */
+.screen-line {
     width: 70%;
     min-width: 300px;
-    height: 8px;
-    background-color: #ffffff;
-    box-shadow: 0 6px 30px rgba(255, 255, 255, 0.7);
+    height: 4px;
+    background-color: #6c5ce7;
+    box-shadow: 0 0 20px #6c5ce7, 0 0 40px #6c5ce7;
     border-radius: 50%;
-    margin-bottom: 50px;
-    text-align: center;
-    color: rgba(255, 255, 255, 0.3);
+    margin-bottom: 15px;
+}
+
+.screen-text {
+    color: rgba(255, 255, 255, 0.4);
     font-size: 0.8rem;
-    letter-spacing: 5px;
+    letter-spacing: 7px;
+    margin-bottom: 40px;
+    font-weight: bold;
 }
 
 .cinema-hall {
@@ -180,42 +171,107 @@ h2 {
     height: 100%;
 }
 
-/* ИСПРАВЛЕНО: VIP диваны адаптируются автоматически под 2 грид-колонки */
-.seat.vip {
-    grid-column: span 2;
-    width: 100%;
-    background-color: #d2a136;
-    border-radius: 8px 8px 4px 4px;
+/* ДОБАВЛЕНО: Стили дополнительных услуг */
+.services-container, .auth-container {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #252538;
 }
 
-.seat.vip:hover {
-    background-color: #f1c40f;
+.services-grid {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 15px;
 }
 
-/* Кассовый интерфейс */
+.service-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #1c1c30;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 1px solid #252538;
+    transition: border-color 0.2s;
+}
+
+.service-item:hover {
+    border-color: #00cec9;
+}
+
+.service-checkbox {
+    accent-color: #00cec9;
+    width: 18px;
+    height: 18px;
+}
+
+/* ДОБАВЛЕНО: Стили блока авторизации */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 400px;
+    margin-top: 15px;
+}
+
+.auth-form input {
+    background-color: #1c1c30;
+    border: 1px solid #252538;
+    padding: 12px;
+    border-radius: 8px;
+    color: white;
+    font-size: 0.95rem;
+}
+
+.auth-form input:focus {
+    border-color: #6c5ce7;
+    outline: none;
+}
+
+.status-msg-neutral {
+    font-size: 0.85rem;
+    color: #a0a0b8;
+    margin: 5px 0 0 0;
+}
+
+/* Финал кассы */
 .booking-summary {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 30px;
-    padding-top: 20px;
+    margin-top: 35px;
+    padding-top: 25px;
     border-top: 1px solid #252538;
+}
+
+.summary-text-block p {
+    margin: 5px 0;
+    font-size: 1.1rem;
+}
+
+#total-price {
+    color: #00cec9;
+    font-weight: bold;
+    font-size: 1.3rem;
 }
 
 .book-button {
     background-color: #6c5ce7;
     color: white;
     border: none;
-    padding: 12px 28px;
+    padding: 15px 35px;
     font-size: 1rem;
     font-weight: bold;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, transform 0.1s;
 }
 
 .book-button:hover:not(:disabled) {
     background-color: #5f27cd;
+    transform: translateY(-2px);
 }
 
 .book-button:disabled {
