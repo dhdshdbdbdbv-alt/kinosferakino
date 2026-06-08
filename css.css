@@ -1,584 +1,225 @@
-/* Базовые сбросы стилей */
-* {
-    box-sizing: border-box;
+body {
     margin: 0;
     padding: 0;
-}
-
-body {
-    background-color: #0b0914;
+    background-color: #0f0f1a;
     color: #ffffff;
-    font-family: sans-serif;
+    font-family: 'Segoe UI', Roboto, sans-serif;
 }
 
-/* ШАПКА */
+html {
+    scroll-behavior: smooth;
+}
+
 .main-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 50px;
-    background: #141124;
-    border-bottom: 1px solid #231f3a;
+    text-align: center;
+    padding: 20px;
+    background-color: #161626;
+    border-bottom: 1px solid #252538;
 }
 
-.logo {
-    font-weight: bold;
-    font-size: 1.3rem;
-    color: #00d2d3;
-    cursor: pointer;
-}
-
-/* ПОИСК */
-.search-box {
-    flex: 0 1 400px;
-    margin: 0 20px;
-}
-
-.search-box input {
-    width: 100%;
-    padding: 10px 15px;
-    background-color: #231f3a;
-    border: 1px solid #342f52;
-    border-radius: 20px;
-    color: white;
-    font-size: 0.95rem;
-    outline: none;
-    transition: border-color 0.2s;
-}
-
-.search-box input:focus {
-    border-color: #00d2d3;
-}
-
-.btn-login {
-    background: transparent;
-    color: #fff;
-    border: 1px solid #00d2d3;
-    padding: 8px 18px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background 0.2s;
-}
-
-.btn-login:hover {
-    background: rgba(0, 210, 211, 0.1);
-}
-
-/* КАТАЛОГ ФИЛЬМОВ С УВЕЛИЧЕНИЕМ КАРТОЧЕК */
 .content-wrapper {
-    padding: 40px 50px;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
-.section-title {
-    margin-bottom: 30px;
+h2 {
+    border-left: 4px solid #6c5ce7;
+    padding-left: 10px;
+    margin-bottom: 25px;
 }
 
+/* ==========================================================================
+   СЕТКА ФИЛЬМОВ (Адаптивная, без пустых углов)
+   ========================================================================== */
 .movies-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 30px;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 25px;
+    width: 100%;
+    margin-bottom: 50px;
 }
 
 .movie-card {
-    background: #141124;
-    border-radius: 10px;
+    background-color: #161626;
+    border-radius: 12px;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+    border: 2px solid #232336;
+    /* Сделали рамку чуть толще для четкого фокуса */
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-sizing: border-box;
 }
 
-/* Плавный эффект увеличения при наведении на обложку */
-.movie-card:hover {
-    transform: scale(1.04);
+.movie-card img {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    background-color: #252538;
 }
 
-.card-poster {
-    height: 280px;
-    background-size: cover;
-    background-position: center;
-    background-color: #231f3a;
-}
-
-.card-info {
-    padding: 15px;
-}
-
-.card-info h3 {
+.movie-card h3 {
+    margin: 12px;
     font-size: 1rem;
-    margin-bottom: 5px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.card-info p {
-    color: #00d2d3;
+.movie-card .price {
+    margin: 0 12px 12px 12px;
+    color: #00cec9;
     font-weight: bold;
 }
 
-/* ОБЩИЕ МОДАЛЬНЫЕ ОКНА */
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+.movie-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(108, 92, 231, 0.25);
+    background-color: #1c1c30;
+    border-color: #6c5ce7;
 }
 
-.modal-content {
-    background: #141124;
-    padding: 35px;
+/* Безопасный и чистый стиль для активного (выбранного) фильма */
+.movie-card.active {
+    background-color: #1c1c30;
+    border-color: #6c5ce7;
+    box-shadow: 0 0 15px rgba(108, 92, 231, 0.4);
+}
+
+/* ==========================================================================
+   ГЕОМЕТРИЯ СХЕМЫ ЗАЛА
+   ========================================================================== */
+.booking-section {
+    background-color: #161626;
+    padding: 30px;
     border-radius: 16px;
-    width: 100%;
-    max-width: 380px;
-    position: relative;
-    border: 1px solid #231f3a;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    border: 1px solid #232336;
 }
 
-.close-btn {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 1.6rem;
-    cursor: pointer;
-    color: #a5a3b4;
-}
-
-.close-btn:hover {
-    color: #fff;
-}
-
-/* ФОРМА ВХОДА */
-.auth-form {
+.hall-container {
     display: flex;
     flex-direction: column;
-    margin-top: 25px;
-    gap: 15px;
-}
-
-.auth-form input {
-    padding: 12px;
-    background: #231f3a;
-    border: 1px solid #342f52;
-    border-radius: 6px;
-    color: white;
-    outline: none;
-}
-
-.auth-form input:focus {
-    border-color: #00d2d3;
-}
-
-.btn-submit {
-    background: #5f3dc4;
-    color: white;
-    border: none;
-    padding: 12px;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.btn-submit:hover {
-    background: #7048e8;
-}
-
-.toggle-auth-text {
-    text-align: center;
-    font-size: 0.85rem;
-    color: #a5a3b4;
-    margin-top: 15px;
-}
-
-.toggle-auth-text span {
-    color: #00d2d3;
-    cursor: pointer;
-    text-decoration: underline;
-}
-
-/* КРАСИВОЕ ОФОРМЛЕНИЕ ЗАГЛУШКИ ТЕХ. РАБОТ */
-.tech-modal-content {
-    text-align: center;
-    max-width: 440px;
-    /* Немного шире обычного */
-    border: 1px solid #342f52;
-}
-
-.tech-icon {
-    font-size: 3.5rem;
-    margin-bottom: 15px;
-    animation: spin 4s linear infinite;
-    /* Крутящаяся шестеренка */
-    display: inline-block;
-}
-
-@keyframes spin {
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
-.tech-modal-content h2 {
-    font-size: 1.4rem;
-    color: #ff9f43;
-    /* Предупреждающий цвет */
-    margin-bottom: 12px;
-}
-
-.tech-description {
-    color: #a5a3b4;
-    font-size: 0.9rem;
-    line-height: 1.5;
-    margin-bottom: 20px;
-}
-
-/* Коробка деталей чека внутри заглушки */
-.order-summary-box {
-    background: #231f3a;
-    border-radius: 8px;
-    padding: 15px;
-    text-align: left;
-    margin-bottom: 25px;
-    border-left: 4px solid #00d2d3;
-    font-size: 0.9rem;
-}
-
-.order-summary-box h4 {
-    margin-bottom: 6px;
-    color: #fff;
-}
-
-/* Кнопка перехода на Телеграм */
-.btn-telegram {
-    display: flex;
-    justify-content: center;
     align-items: center;
-    background: #0088cc;
-    /* Брендовый цвет Telegram */
-    color: white;
-    text-decoration: none;
-    padding: 14px;
-    border-radius: 8px;
-    font-weight: bold;
-    transition: background 0.2s, transform 0.1s;
-    box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4);
-}
-
-.btn-telegram:hover {
-    background: #0099e6;
-    transform: translateY(-2px);
-}
-
-/* ЗАЛ И СХЕМА КРЕСЕЛ */
-.booking-layout {
-    display: flex;
-    gap: 40px;
-    margin-top: 30px;
-    flex-wrap: wrap;
-}
-
-.hall-wrapper {
-    flex: 1;
-    min-width: 300px;
-    background: #141124;
-    padding: 30px;
-    border-radius: 12px;
-    text-align: center;
+    perspective: 1200px;
+    margin: 40px 0;
+    overflow-x: auto;
+    padding: 20px;
 }
 
 .screen {
-    background: #342f52;
-    padding: 8px;
-    margin-bottom: 40px;
+    width: 70%;
+    min-width: 300px;
+    height: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 6px 30px rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    margin-bottom: 50px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.8rem;
     letter-spacing: 5px;
-    font-size: 0.9rem;
-    border-radius: 4px;
 }
 
-.hall-row {
+.cinema-hall {
     display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 10px;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Сетка: 6 мест | проход | 10 мест | проход | 6 мест */
+.hall-row {
+    display: grid;
+    grid-template-columns: repeat(6, 28px) 25px repeat(10, 28px) 25px repeat(6, 28px);
+    gap: 6px;
+    align-items: center;
 }
 
 .seat {
     width: 28px;
-    height: 28px;
-    border-radius: 6px;
-}
-
-.seat.available {
-    background-color: #433e66;
+    height: 26px;
+    background-color: #3b3b54;
+    border-radius: 6px 6px 3px 3px;
     cursor: pointer;
+    transition: background-color 0.15s, transform 0.15s;
+    position: relative;
+    box-sizing: border-box;
 }
 
-.seat.available:hover {
-    background-color: #565082;
-}
-
-/* ЗАНЯТЫЕ МЕСТА ПОДCВЕЧЕНЫ ГОЛУБЫМ */
-.seat.occupied {
-    background-color: #00d2d3;
-    cursor: not-allowed;
-    box-shadow: 0 0 8px rgba(0, 210, 211, 0.5);
+.seat:hover {
+    background-color: #5f27cd;
+    transform: scale(1.1);
 }
 
 .seat.selected {
-    background-color: #ff9f43;
-    box-shadow: 0 0 10px #ff9f43;
+    background-color: #00cec9 !important;
+    box-shadow: 0 0 10px rgba(0, 206, 201, 0.5);
 }
 
-.btn-back {
-    background: transparent;
-    color: #a5a3b4;
-    border: 1px solid #433e66;
-    padding: 8px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    margin-bottom: 20px;
+.seat.occupied {
+    background-color: #1c1c24;
+    border: 1px solid #2d2d3a;
+    cursor: not-allowed;
+    pointer-events: none;
 }
 
-/* ПАНЕЛЬ УСЛУГ СО СКРОЛЛОМ */
-.order-panel {
-    width: 330px;
-    background: #141124;
-    padding: 20px;
-    border-radius: 12px;
-    height: 520px;
-    display: flex;
-    flex-direction: column;
+.seat.occupied::after {
+    content: '';
+    position: absolute;
+    width: 60%;
+    height: 2px;
+    background-color: #555;
+    top: 50%;
+    left: 20%;
 }
 
-.snacks-container-scroll {
-    flex: 1;
-    overflow-y: auto;
-    padding-right: 8px;
+.passage {
+    width: 25px;
+    height: 100%;
 }
 
-.snacks-container-scroll::-webkit-scrollbar {
-    width: 4px;
-}
-
-.snacks-container-scroll::-webkit-scrollbar-thumb {
-    background: #342f52;
-    border-radius: 2px;
-}
-
-.snack-category h4 {
-    color: #00d2d3;
-    margin-top: 15px;
-    margin-bottom: 6px;
-    font-size: 0.95rem;
-    border-bottom: 1px solid #231f3a;
-    padding-bottom: 3px;
-}
-
-.snack-category label {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 8px 0;
-    font-size: 0.88rem;
-    cursor: pointer;
-    color: #a5a3b4;
-}
-
-.snack-category label:hover {
-    color: #fff;
-}
-
-.snack-category input {
-    accent-color: #00d2d3;
-    cursor: pointer;
-}
-
-.total-price {
-    font-size: 1.4rem;
-    font-weight: bold;
-    margin: 15px 0;
-    color: #ff9f43;
-}
-
-.btn-checkout {
+/* ИСПРАВЛЕНО: VIP диваны адаптируются автоматически под 2 грид-колонки */
+.seat.vip {
+    grid-column: span 2;
     width: 100%;
-    background: #5f3dc4;
+    background-color: #d2a136;
+    border-radius: 8px 8px 4px 4px;
+}
+
+.seat.vip:hover {
+    background-color: #f1c40f;
+}
+
+/* Кассовый интерфейс */
+.booking-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #252538;
+}
+
+.book-button {
+    background-color: #6c5ce7;
     color: white;
     border: none;
-    padding: 12px;
-    border-radius: 6px;
+    padding: 12px 28px;
+    font-size: 1rem;
     font-weight: bold;
+    border-radius: 8px;
     cursor: pointer;
+    transition: background-color 0.2s;
 }
 
-.btn-checkout:hover {
-    background: #7048e8;
+.book-button:hover:not(:disabled) {
+    background-color: #5f27cd;
 }
 
-.legend {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 30px;
-    font-size: 0.85rem;
-}
-
-.legend-item {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.seat-demo {
-    width: 15px;
-    height: 15px;
-    border-radius: 3px;
-}
-
-/* ==========================================
-   МОБИЛЬНАЯ АДАПТАЦИЯ (ДЛЯ ЭКРАНОВ МЕНЕЕ 768px)
-   ========================================== */
-@media screen and (max-width: 768px) {
-
-    /* 1. Главный контейнер страницы */
-    .content-wrapper {
-        padding: 10px;
-    }
-
-    /* 2. Шапка сайта: перестраиваем элементы в вертикальный столбец */
-    .main-header {
-        flex-direction: column;
-        height: auto;
-        padding: 15px 10px;
-        gap: 12px;
-    }
-
-    /* Логотип по центру */
-    .main-header .logo {
-        font-size: 1.5rem;
-    }
-
-    /* Поиск на всю ширину экрана */
-    .search-box {
-        width: 100%;
-        margin: 0;
-    }
-
-    .search-box input {
-        width: 100%;
-        box-sizing: border-box;
-        font-size: 1rem;
-    }
-
-    /* Кнопка входа на всю ширину */
-    .nav-menu {
-        width: 100%;
-    }
-
-    .btn-login {
-        width: 100%;
-        text-align: center;
-        padding: 10px;
-    }
-
-    /* 3. Каталог: сетка фильмов превращается в 2 колонки вместо 4-5 */
-    .movies-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 12px;
-        padding: 5px;
-    }
-
-    .movie-card {
-        margin: 0;
-    }
-
-    .card-poster {
-        height: 220px;
-        /* Чуть уменьшаем высоту постеров под мобильные экраны */
-    }
-
-    /* 4. Экран бронирования: Зал и Бар встают друг под друга */
-    .booking-layout {
-        flex-direction: column;
-        gap: 25px;
-        padding: 0;
-    }
-
-    /* Контейнер зала */
-    .hall-wrapper {
-        width: 100%;
-        padding: 15px 5px;
-        box-sizing: border-box;
-        background: #151122;
-        border-radius: 8px;
-        overflow-x: auto;
-        /* Если телефон слишком узкий, зал можно будет скроллить горизонтально */
-    }
-
-    /* Сетка кресел */
-    #hall-grid {
-        gap: 6px;
-        min-width: 320px;
-        /* Защита от деформации сетки */
-    }
-
-    .hall-row {
-        gap: 5px;
-        justify-content: center;
-    }
-
-    /* Сами кресла делаем чуть меньше, чтобы по ним было удобно тапать пальцем */
-    .seat {
-        width: 24px;
-        height: 24px;
-        border-radius: 4px;
-    }
-
-    /* Легенда зала (Свободно/Занято) */
-    .legend {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 15px;
-        font-size: 0.85rem;
-    }
-
-    /* 5. Панель Кинобара и чека */
-    .order-panel {
-        width: 100% !important;
-        /* На мобилке бар занимает 100% ширины */
-        margin: 0;
-        padding: 15px;
-        box-sizing: border-box;
-    }
-
-    /* Скролл-контейнер закусок делаем чуть пониже, чтобы экран не бесконечно тянулся */
-    .snacks-container-scroll {
-        max-height: 250px;
-    }
-
-    /* Кнопка оформления заказа */
-    .btn-checkout {
-        width: 100%;
-        padding: 14px;
-        font-size: 1.1rem;
-    }
-
-    /* 6. Модальные окна (Авторизация и Ошибка платежа) */
-    .modal-content {
-        width: 92% !important;
-        padding: 20px 15px;
-        box-sizing: border-box;
-    }
-
-    .tech-modal-content h2 {
-        font-size: 1.3rem;
-    }
+.book-button:disabled {
+    background-color: #2d2d3a;
+    color: #777;
+    cursor: not-allowed;
 }
