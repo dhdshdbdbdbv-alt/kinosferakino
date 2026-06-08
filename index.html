@@ -2,183 +2,62 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>КИНОСФЕРА — Премиум Сеть Кинотеатров</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>КИНОСФЕРА — Премиум Бронирование</title>
     <link rel="stylesheet" href="css.css">
 </head>
 <body>
-
     <header class="cinema-top-bar">
+        <div class="top-bar-left">
+            <div class="city-selector-container" id="city-dropdown-wrapper">
+                <button class="city-selector-btn" id="active-city-btn"><span id="current-city-name">Москва</span> ▼</button>
+                <div class="city-dropdown-menu">
+                    <div class="city-option">Москва</div>
+                    <div class="city-option">Санкт-Петербург</div>
+                </div>
+            </div>
+        </div>
         <div class="logo">КИНО<span>СФЕРА</span></div>
     </header>
 
     <main class="main-layout">
         <section class="catalog-section">
-            <h2 class="section-title">Сегодня в кино</h2>
+            <h2 class="section-title">Сегодня в КИНО</h2>
             <div id="movies-grid" class="movies-responsive-grid">
-                
                 <div class="movie-premium-card" data-movie="bogatiry">
-                    <div class="poster-wrapper">
-                        <img src="bogatyry.jpg" alt="Три богатыря">
-                    </div>
-                    <div class="movie-info">
-                        <h3>Три богатыря</h3>
-                        <span class="badge-price">350 ₽</span>
-                    </div>
+                    <div class="poster-wrapper"><img src="bogatyry.jpg" alt="Фильм"></div>
+                    <div class="movie-info"><h3>Три богатыря</h3></div>
                 </div>
-
                 <div class="movie-premium-card" data-movie="karamazovy">
-                    <div class="poster-wrapper">
-                        <img src="brothers-karamazovy.jpg" alt="Братья Карамазовы">
-                    </div>
-                    <div class="movie-info">
-                        <h3>Братья Карамазовы</h3>
-                        <span class="badge-price">400 ₽</span>
-                    </div>
+                    <div class="poster-wrapper"><img src="brothers-karamazovy.jpg" alt="Фильм"></div>
+                    <div class="movie-info"><h3>Братья Карамазовы</h3></div>
                 </div>
-
-                <div class="movie-premium-card" data-movie="dengi">
-                    <div class="poster-wrapper">
-                        <img src="gryznyedengi.jpg" alt="Грязные деньги">
-                    </div>
-                    <div class="movie-info">
-                        <h3>Грязные деньги</h3>
-                        <span class="badge-price">380 ₽</span>
-                    </div>
-                </div>
-
-                <div class="movie-premium-card" data-movie="bill">
-                    <div class="poster-wrapper">
-                        <img src="killbill.jpg" alt="Убить Билла">
-                    </div>
-                    <div class="movie-info">
-                        <h3>Убить Билла</h3>
-                        <span class="badge-price">450 ₽</span>
-                    </div>
-                </div>
-
-                <div class="movie-premium-card" data-movie="komers">
-                    <div class="poster-wrapper">
-                        <img src="komers.jpg" alt="Комерс">
-                    </div>
-                    <div class="movie-info">
-                        <h3>Комерс</h3>
-                        <span class="badge-price">350 ₽</span>
-                    </div>
-                </div>
-
-                <div class="movie-premium-card" data-movie="koshey">
-                    <div class="poster-wrapper">
-                        <img src="koshey.jpg" alt="Кощей">
-                    </div>
-                    <div class="movie-info">
-                        <h3>Кощей</h3>
-                        <span class="badge-price">380 ₽</span>
-                    </div>
-                </div>
-
-                <div class="movie-premium-card" data-movie="leo">
-                    <div class="poster-wrapper">
-                        <img src="leoandtig.jpg" alt="Лео и Тиг">
-                    </div>
-                    <div class="movie-info">
-                        <h3>Лео и Тиг</h3>
-                        <span class="badge-price">300 ₽</span>
-                    </div>
-                </div>
-
-                <div class="movie-premium-card" data-movie="michael">
-                    <div class="poster-wrapper">
-                        <img src="Michael_(2026_film)_poster.jpg" alt="Майкл (2026)">
-                    </div>
-                    <div class="movie-info">
-                        <h3>Майкл (2026)</h3>
-                        <span class="badge-price">500 ₽</span>
-                    </div>
-                </div>
-
-                <div class="movie-premium-card" data-movie="momo">
-                    <div class="poster-wrapper">
-                        <img src="momo.jpg" alt="Момо">
-                    </div>
-                    <div class="movie-info">
-                        <h3>Момо</h3>
-                        <span class="badge-price">420 ₽</span>
-                    </div>
-                </div>
-
-                <div class="movie-premium-card" data-movie="propast">
-                    <div class="poster-wrapper">
-                        <img src="propast.jpg" alt="Пропасть">
-                    </div>
-                    <div class="movie-info">
-                        <h3>Пропасть</h3>
-                        <span class="badge-price">390 ₽</span>
-                    </div>
-                </div>
-
             </div>
         </section>
 
         <section id="booking-workspace" class="booking-workspace hidden">
-            <h2 id="current-movie-title" class="section-title">Выбор мест</h2>
-            
-            <div class="interactive-hall-viewport">
-                <div class="interactive-hall-wrapper">
-                    <div class="cinema-glowing-screen">ЭКРАН</div>
+            <h2 id="current-movie-title" class="section-title">Выбор сеанса</h2>
+            <div id="session-selector" class="session-selector">
+                <p id="movie-details" class="movie-details"></p>
+                <div id="session-time-slots" class="session-time-slots"></div>
+            </div>
+
+            <div id="seats-and-bar-area" class="hidden">
+                <h3 class="block-subtitle">Выберите места:</h3>
+                <div class="interactive-hall-viewport">
                     <div id="dynamic-hall-grid" class="dynamic-hall-grid"></div>
                 </div>
-            </div>
-
-            <div class="bar-container">
-                <h3 class="block-subtitle">🛒 Наш мега-кинобар</h3>
-                
-                <div class="bar-section">
-                    <h4>🔥 Фирменные Комбо</h4>
-                    <div class="bar-flex-grid">
-                        <label class="bar-card-item"><input type="checkbox" class="bar-item-checkbox" data-price="450"> <span>Стандарт Комбо (Попкорн М + Напиток 0.5) — 450 ₽</span></label>
-                        <label class="bar-card-item"><input type="checkbox" class="bar-item-checkbox" data-price="590"> <span>Большой Комбо (Попкорн L + Напиток 0.8) — 590 ₽</span></label>
-                        <label class="bar-card-item"><input type="checkbox" class="bar-item-checkbox" data-price="1200"> <span>Трио Комбо (2 Попкорна М + 3 Напитка 0.5) — 1200 ₽</span></label>
-                    </div>
+                <div class="bar-container">
+                    <h3>Кинобар</h3>
+                    <label><input type="checkbox" class="bar-item" data-price="350"> Попкорн — 350 ₽</label>
                 </div>
-
-                <div class="bar-section">
-                    <h4>🍿 Свежий Хрустящий Попкорн</h4>
-                    <div class="bar-flex-grid">
-                        <label class="bar-card-item"><input type="checkbox" class="bar-item-checkbox" data-price="250"> <span>Попкорн Соленый S — 250 ₽</span></label>
-                        <label class="bar-card-item"><input type="checkbox" class="bar-item-checkbox" data-price="350"> <span>Попкорн Caramel M — 350 ₽</span></label>
-                        <label class="bar-card-item"><input type="checkbox" class="bar-item-checkbox" data-price="450"> <span>Попкорн Сырный Премиум L — 450 ₽</span></label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="auth-container">
-                <h3 class="block-subtitle">🔐 Личный кабинет клиента</h3>
-                <div class="auth-box-fields">
-                    <input type="text" id="client-login-field" placeholder="Логин" autocomplete="off">
-                    <input type="password" id="client-pass-field" placeholder="Пароль">
-                    <button id="submit-account-btn" class="action-accent-btn">Зарегистрироваться / Войти</button>
-                    <p id="account-validation-status" class="status-warning">Для разблокировки кассы подтвердите создание аккаунта</p>
-                </div>
-            </div>
-
-            <div class="checkout-sticky-panel">
-                <div class="left-totals">
-                    <p>Выбрано билетов: <span id="display-seats-count">0</span> шт.</p>
-                    <p class="final-price-row">К оплате: <span id="display-total-sum">0</span> ₽</p>
-                </div>
-                <button id="final-checkout-btn" class="main-order-submit" disabled>Оформить заказ</button>
-            </div>
-
-            <div id="payment-receipt-block" class="payment-receipt-block hidden">
-                <div id="receipt-text-container" class="receipt-text-container"></div>
-                <div class="secure-error-banner">
-                    ❌ В настоящий момент привычные средсваоплаты не доступны. Уже ведется работа над исправлением поломки. Вы можете оплатить переводом на номер +79196382853 ozon. По поводу дальнейше помощи можете обратиться в нашу поддержку telegram:
+                <div class="checkout-sticky-panel">
+                    <p>ИТОГО: <span id="display-total-sum">0</span> ₽</p>
+                    <button id="final-checkout-btn">Оформить заказ</button>
                 </div>
             </div>
         </section>
     </main>
-
     <script src="main.js"></script>
 </body>
 </html>
