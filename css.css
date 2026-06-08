@@ -6,10 +6,6 @@ body {
     font-family: 'Segoe UI', Roboto, sans-serif;
 }
 
-html {
-    scroll-behavior: smooth;
-}
-
 .main-header {
     text-align: center;
     padding: 20px;
@@ -29,6 +25,9 @@ h2 {
     margin-bottom: 25px;
 }
 
+/* ==========================================================================
+   СОХРАНЕНО: Твое любимое расположение постеров (Grid)
+   ========================================================================== */
 .movies-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -44,25 +43,20 @@ h2 {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+    transition: transform 0.3s ease, border-color 0.3s ease;
     border: 2px solid #232336;
     cursor: pointer;
-    box-sizing: border-box;
 }
 
 .movie-card img {
     width: 100%;
     height: 320px;
     object-fit: cover;
-    background-color: #252538;
 }
 
 .movie-card h3 {
     margin: 12px;
     font-size: 1rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .movie-card .price {
@@ -73,45 +67,46 @@ h2 {
 
 .movie-card:hover, .movie-card.active {
     transform: translateY(-5px);
-    box-shadow: 0 12px 24px rgba(108, 92, 231, 0.25);
-    background-color: #1c1c30;
     border-color: #6c5ce7;
 }
 
+/* ==========================================================================
+   ОКНО ВЫБОРA МЕСТ И КОМБО
+   ========================================================================== */
 .booking-section {
     background-color: #161626;
     padding: 30px;
     border-radius: 16px;
     border: 1px solid #232336;
-    margin-bottom: 50px;
+    margin-top: 30px;
+}
+
+.hidden {
+    display: none !important;
 }
 
 .hall-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    perspective: 1200px;
-    margin: 20px 0 40px 0;
-    padding: 20px;
+    margin: 40px 0;
 }
 
-/* ИСПРАВЛЕНО: Экран больше не накладывается на текст */
-.screen-line {
+/* СОХРАНЕНО: Твоя белая полоса экрана, но текст приподнят для исключения наложения */
+.screen {
     width: 70%;
     min-width: 300px;
-    height: 4px;
-    background-color: #6c5ce7;
-    box-shadow: 0 0 20px #6c5ce7, 0 0 40px #6c5ce7;
+    height: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 6px 30px rgba(255, 255, 255, 0.7);
     border-radius: 50%;
-    margin-bottom: 15px;
-}
-
-.screen-text {
-    color: rgba(255, 255, 255, 0.4);
+    margin-bottom: 35px;
+    text-align: center;
+    color: #161626;
     font-size: 0.8rem;
-    letter-spacing: 7px;
-    margin-bottom: 40px;
     font-weight: bold;
+    letter-spacing: 5px;
+    line-height: 8px;
 }
 
 .cinema-hall {
@@ -120,12 +115,10 @@ h2 {
     gap: 12px;
 }
 
-/* Сетка: 6 мест | проход | 10 мест | проход | 6 мест */
 .hall-row {
     display: grid;
     grid-template-columns: repeat(6, 28px) 25px repeat(10, 28px) 25px repeat(6, 28px);
     gap: 6px;
-    align-items: center;
 }
 
 .seat {
@@ -134,148 +127,107 @@ h2 {
     background-color: #3b3b54;
     border-radius: 6px 6px 3px 3px;
     cursor: pointer;
-    transition: background-color 0.15s, transform 0.15s;
-    position: relative;
-    box-sizing: border-box;
-}
-
-.seat:hover {
-    background-color: #5f27cd;
-    transform: scale(1.1);
 }
 
 .seat.selected {
     background-color: #00cec9 !important;
-    box-shadow: 0 0 10px rgba(0, 206, 201, 0.5);
 }
 
 .seat.occupied {
     background-color: #1c1c24;
-    border: 1px solid #2d2d3a;
     cursor: not-allowed;
     pointer-events: none;
 }
 
-.seat.occupied::after {
-    content: '';
-    position: absolute;
-    width: 60%;
-    height: 2px;
-    background-color: #555;
-    top: 50%;
-    left: 20%;
-}
-
 .passage {
     width: 25px;
-    height: 100%;
 }
 
-/* ДОБАВЛЕНО: Стили дополнительных услуг */
-.services-container, .auth-container {
+.seat.vip {
+    grid-column: span 2;
+    width: 100%;
+    background-color: #d2a136;
+}
+
+/* Комбо-секция */
+.combo-container {
     margin-top: 30px;
     padding-top: 20px;
     border-top: 1px solid #252538;
 }
 
-.services-grid {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin-top: 15px;
-}
-
-.service-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background-color: #1c1c30;
-    padding: 12px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    border: 1px solid #252538;
-    transition: border-color 0.2s;
-}
-
-.service-item:hover {
-    border-color: #00cec9;
-}
-
-.service-checkbox {
-    accent-color: #00cec9;
-    width: 18px;
-    height: 18px;
-}
-
-/* ДОБАВЛЕНО: Стили блока авторизации */
-.auth-form {
+.combo-grid {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    max-width: 400px;
     margin-top: 15px;
 }
 
-.auth-form input {
+.combo-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
     background-color: #1c1c30;
-    border: 1px solid #252538;
-    padding: 12px;
+    padding: 15px;
     border-radius: 8px;
-    color: white;
-    font-size: 0.95rem;
+    cursor: pointer;
+    border: 1px solid #252538;
 }
 
-.auth-form input:focus {
-    border-color: #6c5ce7;
-    outline: none;
+.combo-checkbox {
+    width: 18px;
+    height: 18px;
+    accent-color: #00cec9;
 }
 
-.status-msg-neutral {
-    font-size: 0.85rem;
-    color: #a0a0b8;
-    margin: 5px 0 0 0;
-}
-
-/* Финал кассы */
+/* Касса и финальный чек */
 .booking-summary {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 35px;
-    padding-top: 25px;
+    margin-top: 30px;
+    padding-top: 20px;
     border-top: 1px solid #252538;
-}
-
-.summary-text-block p {
-    margin: 5px 0;
-    font-size: 1.1rem;
-}
-
-#total-price {
-    color: #00cec9;
-    font-weight: bold;
-    font-size: 1.3rem;
 }
 
 .book-button {
     background-color: #6c5ce7;
     color: white;
     border: none;
-    padding: 15px 35px;
+    padding: 12px 28px;
     font-size: 1rem;
     font-weight: bold;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.2s, transform 0.1s;
-}
-
-.book-button:hover:not(:disabled) {
-    background-color: #5f27cd;
-    transform: translateY(-2px);
 }
 
 .book-button:disabled {
     background-color: #2d2d3a;
     color: #777;
     cursor: not-allowed;
+}
+
+.invoice-block {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #11111e;
+    border-radius: 8px;
+    border-left: 4px solid #e74c3c;
+}
+
+.invoice-details {
+    font-family: monospace;
+    white-space: pre-wrap;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    color: #d1d1e0;
+}
+
+.error-payment-msg {
+    color: #ff7675;
+    font-weight: bold;
+    background-color: rgba(231, 76, 60, 0.1);
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px dashed #e74c3c;
 }
