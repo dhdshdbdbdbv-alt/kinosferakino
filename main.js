@@ -15,21 +15,10 @@ let activeMovieKey = "";
 let chosenSeatsList = [];
 let accountVerified = false;
 
-// Топология зала под твою сетку: 6 мест, проход, 10 мест, проход, 6 мест
-const structureTemplate = [
-    [1,1,1,1,1,1, 0, 1,1,1,1,1,1,1,1,1,1, 0, 1,1,1,1,1,1],
-    [1,1,1,1,1,1, 0, 1,1,1,1,1,1,1,1,1,1, 0, 1,1,1,1,1,1],
-    [1,1,1,1,1,1, 0, 1,1,1,1,1,1,1,1,1,1, 0, 1,1,1,1,1,1],
-    [1,1,1,1,1,1, 0, 1,1,1,1,1,1,1,1,1,1, 0, 1,1,1,1,1,1],
-    [1,1,1,1,1,1, 0, 1,1,1,1,1,1,1,1,1,1, 0, 1,1,1,1,1,1],
-    [1,1,1,1,1,1, 0, 1,1,1,1,1,1,1,1,1,1, 0, 1,1,1,1,1,1],
-    [1,1,1,1,1,1, 0, 1,1,1,1,1,1,1,1,1,1, 0, 1,1,1,1,1,1],
-    [1,1,1,1,1,1, 0, 1,1,1,1,1,1,1,1,1,1, 0, 1,1,1,1,1,1],
-    [1,1,1,1,1,1, 0, 1,1,1,1,1,1,1,1,1,1, 0, 1,1,1,1,1,1],
-    [1,1,1,1,1,1, 0, 1,1,1,1,1,1,1,1,1,1, 0, 1,1,1,1,1,1]
-];
+// Схема ряда: 6 мест (1), 1 проход (0), 10 мест (1), 1 проход (0), 6 мест (1)
+const rowTemplate = [1,1,1,1,1,1, 0, 1,1,1,1,1,1,1,1,1,1, 0, 1,1,1,1,1,1];
+const totalRows = 10;
 
-// Селекторы DOM
 const workspaceSection = document.getElementById('booking-workspace');
 const textMovieTitle = document.getElementById('current-movie-title');
 const gridHallElement = document.getElementById('dynamic-hall-grid');
@@ -47,156 +36,165 @@ const blockBillReceipt = document.getElementById('payment-receipt-block');
 const textReceiptDetails = document.getElementById('receipt-text-container');
 
 function generateHallLayout() {
+    if (!gridHallElement) return;
     gridHallElement.innerHTML = '';
     chosenSeatsList = [];
     systemBarCheckboxes.forEach(box => box.checked = false);
-    blockBillReceipt.classList.add('hidden');
+    if (blockBillReceipt) blockBillReceipt.classList.add('hidden');
     refreshCalculations();
 
-    const currentMovieInfo = moviesCatalog[activeMovieKey];
-    textMovieTitle.textContent = `Выбор мест: Сеанс «${currentMovieInfo.title}»`;
+    const movieInfo = moviesCatalog[activeMovieKey];
+    if (textMovieTitle && movieInfo) textMovieTitle.textContent = `Выбор мест: Сеанс «${movieInfo.title}»`;
 
-    structureTemplate.forEach((rowPattern, lineIndex) => {
+    for (let r = 0; r < totalRows; r++) {
         const rowDiv = document.createElement('div');
-        rowDiv.classList.add('hall-row'); // Твой класс из css.css
-        let calculatedSeatNum = 1;
+        rowDiv.classList.add('hall-row');
+        
+        let seatNum = 1;
 
-        rowPattern.forEach((slotType) => {
-            if (slotType === 0) {
-                const spacer = document.createElement('div');
-                spacer.classList.add('passage'); // Твой класс из css.css
-                rowDiv.appendChild(spacer);
+        rowTemplate.forEach((slot) => {
+            if (slot === 0) {
+                const passage = document.createElement('div');
+                passage.classList.add('passage');
+                rowDiv.appendChild(passage);
             } else {
-                const nodeSeat = document.createElement('div');
-                nodeSeat.classList.add('seat'); // Твой класс из css.css
+                const seatDiv = document.createElement('div');
+                seatDiv.classList.add('seat');
                 
-                const virtualRow = lineIndex + 1;
-                const uniquelyId = `${virtualRow}-${calculatedSeatNum}`;
-                let finalSeatCost = currentMovieInfo.basePrice;
+                const rowNum = r + 1;
+                const seatId = `${rowNum}-${seatNum}`;
+                const price = movieInfo ? movieInfo.basePrice : 350;
 
-                // Рандомное заполнение 1 к 5 (ровно 20% занятых мест)
                 if (Math.random() < 0.2) {
-                    nodeSeat.classList.add('occupied');
+                    seatDiv.classList.add('occupied');
                 }
 
-                nodeSeat.dataset.price = finalSeatCost;
-                nodeSeat.dataset.id = uniquelyId;
+                seatDiv.dataset.id = seatId;
 
-                if (!nodeSeat.classList.contains('occupied')) {
-                    nodeSeat.addEventListener('click', () => {
-                        if (nodeSeat.classList.contains('selected')) {
-                            nodeSeat.classList.remove('selected');
-                            chosenSeatsList = chosenSeatsList.filter(item => item.id !== uniquelyId);
+                if (!seatDiv.classList.contains('occupied')) {
+                    seatDiv.addEventListener('click', () => {
+                        if (seatDiv.classList.contains('selected')) {
+                            seatDiv.classList.remove('selected');
+                            chosenSeatsList = chosenSeatsList.filter(item => item.id !== seatId);
                         } else {
-                            nodeSeat.classList.add('selected');
-                            chosenSeatsList.push({ id: uniquelyId, price: finalSeatCost, row: virtualRow, num: calculatedSeatNum });
+                            seatDiv.classList.add('selected');
+                            chosenSeatsList.push({ id: seatId, price: price, row: rowNum, num: seatNum });
                         }
                         refreshCalculations();
                     });
                 }
 
-                rowDiv.appendChild(nodeSeat);
-                calculatedSeatNum++;
+                rowDiv.appendChild(seatDiv);
+                seatNum++;
             }
         });
         gridHallElement.appendChild(rowDiv);
-    });
+    }
 }
 
 function refreshCalculations() {
-    const totalSelectedTickets = chosenSeatsList.length;
-    let computedMoneySum = chosenSeatsList.reduce((acc, current) => acc + current.price, 0);
+    const totalSelected = chosenSeatsList.length;
+    let totalSum = chosenSeatsList.reduce((sum, item) => sum + item.price, 0);
 
     systemBarCheckboxes.forEach(box => {
-        if (box.checked) computedMoneySum += parseInt(box.dataset.price);
+        if (box.checked) totalSum += parseInt(box.dataset.price || 0);
     });
 
-    counterSeatsElement.textContent = totalSelectedTickets;
-    counterSumElement.textContent = computedMoneySum;
-    
+    if (counterSeatsElement) counterSeatsElement.textContent = totalSelected;
+    if (counterSumElement) counterSumElement.textContent = totalSum;
+
     evaluateGatewayUnlock();
 }
 
-// Слушатель для физической кнопки верификации аккаунта
-buttonVerifyAccount.addEventListener('click', () => {
-    const rawLogin = fieldUserLogin.value.trim();
-    const rawPass = fieldUserPass.value.trim();
+if (buttonVerifyAccount) {
+    buttonVerifyAccount.addEventListener('click', () => {
+        const login = fieldUserLogin ? fieldUserLogin.value.trim() : "";
+        const pass = fieldUserPass ? fieldUserPass.value.trim() : "";
 
-    if (rawLogin.length >= 3 && rawPass.length >= 4) {
-        accountVerified = true;
-        labelValidationStatus.textContent = `✅ Успешный вход! Клиент: ${rawLogin}`;
-        labelValidationStatus.style.color = "#00e676";
+        if (login.length >= 3 && pass.length >= 4) {
+            accountVerified = true;
+            if (labelValidationStatus) {
+                labelValidationStatus.textContent = `✅ Успешный вход! Клиент: ${login}`;
+                labelValidationStatus.style.color = "#00e676";
+            }
+        } else {
+            accountVerified = false;
+            if (labelValidationStatus) {
+                labelValidationStatus.textContent = "❌ Ошибка: Логин от 3 симв., Пароль от 4 симв.";
+                labelValidationStatus.style.color = "#ff5252";
+            }
+        }
         evaluateGatewayUnlock();
-    } else {
-        accountVerified = false;
-        labelValidationStatus.textContent = "❌ Ошибка: Логин от 3 симв., Пароль от 4 симв.";
-        labelValidationStatus.style.color = "#ff5252";
-        evaluateGatewayUnlock();
-    }
-});
+    });
+}
 
 function evaluateGatewayUnlock() {
-    if (chosenSeatsList.length > 0 && accountVerified) {
-        checkoutButton.disabled = false;
-    } else {
-        checkoutButton.disabled = true;
-    }
+    if (!checkoutButton) return;
+    checkoutButton.disabled = !(chosenSeatsList.length > 0 && accountVerified);
 }
 
 systemBarCheckboxes.forEach(box => box.addEventListener('change', refreshCalculations));
 
-function bindCatalogClicks() {
-    const allMovieNodes = document.querySelectorAll('.movie-premium-card');
-    allMovieNodes.forEach(node => {
-        node.addEventListener('click', () => {
-            allMovieNodes.forEach(n => n.classList.remove('active'));
-            node.classList.add('active');
-            
-            activeMovieKey = node.dataset.movie;
-            workspaceSection.classList.remove('hidden');
-            generateHallLayout();
+function initCatalog() {
+    const cards = document.querySelectorAll('.movie-premium-card');
+    cards.forEach(card => {
+        card.addEventListener('click', () => {
+            cards.forEach(c => c.classList.remove('active'));
+            card.classList.add('active');
 
-            workspaceSection.scrollIntoView({ behavior: 'smooth' });
+            activeMovieKey = card.dataset.movie;
+            if (workspaceSection) {
+                workspaceSection.classList.remove('hidden');
+                generateHallLayout();
+                workspaceSection.scrollIntoView({ behavior: 'smooth' });
+            }
         });
     });
 }
 
-checkoutButton.addEventListener('click', () => {
-    const pickedMovie = moviesCatalog[activeMovieKey];
-    let sumTickets = chosenSeatsList.reduce((acc, current) => acc + current.price, 0);
-    let sumGoods = 0;
-    let selectedProductsReport = [];
+if (checkoutButton) {
+    checkoutButton.addEventListener('click', () => {
+        const movie = moviesCatalog[activeMovieKey];
+        if (!movie) return;
 
-    systemBarCheckboxes.forEach(box => {
-        if (box.checked) {
-            sumGoods += parseInt(box.dataset.price);
-            selectedProductsReport.push(`• ${box.parentElement.querySelector('span').textContent}`);
+        let ticketsSum = chosenSeatsList.reduce((sum, item) => sum + item.price, 0);
+        let barSum = 0;
+        let barItems = [];
+
+        systemBarCheckboxes.forEach(box => {
+            if (box.checked) {
+                barSum += parseInt(box.dataset.price || 0);
+                const span = box.parentElement.querySelector('span');
+                if (span) barItems.push(`• ${span.textContent}`);
+            }
+        });
+
+        let receipt = `========================================\n`;
+        receipt += `        СЕТЬ КИНОТЕАТРОВ "КИНОСФЕРА"       \n`;
+        receipt += `             ЭЛЕКТРОННЫЙ ЧЕК            \n`;
+        receipt += `========================================\n`;
+        receipt += `Покупатель: ${fieldUserLogin ? fieldUserLogin.value.trim() : 'Аноним'}\n`;
+        receipt += `Фильм: ${movie.title}\n`;
+        receipt += `Места (${chosenSeatsList.length} шт.):\n`;
+        chosenSeatsList.forEach(item => {
+            receipt += `  - Ряд ${item.row}, Место ${item.num} (${item.price} ₽)\n`;
+        });
+        if (barItems.length > 0) {
+            receipt += `Кинобар:\n${barItems.join('\n')}\n`;
+        }
+        receipt += `----------------------------------------\n`;
+        receipt += `Билеты: ${ticketsSum} ₽\n`;
+        receipt += `Бар: ${barSum} ₽\n`;
+        receipt += `ИТОГО: ${ticketsSum + barSum} ₽\n`;
+        receipt += `========================================`;
+
+        if (textReceiptDetails) textReceiptDetails.textContent = receipt;
+        if (blockBillReceipt) {
+            blockBillReceipt.classList.remove('hidden');
+            blockBillReceipt.scrollIntoView({ behavior: 'smooth' });
         }
     });
+}
 
-    let paperLayout = `========================================\n`;
-    paperLayout += `        СЕТЬ КИНОТЕАТРОВ "КИНОСФЕРА"       \n`;
-    paperLayout += `             ЭЛЕКТРОННЫЙ ЧЕК            \n`;
-    paperLayout += `========================================\n`;
-    paperLayout += `Аккаунт покупателя: ${fieldUserLogin.value.trim()}\n`;
-    paperLayout += `Фильм: ${pickedMovie.title}\n`;
-    paperLayout += `Билеты (${chosenSeatsList.length} шт.):\n`;
-    chosenSeatsList.forEach(ticket => {
-        paperLayout += `  - Ряд ${ticket.row}, Место ${ticket.num} (${ticket.price} ₽)\n`;
-    });
-    if (selectedProductsReport.length > 0) {
-        paperLayout += `Продукция кинобара:\n${selectedProductsReport.join('\n')}\n`;
-    }
-    paperLayout += `----------------------------------------\n`;
-    paperLayout += `Стоимость билетов: ${sumTickets} ₽\n`;
-    paperLayout += `Стоимость товаров: ${sumGoods} ₽\n`;
-    paperLayout += `ИТОГО К ОПЛАТЕ: ${sumTickets + sumGoods} ₽\n`;
-    paperLayout += `========================================`;
-
-    textReceiptDetails.textContent = paperLayout;
-    blockBillReceipt.classList.remove('hidden'); 
-    blockBillReceipt.scrollIntoView({ behavior: 'smooth' });
-});
-
-// Инициализация кликов по карточкам при загрузке
-bindCatalogClicks();
+document.addEventListener('DOMContentLoaded', initCatalog);
+if (document.readyState !== 'loading') initCatalog();
