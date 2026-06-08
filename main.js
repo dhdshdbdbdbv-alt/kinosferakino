@@ -1,20 +1,20 @@
-// Старый ассортимент и цены из твоей прошлой версии
 const moviesData = {
-    "bogatiry": { title: "Богатыри", basePrice: 350, occupied: ["1-3", "1-4", "2-5"] },
-    "karamazovy": { title: "Братья Карамазовы", basePrice: 400, occupied: ["3-2", "3-3"] },
-    "dengi": { title: "Грязные деньги", basePrice: 380, occupied: ["1-1", "8-5"] },
-    "bill": { title: "Убить Билла", basePrice: 450, occupied: ["4-4", "4-5"] },
-    "komers": { title: "Комерс", basePrice: 350, occupied: ["2-1"] },
-    "koshey": { title: "Кощей", basePrice: 380, occupied: [] },
-    "leo": { title: "Лео и Тиг", basePrice: 300, occupied: ["1-1", "1-2"] },
-    "michael": { title: "Майкл (2026)", basePrice: 500, occupied: ["5-5"] },
-    "momo": { title: "Момо", basePrice: 420, occupied: [] },
-    "propast": { title: "Пропасть", basePrice: 390, occupied: ["3-12"] }
+    "bogatiry": { title: "Богатыри", basePrice: 350 },
+    "karamazovy": { title: "Братья Карамазовы", basePrice: 400 },
+    "dengi": { title: "Грязные деньги", basePrice: 380 },
+    "bill": { title: "Убить Билла", basePrice: 450 },
+    "komers": { title: "Комерс", basePrice: 350 },
+    "koshey": { title: "Кощей", basePrice: 380 },
+    "leo": { title: "Лео и Тиг", basePrice: 300 },
+    "michael": { title: "Майкл (2026)", basePrice: 500 },
+    "momo": { title: "Момо", basePrice: 420 },
+    "propast": { title: "Пропасть", basePrice: 390 }
 };
 
 let currentMovieKey = "";
-let selectedSeats = []; // Хранение нескольких выбранных мест одновременно
+let selectedSeats = [];
 
+// Последние два ряда содержат сдвоенные кресла (по 2 единицы вместо одного старого VIP-дивана)
 const hallTopology = [
     [1,1,1,1,1,1, 0, 1,1,1,1,1,1,1,1,1,1, 0, 1,1,1,1,1,1],
     [1,1,1,1,1,1, 0, 1,1,1,1,1,1,1,1,1,1, 0, 1,1,1,1,1,1],
@@ -24,8 +24,8 @@ const hallTopology = [
     [1,1,1,1,1,1, 0, 1,1,1,1,1,1,1,1,1,1, 0, 1,1,1,1,1,1],
     [1,1,1,1,1,1, 0, 1,1,1,1,1,1,1,1,1,1, 0, 1,1,1,1,1,1],
     [1,1,1,1,1,1, 0, 1,1,1,1,1,1,1,1,1,1, 0, 1,1,1,1,1,1],
-    ['VIP', 'VIP', 'VIP', 0, 'VIP', 'VIP', 'VIP', 'VIP', 'VIP', 0, 'VIP', 'VIP', 'VIP'],
-    ['VIP', 'VIP', 'VIP', 0, 'VIP', 'VIP', 'VIP', 'VIP', 'VIP', 0, 'VIP', 'VIP', 'VIP']
+    ['D', 'D', 'D', 0, 'D', 'D', 'D', 'D', 'D', 0, 'D', 'D', 'D'],
+    ['D', 'D', 'D', 0, 'D', 'D', 'D', 'D', 'D', 0, 'D', 'D', 'D']
 ];
 
 const bookingWindow = document.getElementById('booking-window');
@@ -34,14 +34,18 @@ const hallContainer = document.getElementById('cinema-hall');
 const selectedCountEl = document.getElementById('selected-count');
 const totalPriceEl = document.getElementById('total-price');
 const bookBtn = document.getElementById('book-btn');
-const comboCheckboxes = document.querySelectorAll('.combo-checkbox');
+const barCheckboxes = document.querySelectorAll('.bar-checkbox');
 const invoiceBlock = document.getElementById('invoice-block');
 const invoiceDetails = document.getElementById('invoice-details');
+
+const loginInput = document.getElementById('auth-login');
+const passwordInput = document.getElementById('auth-password');
+const statusMsg = document.getElementById('auth-status-msg');
 
 function renderHall() {
     hallContainer.innerHTML = '';
     selectedSeats = [];
-    comboCheckboxes.forEach(cb => cb.checked = false);
+    barCheckboxes.forEach(cb => cb.checked = false);
     invoiceBlock.classList.add('hidden');
     updateSummary();
 
@@ -64,12 +68,16 @@ function renderHall() {
                 
                 const currentRow = rowIndex + 1;
                 const seatId = `${currentRow}-${seatNumber}`;
-                let currentPrice = cellType === 'VIP' ? activeMovie.basePrice * 2 : activeMovie.basePrice;
+                let currentPrice = activeMovie.basePrice;
 
-                if (activeMovie.occupied.includes(seatId)) {
+                if (cellType === 'D') {
+                    seatElement.classList.add('double-seat');
+                }
+
+                // Срабатывание вероятностной генерации 1 к 5 (20%)
+                if (Math.random() < 0.2) {
                     seatElement.classList.add('occupied');
                 }
-                if (cellType === 'VIP') seatElement.classList.add('vip');
 
                 seatElement.dataset.price = currentPrice;
                 seatElement.dataset.id = seatId;
@@ -77,7 +85,6 @@ function renderHall() {
 
                 if (!seatElement.classList.contains('occupied')) {
                     seatElement.addEventListener('click', () => {
-                        // СОХРАНЕНО: Старый функционал мультивыбора мест
                         if (seatElement.classList.contains('selected')) {
                             seatElement.classList.remove('selected');
                             selectedSeats = selectedSeats.filter(item => item.id !== seatId);
@@ -101,18 +108,39 @@ function updateSummary() {
     const count = selectedSeats.length;
     let total = selectedSeats.reduce((sum, seat) => sum + seat.price, 0);
 
-    comboCheckboxes.forEach(cb => {
+    barCheckboxes.forEach(cb => {
         if (cb.checked) total += parseInt(cb.dataset.price);
     });
 
     selectedCountEl.textContent = count;
     totalPriceEl.textContent = total;
-    bookBtn.disabled = count === 0;
+    
+    validateRegistration();
 }
 
-comboCheckboxes.forEach(cb => cb.addEventListener('change', updateSummary));
+function validateRegistration() {
+    const isFormFilled = loginInput.value.trim().length >= 3 && passwordInput.value.trim().length >= 4;
+    const hasSeats = selectedSeats.length > 0;
 
-// ВЫБОР ФИЛЬМА: Открывает окно бронирования снизу
+    if (!hasSeats) {
+        statusMsg.textContent = "Выберите места на схеме зала";
+        statusMsg.style.color = "#ff7675";
+        bookBtn.disabled = true;
+    } else if (!isFormFilled) {
+        statusMsg.textContent = "Заполните личный кабинет (Логин от 3 симв., Пароль от 4 симв.)";
+        statusMsg.style.color = "#ff7675";
+        bookBtn.disabled = true;
+    } else {
+        statusMsg.textContent = "Аккаунт готов к регистрации. Можно оформлять заказ!";
+        statusMsg.style.color = "#2ecc71";
+        bookBtn.disabled = false;
+    }
+}
+
+loginInput.addEventListener('input', validateRegistration);
+passwordInput.addEventListener('input', validateRegistration);
+barCheckboxes.forEach(cb => cb.addEventListener('change', updateSummary));
+
 function initMoviesSelection() {
     const movieCards = document.querySelectorAll('.movie-card');
     movieCards.forEach(card => {
@@ -122,7 +150,6 @@ function initMoviesSelection() {
             
             currentMovieKey = card.dataset.movie;
             
-            // Показываем скрытое окно бронирования
             bookingWindow.classList.remove('hidden');
             renderHall();
 
@@ -131,40 +158,39 @@ function initMoviesSelection() {
     });
 }
 
-// ОФОРМЛЕНИЕ ЗАКАЗА: Генерация чека + вывод ошибки оплаты
 bookBtn.addEventListener('click', () => {
     const activeMovie = moviesData[currentMovieKey];
     let ticketSum = selectedSeats.reduce((sum, seat) => sum + seat.price, 0);
-    let comboSum = 0;
-    let comboList = [];
+    let barSum = 0;
+    let barList = [];
 
-    comboCheckboxes.forEach(cb => {
+    barCheckboxes.forEach(cb => {
         if (cb.checked) {
-            comboSum += parseInt(cb.dataset.price);
-            comboList.push(`• ${cb.parentElement.querySelector('span').textContent}`);
+            barSum += parseInt(cb.dataset.price);
+            barList.push(`• ${cb.parentElement.querySelector('span').textContent}`);
         }
     });
 
-    // Формируем чек текстом
     let invoiceText = `========================================\n`;
     invoiceText += `        ООО "КИНОСФЕРА" — ЭЛЕКТРОННЫЙ ЧЕК       \n`;
     invoiceText += `========================================\n`;
+    invoiceText += `Пользователь: ${loginInput.value.trim()}\n`;
     invoiceText += `Фильм: ${activeMovie.title}\n`;
-    invoiceText += `Выбранные места (${selectedSeats.length} шт.):\n`;
+    invoiceText += `Места (${selectedSeats.length} шт.):\n`;
     selectedSeats.forEach(s => {
         invoiceText += `  - Ряд ${s.row}, Место ${s.num} (${s.price} ₽)\n`;
     });
-    if (comboList.length > 0) {
-        invoiceText += `Продукция бара:\n${comboList.join('\n')}\n`;
+    if (barList.length > 0) {
+        invoiceText += `Продукция кинобара:\n${barList.join('\n')}\n`;
     }
     invoiceText += `----------------------------------------\n`;
     invoiceText += `Стоимость билетов: ${ticketSum} ₽\n`;
-    invoiceText += `Стоимость комбо: ${comboSum} ₽\n`;
-    invoiceText += `ИТОГО К ОПЛАТЕ: ${ticketSum + comboSum} ₽\n`;
+    invoiceText += `Стоимость товаров: ${barSum} ₽\n`;
+    invoiceText += `ИТОГО К ОПЛАТЕ: ${ticketSum + barSum} ₽\n`;
     invoiceText += `========================================`;
 
     invoiceDetails.textContent = invoiceText;
-    invoiceBlock.classList.remove('hidden'); // Показываем чек и блок ошибки
+    invoiceBlock.classList.remove('hidden'); 
 
     invoiceBlock.scrollIntoView({ behavior: 'smooth' });
 });
