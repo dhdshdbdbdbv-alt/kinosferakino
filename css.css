@@ -4,7 +4,6 @@ body {
     background-color: #0f0f1a;
     color: #ffffff;
     font-family: 'Segoe UI', Roboto, sans-serif;
-    -webkit-text-size-adjust: 100%;
 }
 
 .main-header {
@@ -18,7 +17,6 @@ body {
     max-width: 1400px;
     margin: 0 auto;
     padding: 15px;
-    box-sizing: border-box;
 }
 
 h2 {
@@ -27,11 +25,13 @@ h2 {
     margin-bottom: 25px;
 }
 
-/* Сетка фильмов - Идеально адаптируется от мобилок до ПК */
+/* ==========================================================================
+   АДАПТИВНАЯ СЕТКА ПОСТЕРОВ (ПОДДЕРЖКА МОБИЛЬНЫХ УСТРОЙСТВ)
+   ========================================================================== */
 .movies-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 15px;
     width: 100%;
     margin-bottom: 40px;
 }
@@ -57,7 +57,7 @@ h2 {
 
 .movie-card img {
     width: 100%;
-    height: 200px;
+    height: 240px;
     object-fit: cover;
 }
 
@@ -67,11 +67,7 @@ h2 {
 
 .movie-card h3 {
     margin: 10px;
-    font-size: 0.9rem;
-}
-
-@media (min-width: 480px) {
-    .movie-card h3 { font-size: 1.1rem; }
+    font-size: 0.95rem;
 }
 
 .movie-card .price {
@@ -85,14 +81,15 @@ h2 {
     border-color: #6c5ce7;
 }
 
-/* Секция бронирования */
+/* ==========================================================================
+   ОКНО БРОНИРОВАНИЯ И СХЕМА ЗАЛА
+   ========================================================================== */
 .booking-section {
     background-color: #161626;
-    padding: 15px;
+    padding: 20px;
     border-radius: 16px;
     border: 1px solid #232336;
     margin-top: 30px;
-    box-sizing: border-box;
 }
 
 @media (min-width: 768px) {
@@ -101,7 +98,7 @@ h2 {
 
 .hidden { display: none !important; }
 
-/* МОБИЛЬНЫЙ ПОРТ СХЕМЫ ЗАЛА: скролл пальцем без поломки основного макета */
+/* ИСПРАВЛЕНО: Горизонтальный скролл схемы на смартфонах без поломки верстки */
 .hall-container {
     display: flex;
     flex-direction: column;
@@ -109,12 +106,12 @@ h2 {
     margin: 30px 0;
     overflow-x: auto;
     width: 100%;
-    padding: 15px 0;
+    padding: 10px 0;
     -webkit-overflow-scrolling: touch;
 }
 
 .screen {
-    width: 95%;
+    width: 90%;
     max-width: 600px;
     min-width: 580px;
     height: 8px;
@@ -134,7 +131,7 @@ h2 {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    min-width: 580px;
+    min-width: 580px; 
 }
 
 .hall-row {
@@ -149,7 +146,6 @@ h2 {
     background-color: #3b3b54;
     border-radius: 6px 6px 3px 3px;
     cursor: pointer;
-    transition: background-color 0.2s;
 }
 
 .seat.selected { background-color: #00cec9 !important; }
@@ -161,28 +157,25 @@ h2 {
 
 .passage { width: 25px; }
 
-/* Кинобар */
+/* ==========================================================================
+   ИНТЕРФЕЙС БАРА И АВТОРИЗАЦИИ
+   ========================================================================== */
 .bar-container, .auth-container {
     margin-top: 30px;
     padding-top: 20px;
     border-top: 1px solid #252538;
 }
 
-.bar-category { margin-bottom: 25px; }
-.bar-category h4 {
-    margin: 5px 0 12px 0;
-    color: #6c5ce7;
-    font-size: 1.05rem;
+.bar-section { margin-bottom: 20px; }
+.bar-section h4 {
+    margin: 5px 0 10px 0;
+    color: #a0a0b8;
 }
 
 .bar-grid {
-    display: grid;
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 10px;
-}
-
-@media (min-width: 768px) {
-    .bar-grid { grid-template-columns: 1fr 1fr; }
 }
 
 .bar-item {
@@ -195,32 +188,27 @@ h2 {
     cursor: pointer;
     border: 1px solid #252538;
     font-size: 0.9rem;
-    transition: border-color 0.2s;
 }
 
-.bar-item:hover { border-color: #00cec9; }
 .bar-checkbox {
     width: 18px;
     height: 18px;
     accent-color: #00cec9;
 }
 
-/* Форма аккаунта */
 .auth-form {
     display: flex;
     flex-direction: column;
     gap: 12px;
     max-width: 400px;
-    margin-top: 15px;
 }
 
 .auth-form input {
     background-color: #1c1c30;
     border: 1px solid #252538;
-    padding: 14px;
+    padding: 12px;
     border-radius: 8px;
     color: white;
-    font-size: 1rem;
 }
 
 .auth-form input:focus {
@@ -232,37 +220,27 @@ h2 {
     font-size: 0.85rem;
     color: #ff7675;
     margin: 5px 0;
-    font-weight: bold;
 }
 
-/* Касса */
+/* КАССА И ЧЕК */
 .booking-summary {
     display: flex;
-    flex-direction: column;
-    gap: 15px;
+    justify-content: space-between;
+    align-items: center;
     margin-top: 30px;
     padding-top: 20px;
     border-top: 1px solid #252538;
-}
-
-@media (min-width: 480px) {
-    .booking-summary {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-    }
 }
 
 .book-button {
     background-color: #6c5ce7;
     color: white;
     border: none;
-    padding: 16px 32px;
+    padding: 12px 24px;
     font-size: 1rem;
     font-weight: bold;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.2s;
 }
 
 .book-button:disabled {
@@ -271,7 +249,6 @@ h2 {
     cursor: not-allowed;
 }
 
-/* Блок вывода чека */
 .invoice-block {
     margin-top: 30px;
     padding: 20px;
@@ -284,9 +261,6 @@ h2 {
     font-family: monospace;
     white-space: pre-wrap;
     color: #d1d1e0;
-    font-size: 0.9rem;
-    line-height: 1.5;
-    overflow-x: auto;
 }
 
 .error-payment-msg {
@@ -296,6 +270,4 @@ h2 {
     padding: 15px;
     border-radius: 6px;
     margin-top: 15px;
-    border: 1px dashed #e74c3c;
-    font-size: 0.95rem;
 }
