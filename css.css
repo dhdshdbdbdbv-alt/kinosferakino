@@ -1,143 +1,186 @@
+/* Базовые стили и сбросы */
 body {
     margin: 0;
     padding: 0;
-    background-color: #0f0f1a;
-    color: #ffffff;
-    font-family: 'Segoe UI', Roboto, sans-serif;
+    background: #09090e;
+    color: #e2e8f0;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
 }
 
-.main-header {
-    text-align: center;
+.cinema-top-bar {
+    background: linear-gradient(180deg, #12121c 0%, #09090e 100%);
     padding: 20px;
-    background-color: #161626;
-    border-bottom: 1px solid #252538;
+    text-align: center;
+    border-bottom: 1px solid #1f1f33;
 }
 
-.content-wrapper {
-    max-width: 1400px;
+.cinema-top-bar .logo {
+    font-size: 1.8rem;
+    font-weight: 900;
+    letter-spacing: 3px;
+    color: #fff;
+}
+
+.cinema-top-bar .logo span {
+    color: #7c4dff;
+    text-shadow: 0 0 15px rgba(124, 77, 255, 0.6);
+}
+
+.main-layout {
+    max-width: 1200px;
     margin: 0 auto;
     padding: 15px;
+    box-sizing: border-box;
 }
 
-h2 {
-    border-left: 4px solid #6c5ce7;
-    padding-left: 10px;
-    margin-bottom: 25px;
+.section-title {
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-left: 4px solid #7c4dff;
+    padding-left: 12px;
+    margin: 30px 0 20px 0;
 }
 
-/* ==========================================================================
-   АДАПТИВНАЯ СЕТКА ПОСТЕРОВ (ПОДДЕРЖКА МОБИЛЬНЫХ УСТРОЙСТВ)
-   ========================================================================== */
-.movies-grid {
+.block-subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    color: #fff;
+}
+
+/* Сетка фильмов */
+.movies-responsive-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 15px;
-    width: 100%;
-    margin-bottom: 40px;
 }
 
-@media (min-width: 480px) {
-    .movies-grid {
+@media(min-width: 600px) {
+    .movies-responsive-grid {
         grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
         gap: 25px;
     }
 }
 
-.movie-card {
-    background-color: #161626;
+.movie-premium-card {
+    background: #11111f;
     border-radius: 12px;
     overflow: hidden;
+    border: 1px solid #1f1f33;
+    cursor: pointer;
+    transition: all 0.25s ease-in-out;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    transition: transform 0.3s ease, border-color 0.3s ease;
-    border: 2px solid #232336;
-    cursor: pointer;
 }
 
-.movie-card img {
+.movie-premium-card:hover, .movie-premium-card.active {
+    border-color: #7c4dff;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(124, 77, 255, 0.2);
+}
+
+.poster-wrapper {
     width: 100%;
-    height: 240px;
+    position: relative;
+    padding-top: 145%;
+    background: #161626;
+}
+
+.poster-wrapper img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
 }
 
-@media (min-width: 480px) {
-    .movie-card img { height: 320px; }
+.movie-info {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-between;
 }
 
-.movie-card h3 {
-    margin: 10px;
+.movie-info h3 {
+    margin: 0 0 8px 0;
     font-size: 0.95rem;
+    color: #fff;
+    line-height: 1.3;
 }
 
-.movie-card .price {
-    margin: 0 10px 10px 10px;
-    color: #00cec9;
-    font-weight: bold;
+.badge-price {
+    align-self: flex-start;
+    background: rgba(0, 230, 118, 0.1);
+    color: #00e676;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 700;
 }
 
-.movie-card:hover, .movie-card.active {
-    transform: translateY(-5px);
-    border-color: #6c5ce7;
-}
-
-/* ==========================================================================
-   ОКНО БРОНИРОВАНИЯ И СХЕМА ЗАЛА
-   ========================================================================== */
-.booking-section {
-    background-color: #161626;
-    padding: 20px;
+/* Рабочая зона */
+.booking-workspace {
+    background: #11111f;
+    border: 1px solid #1f1f33;
     border-radius: 16px;
-    border: 1px solid #232336;
+    padding: 15px;
     margin-top: 30px;
 }
 
-@media (min-width: 768px) {
-    .booking-section { padding: 30px; }
+@media(min-width: 768px) {
+    .booking-workspace { padding: 30px; }
 }
 
 .hidden { display: none !important; }
 
-/* ИСПРАВЛЕНО: Горизонтальный скролл схемы на смартфонах без поломки верстки */
-.hall-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 30px 0;
-    overflow-x: auto;
+/* Адаптивное окно зала (Защита от сжатия на телефонах) */
+.interactive-hall-viewport {
     width: 100%;
-    padding: 10px 0;
+    overflow-x: auto;
+    background: #0b0b14;
+    padding: 30px 10px;
+    border-radius: 12px;
+    box-sizing: border-box;
     -webkit-overflow-scrolling: touch;
 }
 
-.screen {
-    width: 90%;
-    max-width: 600px;
-    min-width: 580px;
-    height: 8px;
-    background-color: #ffffff;
-    box-shadow: 0 6px 30px rgba(255, 255, 255, 0.7);
-    border-radius: 50%;
-    margin-bottom: 35px;
-    text-align: center;
-    color: #161626;
-    font-size: 0.8rem;
-    font-weight: bold;
-    letter-spacing: 5px;
-    line-height: 8px;
-}
-
-.cinema-hall {
+.interactive-hall-wrapper {
+    min-width: 740px; /* Фиксирует ширину структуры, чтобы на смартфонах появлялся аккуратный свайп */
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    min-width: 580px; 
+    align-items: center;
 }
 
+.cinema-glowing-screen {
+    width: 80%;
+    height: 6px;
+    background: #fff;
+    box-shadow: 0 4px 25px #fff;
+    border-radius: 50%;
+    text-align: center;
+    color: rgba(255,255,255,0.3);
+    font-size: 0.7rem;
+    letter-spacing: 6px;
+    line-height: 6px;
+    margin-bottom: 40px;
+}
+
+.dynamic-hall-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Стилизация сетки по твоему скриншоту */
 .hall-row {
     display: grid;
     grid-template-columns: repeat(6, 28px) 25px repeat(10, 28px) 25px repeat(6, 28px);
     gap: 6px;
+    align-items: center;
 }
 
 .seat {
@@ -146,22 +189,27 @@ h2 {
     background-color: #3b3b54;
     border-radius: 6px 6px 3px 3px;
     cursor: pointer;
+    transition: background 0.15s ease;
 }
 
-.seat.selected { background-color: #00cec9 !important; }
+.seat.selected { 
+    background-color: #00cec9 !important; 
+    box-shadow: 0 0 10px rgba(0, 206, 201, 0.5); 
+}
+
 .seat.occupied {
-background: #3d1d1d;       /* Отчетливый темно-бордовый цвет */
-    border: 1px solid #ff5252; /* Тонкая контрастная красная рамка */
+    background: #3d1d1d;
+    border: 1px solid #ff5252;
     cursor: not-allowed;
     pointer-events: none;
     opacity: 0.8;
 }
 
-.passage { width: 25px; }
+.passage { 
+    width: 25px; 
+}
 
-/* ==========================================================================
-   ИНТЕРФЕЙС БАРА И АВТОРИЗАЦИИ
-   ========================================================================== */
+/* Контейнеры бара и авторизации из твоего скриншота */
 .bar-container, .auth-container {
     margin-top: 30px;
     padding-top: 20px;
@@ -170,106 +218,145 @@ background: #3d1d1d;       /* Отчетливый темно-бордовый �
 
 .bar-section { margin-bottom: 20px; }
 .bar-section h4 {
-    margin: 5px 0 10px 0;
-    color: #a0a0b8;
+    margin: 0 0 10px 0;
+    color: #7c4dff;
+    font-size: 1rem;
 }
 
-.bar-grid {
-    display: flex;
-    flex-direction: column;
+.bar-flex-grid {
+    display: grid;
+    grid-template-columns: 1fr;
     gap: 10px;
 }
 
-.bar-item {
+@media(min-width: 768px) {
+    .bar-flex-grid { grid-template-columns: 1fr 1fr; }
+}
+
+.bar-card-item {
     display: flex;
     align-items: center;
-    gap: 12px;
-    background-color: #1c1c30;
+    gap: 10px;
+    background: #161626;
     padding: 12px;
     border-radius: 8px;
     cursor: pointer;
-    border: 1px solid #252538;
+    border: 1px solid #1f1f33;
     font-size: 0.9rem;
 }
 
-.bar-checkbox {
+.bar-item-checkbox {
     width: 18px;
     height: 18px;
-    accent-color: #00cec9;
+    accent-color: #7c4dff;
 }
 
-.auth-form {
+/* Поля ввода и кнопки */
+.auth-box-fields {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    max-width: 400px;
+    max-width: 380px;
 }
 
-.auth-form input {
-    background-color: #1c1c30;
-    border: 1px solid #252538;
+.auth-box-fields input {
+    background: #161626;
+    border: 1px solid #1f1f33;
     padding: 12px;
     border-radius: 8px;
-    color: white;
+    color: #fff;
+    font-size: 0.95rem;
 }
 
-.auth-form input:focus {
-    border-color: #6c5ce7;
+.auth-box-fields input:focus {
+    border-color: #7c4dff;
     outline: none;
 }
 
-#auth-status-msg {
-    font-size: 0.85rem;
-    color: #ff7675;
-    margin: 5px 0;
-}
-
-/* КАССА И ЧЕК */
-.booking-summary {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px solid #252538;
-}
-
-.book-button {
-    background-color: #6c5ce7;
-    color: white;
+.action-accent-btn {
+    background: #7c4dff;
+    color: #fff;
     border: none;
-    padding: 12px 24px;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.action-accent-btn:hover { background: #651fff; }
+
+.status-warning {
+    font-size: 0.85rem;
+    color: #ff5252;
+    margin: 2px 0;
+    font-weight: 600;
+}
+
+/* Касса */
+.checkout-sticky-panel {
+    margin-top: 35px;
+    padding-top: 25px;
+    border-top: 1px solid #1f1f33;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+@media(min-width: 500px) {
+    .checkout-sticky-panel {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+
+.left-totals p { margin: 4px 0; color: #aaa; }
+.final-price-row { font-size: 1.3rem; color: #fff; font-weight: 800; }
+.final-price-row span { color: #00e676; }
+
+.main-order-submit {
+    background: #00e676;
+    color: #000;
+    border: none;
+    padding: 16px 35px;
     font-size: 1rem;
-    font-weight: bold;
+    font-weight: 800;
     border-radius: 8px;
     cursor: pointer;
+    transition: all 0.2s;
 }
 
-.book-button:disabled {
-    background-color: #2d2d3a;
-    color: #777;
+.main-order-submit:disabled {
+    background: #222230;
+    color: #555;
     cursor: not-allowed;
 }
 
-.invoice-block {
+/* Чек */
+.payment-receipt-block {
     margin-top: 30px;
+    background: #0b0b14;
     padding: 20px;
-    background-color: #11111e;
-    border-radius: 8px;
-    border-left: 4px solid #e74c3c;
+    border-radius: 10px;
+    border-left: 4px solid #ff5252;
 }
 
-.invoice-details {
+.receipt-text-container {
     font-family: monospace;
     white-space: pre-wrap;
-    color: #d1d1e0;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: #abb2bf;
 }
 
-.error-payment-msg {
-    color: #ff7675;
-    font-weight: bold;
-    background-color: rgba(231, 76, 60, 0.1);
+.secure-error-banner {
+    margin-top: 20px;
+    background: rgba(255, 82, 82, 0.08);
+    border: 1px dashed #ff5252;
+    color: #ff5252;
     padding: 15px;
     border-radius: 6px;
-    margin-top: 15px;
+    font-size: 0.9rem;
+    font-weight: 600;
 }
