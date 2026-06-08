@@ -1,3 +1,4 @@
+// Оригинальный ассортимент и базовые тарифы
 const moviesData = {
     "bogatiry": { title: "Богатыри", basePrice: 350 },
     "karamazovy": { title: "Братья Карамазовы", basePrice: 400 },
@@ -12,9 +13,9 @@ const moviesData = {
 };
 
 let currentMovieKey = "";
-let selectedSeats = [];
+let selectedSeats = []; 
 
-// ИСПРАВЛЕНО: Полностью одинаковые стандартные ряды по всему залу (Никаких VIP/Double)
+// ИСПРАВЛЕНО: VIP-места заменены обычными креслами (1) с сохранением геометрии сетки
 const hallTopology = [
     [1,1,1,1,1,1, 0, 1,1,1,1,1,1,1,1,1,1, 0, 1,1,1,1,1,1],
     [1,1,1,1,1,1, 0, 1,1,1,1,1,1,1,1,1,1, 0, 1,1,1,1,1,1],
@@ -24,8 +25,8 @@ const hallTopology = [
     [1,1,1,1,1,1, 0, 1,1,1,1,1,1,1,1,1,1, 0, 1,1,1,1,1,1],
     [1,1,1,1,1,1, 0, 1,1,1,1,1,1,1,1,1,1, 0, 1,1,1,1,1,1],
     [1,1,1,1,1,1, 0, 1,1,1,1,1,1,1,1,1,1, 0, 1,1,1,1,1,1],
-    [1,1,1,1,1,1, 0, 1,1,1,1,1,1,1,1,1,1, 0, 1,1,1,1,1,1],
-    [1,1,1,1,1,1, 0, 1,1,1,1,1,1,1,1,1,1, 0, 1,1,1,1,1,1]
+    [1,1,1,1,1,1, 1, 1,1,1,1,1,1,1,1,1,1, 1, 1,1,1,1,1,1],
+    [1,1,1,1,1,1, 1, 1,1,1,1,1,1,1,1,1,1, 1, 1,1,1,1,1,1]
 ];
 
 const bookingWindow = document.getElementById('booking-window');
@@ -70,7 +71,7 @@ function renderHall() {
                 const seatId = `${currentRow}-${seatNumber}`;
                 let currentPrice = activeMovie.basePrice;
 
-                // ДОБАВЛЕНО: Вероятностная генерация занятых мест 1 к 5 (ровно 20% шанс)
+                // ДОБАВЛЕНО: Вероятностная генерация занятых мест (1 к 5 -> 20% шанс)
                 if (Math.random() < 0.2) {
                     seatElement.classList.add('occupied');
                 }
@@ -81,6 +82,7 @@ function renderHall() {
 
                 if (!seatElement.classList.contains('occupied')) {
                     seatElement.addEventListener('click', () => {
+                        // СОХРАНЕНО: Возможность выбирать сразу несколько мест
                         if (seatElement.classList.contains('selected')) {
                             seatElement.classList.remove('selected');
                             selectedSeats = selectedSeats.filter(item => item.id !== seatId);
@@ -114,21 +116,21 @@ function updateSummary() {
     validateRegistration();
 }
 
-// ДОБАВЛЕНО: Строгая проверка аккаунта (логин >= 3, пароль >= 4) + выбор мест
+// ДОБАВЛЕНО: Валидация заглушки создания аккаунта
 function validateRegistration() {
     const isFormFilled = loginInput.value.trim().length >= 3 && passwordInput.value.trim().length >= 4;
     const hasSeats = selectedSeats.length > 0;
 
     if (!hasSeats) {
-        statusMsg.textContent = "⚠️ Выберите места на схеме зала";
+        statusMsg.textContent = "Выберите места на схеме зала";
         statusMsg.style.color = "#ff7675";
         bookBtn.disabled = true;
     } else if (!isFormFilled) {
-        statusMsg.textContent = "⚠️ Создайте аккаунт (Логин от 3 симв., Пароль от 4 симв.)";
+        statusMsg.textContent = "Заполните личный кабинет (Логин от 3 симв., Пароль от 4 симв.)";
         statusMsg.style.color = "#ff7675";
         bookBtn.disabled = true;
     } else {
-        statusMsg.textContent = "✅ Аккаунт готов. Можно оформлять заказ!";
+        statusMsg.textContent = "Аккаунт готов к регистрации. Можно оформлять заказ!";
         statusMsg.style.color = "#2ecc71";
         bookBtn.disabled = false;
     }
@@ -155,6 +157,7 @@ function initMoviesSelection() {
     });
 }
 
+// ДОБАВЛЕНО: Формирование чека + Ошибка шлюза оплаты
 bookBtn.addEventListener('click', () => {
     const activeMovie = moviesData[currentMovieKey];
     let ticketSum = selectedSeats.reduce((sum, seat) => sum + seat.price, 0);
