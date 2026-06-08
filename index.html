@@ -13,115 +13,117 @@
     </header>
 
     <main class="content-wrapper">
+        <!-- СЕКЦИЯ ПОСТЕРОВ (Расположение из новой версии, ассортимент из старой) -->
         <section class="movies-section">
             <h2>Сегодня в кино</h2>
             <div id="movies-grid" class="movies-grid">
                 
-                <div class="movie-card active" data-movie="bogatiry">
-                    <img src="bogatiryy.jpg" alt="Три богатыря">
-                    <h3>Три богатыря</h3>
-                    <p class="price">380 ₽</p>
+                <div class="movie-card" data-movie="bogatiry">
+                    <img src="bogatyry.jpg" alt="Богатыри">
+                    <h3>Богатыри</h3>
+                    <p class="price">350 ₽</p>
                 </div>
 
                 <div class="movie-card" data-movie="karamazovy">
                     <img src="brothers-karamazovy.jpg" alt="Братья Карамазовы">
                     <h3>Братья Карамазовы</h3>
-                    <p class="price">450 ₽</p>
+                    <p class="price">400 ₽</p>
                 </div>
 
                 <div class="movie-card" data-movie="dengi">
                     <img src="gryznyedengi.jpg" alt="Грязные деньги">
                     <h3>Грязные деньги</h3>
-                    <p class="price">420 ₽</p>
+                    <p class="price">380 ₽</p>
                 </div>
 
                 <div class="movie-card" data-movie="bill">
                     <img src="killbill.jpg" alt="Убить Билла">
                     <h3>Убить Билла</h3>
-                    <p class="price">500 ₽</p>
+                    <p class="price">450 ₽</p>
                 </div>
 
                 <div class="movie-card" data-movie="komers">
                     <img src="komers.jpg" alt="Комерс">
                     <h3>Комерс</h3>
-                    <p class="price">400 ₽</p>
+                    <p class="price">350 ₽</p>
                 </div>
 
                 <div class="movie-card" data-movie="koshey">
                     <img src="koshey.jpg" alt="Кощей">
                     <h3>Кощей</h3>
-                    <p class="price">420 ₽</p>
+                    <p class="price">380 ₽</p>
                 </div>
 
                 <div class="movie-card" data-movie="leo">
                     <img src="leoandtig.jpg" alt="Лео и Тиг">
                     <h3>Лео и Тиг</h3>
-                    <p class="price">350 ₽</p>
+                    <p class="price">300 ₽</p>
                 </div>
 
                 <div class="movie-card" data-movie="michael">
                     <img src="Michael_(2026_film)_poster.jpg" alt="Майкл (2026)">
                     <h3>Майкл (2026)</h3>
-                    <p class="price">650 ₽</p>
+                    <p class="price">500 ₽</p>
                 </div>
 
                 <div class="movie-card" data-movie="momo">
                     <img src="momo.jpg" alt="Момо">
                     <h3>Момо</h3>
-                    <p class="price">480 ₽</p>
+                    <p class="price">420 ₽</p>
                 </div>
 
                 <div class="movie-card" data-movie="propast">
                     <img src="propast.jpg" alt="Пропасть">
                     <h3>Пропасть</h3>
-                    <p class="price">450 ₽</p>
+                    <p class="price">390 ₽</p>
                 </div>
 
             </div>
         </section>
 
-        <section class="booking-section">
-            <h2>Выберите места и услуги</h2>
+        <!-- ОТДЕЛЬНОЕ ОКНО БРОНИРОВАНИЯ (Появляется после выбора фильма) -->
+        <section id="booking-window" class="booking-section hidden">
+            <h2 id="booking-title">Выбор мест и услуг: </h2>
             
             <div class="hall-container">
-                <div class="screen-line"></div>
-                <div class="screen-text">ЭКРАН</div>
+                <!-- Твоя белая полоса возвращена, текст приподнят через CSS -->
+                <div class="screen">ЭКРАН</div>
                 <div id="cinema-hall" class="cinema-hall"></div>
             </div>
 
-            <div class="services-container">
-                <h3>Дополнительные услуги</h3>
-                <div class="services-grid">
-                    <label class="service-item">
-                        <input type="checkbox" class="service-checkbox" data-price="350" value="popcorn">
-                        <span class="service-name">Большой попкорн (+350 ₽)</span>
+            <!-- ВЫБОР КОМБО НАБОРОВ (Цены июня 2026) -->
+            <div class="combo-container">
+                <h3>Выберите комбо-наборы</h3>
+                <div class="combo-grid">
+                    <label class="combo-item">
+                        <input type="checkbox" class="combo-checkbox" data-price="450" value="combo-classic">
+                        <span>Классик Комбо (Попкорн М + Кола 0.5) — 450 ₽</span>
                     </label>
-                    <label class="service-item">
-                        <input type="checkbox" class="service-checkbox" data-price="180" value="cola">
-                        <span class="service-name">Кола 0.5л (+180 ₽)</span>
+                    <label class="combo-item">
+                        <input type="checkbox" class="combo-checkbox" data-price="650" value="combo-double">
+                        <span>Дабл Комбо (Попкорн L + 2 Колы 0.5) — 650 ₽</span>
                     </label>
-                    <label class="service-item">
-                        <input type="checkbox" class="service-checkbox" data-price="200" value="glasses">
-                        <span class="service-name">3D-Очки (+200 ₽)</span>
+                    <label class="combo-item">
+                        <input type="checkbox" class="combo-checkbox" data-price="380" value="combo-kids">
+                        <span>Детский Комбо (Попкорн S + Напиток + Игрушка) — 380 ₽</span>
                     </label>
-                </div>
-            </div>
-
-            <div class="auth-container">
-                <h3>Личный кабинет для начисления бонусов</h3>
-                <div class="auth-form">
-                    <input type="text" id="auth-login" placeholder="Введите ваш логин или Email" required>
-                    <input type="password" id="auth-password" placeholder="Введите пароль" required>
-                    <p id="auth-status-msg" class="status-msg-neutral">Для завершения бронирования заполните поля выше</p>
                 </div>
             </div>
 
             <div class="booking-summary">
-                <div class="summary-text-block">
+                <div>
                     <p>Выбрано мест: <span id="selected-count">0</span></p>
                     <p>Итого к оплате: <span id="total-price">0</span> ₽</p>
                 </div>
-                <button id="book-btn" class="book-button" disabled>Забронировать</button>
+                <button id="book-btn" class="book-button" disabled>Оформить заказ</button>
+            </div>
+
+            <!-- ЗОНА ДЛЯ ЧЕКА И ОШИБКИ ОПЛАТЫ -->
+            <div id="invoice-block" class="invoice-block hidden">
+                <div id="invoice-details" class="invoice-details"></div>
+                <div class="error-payment-msg">
+                    ⚠️ Ошибка шлюза оплаты: Не удалось провести транзакцию. Пожалуйста, попробуйте другую карту или обратитесь в поддержку банка.
+                </div>
             </div>
         </section>
     </main>
