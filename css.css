@@ -16,7 +16,7 @@ body {
 .content-wrapper {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 15px;
 }
 
 h2 {
@@ -25,15 +25,20 @@ h2 {
     margin-bottom: 25px;
 }
 
-/* ==========================================================================
-   СОХРАНЕНО: Твое любимое расположение постеров (Grid)
-   ========================================================================== */
+/* Сетка постеров */
 .movies-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 15px;
     width: 100%;
-    margin-bottom: 50px;
+    margin-bottom: 40px;
+}
+
+@media (min-width: 480px) {
+    .movies-grid {
+        grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+        gap: 25px;
+    }
 }
 
 .movie-card {
@@ -50,17 +55,21 @@ h2 {
 
 .movie-card img {
     width: 100%;
-    height: 320px;
+    height: 240px;
     object-fit: cover;
 }
 
+@media (min-width: 480px) {
+    .movie-card img { height: 320px; }
+}
+
 .movie-card h3 {
-    margin: 12px;
-    font-size: 1rem;
+    margin: 10px;
+    font-size: 0.95rem;
 }
 
 .movie-card .price {
-    margin: 0 12px 12px 12px;
+    margin: 0 10px 10px 10px;
     color: #00cec9;
     font-weight: bold;
 }
@@ -70,32 +79,37 @@ h2 {
     border-color: #6c5ce7;
 }
 
-/* ==========================================================================
-   ОКНО ВЫБОРA МЕСТ И КОМБО
-   ========================================================================== */
+/* Окно бронирования */
 .booking-section {
     background-color: #161626;
-    padding: 30px;
+    padding: 20px;
     border-radius: 16px;
     border: 1px solid #232336;
     margin-top: 30px;
 }
 
-.hidden {
-    display: none !important;
+@media (min-width: 768px) {
+    .booking-section { padding: 30px; }
 }
 
+.hidden { display: none !important; }
+
+/* Адаптивный контейнер зала */
 .hall-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 40px 0;
+    margin: 30px 0;
+    overflow-x: auto;
+    width: 100%;
+    padding: 10px 0;
+    -webkit-overflow-scrolling: touch;
 }
 
-/* СОХРАНЕНО: Твоя белая полоса экрана, но текст приподнят для исключения наложения */
 .screen {
-    width: 70%;
-    min-width: 300px;
+    width: 90%;
+    max-width: 600px;
+    min-width: 580px;
     height: 8px;
     background-color: #ffffff;
     box-shadow: 0 6px 30px rgba(255, 255, 255, 0.7);
@@ -113,6 +127,7 @@ h2 {
     display: flex;
     flex-direction: column;
     gap: 12px;
+    min-width: 580px;
 }
 
 .hall-row {
@@ -129,58 +144,96 @@ h2 {
     cursor: pointer;
 }
 
-.seat.selected {
-    background-color: #00cec9 !important;
-}
-
+.seat.selected { background-color: #00cec9 !important; }
 .seat.occupied {
     background-color: #1c1c24;
     cursor: not-allowed;
     pointer-events: none;
 }
 
-.passage {
-    width: 25px;
-}
+.passage { width: 25px; }
 
-.seat.vip {
+/* Двойное кресло вместо VIP с сохранением сетки */
+.seat.double-seat {
     grid-column: span 2;
     width: 100%;
-    background-color: #d2a136;
+    background-color: #4a4a6a;
+    border-radius: 8px 8px 3px 3px;
 }
 
-/* Комбо-секция */
-.combo-container {
+/* Кинобар */
+.bar-container, .auth-container {
     margin-top: 30px;
     padding-top: 20px;
     border-top: 1px solid #252538;
 }
 
-.combo-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-top: 15px;
+.bar-category { margin-bottom: 25px; }
+.bar-category h4 {
+    margin: 5px 0 12px 0;
+    color: #6c5ce7;
+    font-size: 1.05rem;
 }
 
-.combo-item {
+.bar-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+}
+
+@media (min-width: 768px) {
+    .bar-grid { grid-template-columns: 1fr 1fr; }
+}
+
+.bar-item {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
     background-color: #1c1c30;
-    padding: 15px;
+    padding: 12px;
     border-radius: 8px;
     cursor: pointer;
     border: 1px solid #252538;
+    font-size: 0.9rem;
+    transition: border-color 0.2s;
 }
 
-.combo-checkbox {
+.bar-item:hover { border-color: #00cec9; }
+.bar-checkbox {
     width: 18px;
     height: 18px;
     accent-color: #00cec9;
 }
 
-/* Касса и финальный чек */
+/* Форма авторизации */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 400px;
+    margin-top: 15px;
+}
+
+.auth-form input {
+    background-color: #1c1c30;
+    border: 1px solid #252538;
+    padding: 12px;
+    border-radius: 8px;
+    color: white;
+}
+
+.auth-form input:focus {
+    border-color: #6c5ce7;
+    outline: none;
+}
+
+#auth-status-msg {
+    font-size: 0.85rem;
+    color: #ff7675;
+    margin: 5px 0;
+}
+
+/* Касса */
 .booking-summary {
     display: flex;
     justify-content: space-between;
@@ -194,7 +247,7 @@ h2 {
     background-color: #6c5ce7;
     color: white;
     border: none;
-    padding: 12px 28px;
+    padding: 14px 28px;
     font-size: 1rem;
     font-weight: bold;
     border-radius: 8px;
@@ -207,6 +260,7 @@ h2 {
     cursor: not-allowed;
 }
 
+/* Чек */
 .invoice-block {
     margin-top: 30px;
     padding: 20px;
@@ -218,9 +272,9 @@ h2 {
 .invoice-details {
     font-family: monospace;
     white-space: pre-wrap;
-    line-height: 1.6;
-    margin-bottom: 20px;
     color: #d1d1e0;
+    font-size: 0.9rem;
+    line-height: 1.5;
 }
 
 .error-payment-msg {
@@ -229,5 +283,6 @@ h2 {
     background-color: rgba(231, 76, 60, 0.1);
     padding: 15px;
     border-radius: 6px;
+    margin-top: 15px;
     border: 1px dashed #e74c3c;
 }
