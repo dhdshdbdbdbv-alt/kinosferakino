@@ -14,7 +14,7 @@ const moviesData = {
 let currentMovieKey = "";
 let selectedSeats = [];
 
-// Последние два ряда содержат сдвоенные кресла (по 2 единицы вместо одного старого VIP-дивана)
+// ИСПРАВЛЕНО: Полностью одинаковые стандартные ряды по всему залу (Никаких VIP/Double)
 const hallTopology = [
     [1,1,1,1,1,1, 0, 1,1,1,1,1,1,1,1,1,1, 0, 1,1,1,1,1,1],
     [1,1,1,1,1,1, 0, 1,1,1,1,1,1,1,1,1,1, 0, 1,1,1,1,1,1],
@@ -24,8 +24,8 @@ const hallTopology = [
     [1,1,1,1,1,1, 0, 1,1,1,1,1,1,1,1,1,1, 0, 1,1,1,1,1,1],
     [1,1,1,1,1,1, 0, 1,1,1,1,1,1,1,1,1,1, 0, 1,1,1,1,1,1],
     [1,1,1,1,1,1, 0, 1,1,1,1,1,1,1,1,1,1, 0, 1,1,1,1,1,1],
-    ['D', 'D', 'D', 0, 'D', 'D', 'D', 'D', 'D', 0, 'D', 'D', 'D'],
-    ['D', 'D', 'D', 0, 'D', 'D', 'D', 'D', 'D', 0, 'D', 'D', 'D']
+    [1,1,1,1,1,1, 0, 1,1,1,1,1,1,1,1,1,1, 0, 1,1,1,1,1,1],
+    [1,1,1,1,1,1, 0, 1,1,1,1,1,1,1,1,1,1, 0, 1,1,1,1,1,1]
 ];
 
 const bookingWindow = document.getElementById('booking-window');
@@ -70,11 +70,7 @@ function renderHall() {
                 const seatId = `${currentRow}-${seatNumber}`;
                 let currentPrice = activeMovie.basePrice;
 
-                if (cellType === 'D') {
-                    seatElement.classList.add('double-seat');
-                }
-
-                // Срабатывание вероятностной генерации 1 к 5 (20%)
+                // ДОБАВЛЕНО: Вероятностная генерация занятых мест 1 к 5 (ровно 20% шанс)
                 if (Math.random() < 0.2) {
                     seatElement.classList.add('occupied');
                 }
@@ -118,20 +114,21 @@ function updateSummary() {
     validateRegistration();
 }
 
+// ДОБАВЛЕНО: Строгая проверка аккаунта (логин >= 3, пароль >= 4) + выбор мест
 function validateRegistration() {
     const isFormFilled = loginInput.value.trim().length >= 3 && passwordInput.value.trim().length >= 4;
     const hasSeats = selectedSeats.length > 0;
 
     if (!hasSeats) {
-        statusMsg.textContent = "Выберите места на схеме зала";
+        statusMsg.textContent = "⚠️ Выберите места на схеме зала";
         statusMsg.style.color = "#ff7675";
         bookBtn.disabled = true;
     } else if (!isFormFilled) {
-        statusMsg.textContent = "Заполните личный кабинет (Логин от 3 симв., Пароль от 4 симв.)";
+        statusMsg.textContent = "⚠️ Создайте аккаунт (Логин от 3 симв., Пароль от 4 симв.)";
         statusMsg.style.color = "#ff7675";
         bookBtn.disabled = true;
     } else {
-        statusMsg.textContent = "Аккаунт готов к регистрации. Можно оформлять заказ!";
+        statusMsg.textContent = "✅ Аккаунт готов. Можно оформлять заказ!";
         statusMsg.style.color = "#2ecc71";
         bookBtn.disabled = false;
     }
