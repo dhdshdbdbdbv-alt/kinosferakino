@@ -150,9 +150,11 @@ h2 {
 
 .seat.selected { background-color: #00cec9 !important; }
 .seat.occupied {
-    background-color: #1c1c24;
+background: #3d1d1d;       /* Отчетливый темно-бордовый цвет */
+    border: 1px solid #ff5252; /* Тонкая контрастная красная рамка */
     cursor: not-allowed;
     pointer-events: none;
+    opacity: 0.8;
 }
 
 .passage { width: 25px; }
