@@ -1,16 +1,24 @@
+/* БАЗОВЫЕ НАСТРОЙКИ СТИЛЯ */
 body {
     margin: 0;
     padding: 0;
     background: #09090e;
     color: #e2e8f0;
-    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    user-select: none;
 }
 
+.hidden { display: none !important; }
+
+/* ШАПКА САЙТА И СЕЛЕКТОР ГОРОДОВ */
 .cinema-top-bar {
     background: linear-gradient(180deg, #12121c 0%, #09090e 100%);
     padding: 20px;
-    text-align: center;
     border-bottom: 1px solid #1f1f33;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
 }
 
 .cinema-top-bar .logo {
@@ -18,6 +26,9 @@ body {
     font-weight: 900;
     letter-spacing: 3px;
     color: #fff;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .cinema-top-bar .logo span {
@@ -25,32 +36,77 @@ body {
     text-shadow: 0 0 15px rgba(124, 77, 255, 0.6);
 }
 
+.top-bar-left { z-index: 100; }
+
+.city-selector-container { position: relative; }
+
+.city-selector-btn {
+    background: #161626;
+    border: 1px solid #1f1f33;
+    color: #a0aec0;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.city-selector-btn:hover { color: #fff; border-color: #7c4dff; }
+
+.city-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    background: #11111f;
+    border: 1px solid #1f1f33;
+    border-radius: 8px;
+    min-width: 200px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+    display: none;
+    flex-direction: column;
+    padding: 6px 0;
+    z-index: 999;
+}
+
+.city-selector-container.open .city-dropdown-menu { display: flex; }
+
+.city-option {
+    padding: 12px 16px;
+    color: #a0aec0;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+.city-option:hover { color: #fff; background: rgba(124, 77, 255, 0.2); }
+
+/* ДЛЯ ПК: СЕТКА ФИЛЬМОВ */
 .main-layout {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 15px;
+    padding: 20px;
 }
 
 .section-title {
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     text-transform: uppercase;
     letter-spacing: 1px;
     border-left: 4px solid #7c4dff;
     padding-left: 12px;
-    margin: 30px 0 20px 0;
+    margin: 20px 0;
 }
 
-.block-subtitle {
-    font-size: 1.2rem;
-    margin-bottom: 15px;
-    color: #fff;
-}
+.section-subtitle-mobile { display: none; }
+.mobile-sub-navigation { display: none; }
+.top-bar-right { display: block; }
+.movie-meta-tags { display: none; }
 
-/* Фильмы */
 .movies-responsive-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 25px;
 }
 
 .movie-premium-card {
@@ -59,12 +115,13 @@ body {
     overflow: hidden;
     border: 1px solid #1f1f33;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.25s ease;
 }
 
 .movie-premium-card:hover, .movie-premium-card.active {
     border-color: #7c4dff;
-    transform: translateY(-4px);
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(124, 77, 255, 0.2);
 }
 
 .poster-wrapper {
@@ -79,199 +136,333 @@ body {
     object-fit: cover;
 }
 
-.movie-info {
-    padding: 12px;
-}
+.movie-info { padding: 15px; }
+.movie-info h3 { margin: 0 0 10px 0; font-size: 1.05rem; color: #fff; }
 
-.movie-info h3 {
-    margin: 0 0 8px 0;
-    font-size: 0.95rem;
-    color: #fff;
-}
-
-.badge-price {
+.badge-price-pc {
+    display: inline-block;
     background: rgba(0, 230, 118, 0.1);
     color: #00e676;
-    padding: 4px 8px;
+    padding: 4px 10px;
     border-radius: 6px;
     font-size: 0.85rem;
     font-weight: 700;
 }
 
-/* Рабочая область */
+/* ЗОНА СЕАНСОВ И МЕТАДАННЫХ */
 .booking-workspace {
     background: #11111f;
     border: 1px solid #1f1f33;
     border-radius: 16px;
-    padding: 25px;
-    margin-top: 30px;
+    padding: 30px;
+    margin-top: 40px;
 }
 
-.hidden { display: none !important; }
+.dynamic-main-title { font-size: 1.8rem; color: #fff; margin-bottom: 10px; }
 
+.movie-extended-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    background: #161626;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    border: 1px solid #1f1f33;
+}
+
+.meta-item { font-size: 0.95rem; color: #a0aec0; }
+.meta-item strong { color: #7c4dff; }
+
+.block-subtitle { font-size: 1.25rem; margin: 20px 0 15px 0; color: #fff; font-weight: 600; }
+
+.session-time-slots { display: flex; gap: 12px; flex-wrap: wrap; }
+
+.time-slot-btn {
+    background: #222235;
+    border: 1px solid #32324d;
+    color: #fff;
+    padding: 10px 22px;
+    border-radius: 25px; /* Капсулы */
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.time-slot-btn:hover { border-color: #7c4dff; background: rgba(124, 77, 255, 0.1); }
+.time-slot-btn.active {
+    background: #7c4dff !important;
+    border-color: #7c4dff !important;
+    box-shadow: 0 0 12px rgba(124, 77, 255, 0.5);
+}
+
+.section-divider { border: 0; height: 1px; background: #1f1f33; margin: 35px 0; }
+
+/* ИНТЕРАКТИВНЫЙ ЗАЛ (22 СТОЛБЦА С ПРОХОДАМИ) */
 .interactive-hall-viewport {
     width: 100%;
     overflow-x: auto;
     background: #0b0b14;
-    padding: 30px 15px;
+    padding: 40px 20px;
     border-radius: 12px;
+    border: 1px solid #1f1f33;
 }
 
 .interactive-hall-wrapper {
-    min-width: 750px;
+    min-width: 800px;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
 .cinema-glowing-screen {
-    width: 80%;
+    width: 75%;
     height: 4px;
     background: #fff;
-    box-shadow: 0 4px 20px #fff;
+    box-shadow: 0 4px 25px #fff;
     text-align: center;
-    color: rgba(255,255,255,0.2);
-    font-size: 0.7rem;
-    letter-spacing: 4px;
-    margin-bottom: 35px;
+    color: rgba(255, 255, 255, 0.2);
+    font-size: 0.75rem;
+    letter-spacing: 6px;
+    margin-bottom: 40px;
 }
 
-.dynamic-hall-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
+.dynamic-hall-grid { display: flex; flex-direction: column; gap: 10px; }
 
-/* Ваша оригинальная сетка */
+/* Сетка под схему: 6 мест, проход, 10 мест, проход, 6 мест */
 .hall-row {
     display: grid;
-    grid-template-columns: repeat(6, 28px) 25px repeat(10, 28px) 25px repeat(6, 28px);
+    grid-template-columns: repeat(6, 30px) 25px repeat(10, 30px) 25px repeat(6, 30px);
     gap: 6px;
     align-items: center;
 }
 
 .seat {
-    width: 28px;
-    height: 26px;
+    width: 30px;
+    height: 28px;
     background-color: #3b3b54;
-    border-radius: 6px 6px 3px 3px;
+    border-radius: 6px 6px 4px 4px;
     cursor: pointer;
-    transition: background 0.15s;
+    transition: background 0.15s ease;
 }
 
-.seat.selected { 
-    background-color: #00cec9 !important; 
-    box-shadow: 0 0 8px rgba(0, 206, 201, 0.5); 
-}
+.seat.selected { background-color: #00cec9 !important; box-shadow: 0 0 10px rgba(0, 206, 201, 0.6); }
 
-/* Контрастные занятые места */
 .seat.occupied {
-    background: #3d1d1d !important;
+    background: #2a1818 !important;
     border: 1px solid #ff5252 !important;
     cursor: not-allowed;
-    pointer-events: none;
-    opacity: 0.8 !important;
+    opacity: 0.6;
 }
 
 .passage { width: 25px; }
 
-/* Кинобар и поля */
-.bar-container, .auth-container {
-    margin-top: 25px;
-    padding-top: 20px;
-    border-top: 1px solid #1f1f33;
-}
-
-.bar-flex-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-}
+/* КИНОБАР */
+.bar-container { margin-top: 35px; border-top: 1px solid #1f1f33; padding-top: 25px; }
+.bar-grid-sections { display: flex; flex-direction: column; gap: 25px; }
+.bar-section h4 { color: #7c4dff; margin: 0 0 12px 0; font-size: 1.05rem; }
+.bar-flex-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
 .bar-card-item {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     background: #161626;
-    padding: 12px;
+    padding: 14px;
     border-radius: 8px;
+    border: 1px solid #1f1f33;
     cursor: pointer;
 }
 
-.auth-box-fields {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-width: 320px;
-}
+.bar-card-item input { width: 18px; height: 18px; accent-color: #7c4dff; }
+.bar-card-item span { font-size: 0.95rem; color: #e2e8f0; }
+
+/* ЛИЧНЫЙ КАБИНЕТ */
+.auth-container { margin-top: 35px; border-top: 1px solid #1f1f33; padding-top: 25px; }
+.auth-box-fields { display: flex; flex-direction: column; gap: 12px; max-width: 360px; }
 
 .auth-box-fields input {
     background: #161626;
     border: 1px solid #1f1f33;
-    padding: 12px;
+    padding: 14px;
     border-radius: 8px;
     color: #fff;
+    font-size: 1rem;
 }
+
+.auth-box-fields input:focus { border-color: #7c4dff; outline: none; }
 
 .action-accent-btn {
     background: #7c4dff;
     color: #fff;
     border: none;
-    padding: 12px;
+    padding: 14px;
     border-radius: 8px;
     cursor: pointer;
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 1rem;
+    transition: background 0.2s;
 }
 
-.status-warning { font-size: 0.85rem; color: #ff5252; }
+.action-accent-btn:hover { background: #693be6; }
+.status-warning { font-size: 0.9rem; color: #ff5252; margin: 4px 0 0 0; }
 
-/* Касса и Чеки */
+/* КАССОВАЯ ПАНЕЛЬ */
 .checkout-sticky-panel {
-    margin-top: 25px;
+    margin-top: 40px;
+    background: #161626;
+    border: 1px solid #1f1f33;
+    padding: 20px 25px;
+    border-radius: 12px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.final-price-row { font-size: 1.3rem; font-weight: 700; }
+.left-totals p { margin: 4px 0; color: #a0aec0; font-size: 1rem; }
+.final-price-row { font-size: 1.5rem; font-weight: 800; color: #fff !important; }
 .final-price-row span { color: #00e676; }
 
 .main-order-submit {
     background: #00e676;
     color: #000;
     border: none;
-    padding: 14px 28px;
-    font-weight: 700;
+    padding: 16px 36px;
+    font-weight: 800;
+    font-size: 1.1rem;
     border-radius: 8px;
     cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-.main-order-submit:disabled {
-    background: #222230;
-    color: #555;
-    cursor: not-allowed;
-}
+.main-order-submit:disabled { background: #222230; color: #555; cursor: not-allowed; box-shadow: none; }
 
+/* ЭЛЕКТРОННЫЙ ЧЕК И БАНКОВСКАЯ ОШИБКА */
 .payment-receipt-block {
-    margin-top: 25px;
+    margin-top: 35px;
     background: #0b0b14;
-    padding: 20px;
-    border-radius: 8px;
+    padding: 25px;
+    border-radius: 12px;
     border-left: 4px solid #ff5252;
+    border: 1px solid #1f1f33;
 }
 
-.receipt-text-container {
-    font-family: monospace;
-    white-space: pre-wrap;
-    color: #aaa;
-}
-
+.receipt-text-container { font-family: monospace; white-space: pre-wrap; color: #c3c7db; font-size: 0.95rem; line-height: 1.4; }
 .secure-error-banner {
-    margin-top: 15px;
-    background: rgba(255, 82, 82, 0.1);
+    margin-top: 20px;
+    background: rgba(255, 82, 82, 0.08);
     border: 1px dashed #ff5252;
     color: #ff5252;
-    padding: 12px;
-    border-radius: 6px;
-    font-weight: 600;
+    padding: 15px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* ==========================================================================
+   АДАПТИВНАЯ МОБИЛЬНАЯ ВЕРСТКА ПОД СТИЛЬ ПРИЛОЖЕНИЯ КИНОТЕАТР.РУ
+   ========================================================================== */
+@media (max-width: 768px) {
+    body { background: #130f22 !important; }
+
+    .cinema-top-bar {
+        display: grid !important;
+        grid-template-columns: auto 1fr auto;
+        grid-template-rows: auto auto;
+        row-gap: 15px;
+        padding: 12px 16px !important;
+        background: #18142c !important;
+        border-bottom: 2px solid #211c38 !important;
+    }
+
+    .cinema-top-bar .logo {
+        position: static !important;
+        transform: none !important;
+        grid-column: 2;
+        justify-self: center;
+        font-size: 1.4rem !important;
+    }
+
+    .top-bar-left { grid-column: 1; }
+    .top-bar-right { grid-column: 3; display: block !important; }
+
+    .mobile-login-link {
+        display: block;
+        background: transparent;
+        border: none;
+        color: #e2e8f0;
+        font-size: 0.95rem;
+    }
+
+    /* Мобильный скролл навигации */
+    .mobile-sub-navigation {
+        display: flex;
+        grid-column: 1 / span 3;
+        grid-row: 2;
+        gap: 20px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+    }
+    .mobile-sub-navigation::-webkit-scrollbar { display: none; }
+
+    .sub-nav-item {
+        color: #8b86a3;
+        text-decoration: none;
+        font-size: 0.95rem;
+        white-space: nowrap;
+        padding-bottom: 6px;
+        border-bottom: 2px solid transparent;
+    }
+
+    .sub-nav-item.active { color: #fff; border-bottom-color: #7c4dff; }
+
+    .section-title { border-left: none !important; padding-left: 0 !important; font-size: 1.3rem !important; margin: 20px 0 4px 16px !important; font-weight: 700; }
+    .section-subtitle-mobile { display: block; color: #8b86a3; font-size: 0.9rem; margin: 0 0 16px 16px; }
+
+    /* МОБИЛЬНАЯ ГОРИЗОНТАЛЬНАЯ КАРУСЕЛЬ КАРТОЧЕК */
+    .movies-responsive-grid {
+        display: flex !important;
+        flex-direction: row !important;
+        overflow-x: auto !important;
+        scroll-snap-type: x mandatory;
+        gap: 14px !important;
+        padding: 0 16px 20px 16px !important;
+    }
+    .movies-responsive-grid::-webkit-scrollbar { display: none; }
+
+    .movie-premium-card {
+        flex: 0 0 150px !important;
+        scroll-snap-align: start;
+        background: transparent !important;
+        border: none !important;
+        border-radius: 0 !important;
+        transform: none !important;
+        padding: 0 !important;
+    }
+
+    .badge-price-pc { display: none !important; }
+    .poster-wrapper { border-radius: 10px !important; overflow: hidden; }
+    .movie-info { padding: 8px 0 0 0 !important; }
+    .movie-info h3 { font-size: 0.95rem !important; font-weight: 400; margin-top: 4px !important; line-height: 1.3; }
+
+    /* Отображение скрытых на ПК мобильных тегов под изображением */
+    .movie-meta-tags { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
+
+    .age-badge {
+        font-size: 0.75rem;
+        background: #211c38;
+        border: 1px solid #3d3561;
+        color: #a09cb4;
+        padding: 1px 4px;
+        border-radius: 4px;
+        font-weight: 600;
+    }
+
+    .movie-genres { font-size: 0.8rem; color: #8b86a3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .booking-workspace { padding: 20px 16px; border-radius: 0; border-left: none; border-right: none; }
+    .bar-flex-grid { grid-template-columns: 1fr; }
+    .checkout-sticky-panel { flex-direction: column; gap: 15px; align-items: flex-start; }
+    .main-order-submit { width: 100%; text-align: center; }
 }
