@@ -1,468 +1,662 @@
-/* БАЗОВЫЕ НАСТРОЙКИ СТИЛЯ */
+/* ОБНУЛЕНИЕ И БАЗОВЫЕ НАСТРОЙКИ */
 body {
     margin: 0;
     padding: 0;
-    background: #09090e;
-    color: #e2e8f0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    user-select: none;
+    background: #06060b;
+    color: #f1f5f9;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
 }
-
 .hidden { display: none !important; }
 
-/* ШАПКА САЙТА И СЕЛЕКТОР ГОРОДОВ */
+/* ВЕРХНЯЯ ПАНЕЛЬ И НАВИГАЦИЯ */
 .cinema-top-bar {
-    background: linear-gradient(180deg, #12121c 0%, #09090e 100%);
-    padding: 20px;
-    border-bottom: 1px solid #1f1f33;
+    background: #0f0f1a;
+    padding: 15px 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    position: relative;
+    border-bottom: 1px solid #1e1e2f;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
-
 .cinema-top-bar .logo {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     font-weight: 900;
-    letter-spacing: 3px;
-    color: #fff;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+    letter-spacing: 2px;
 }
-
 .cinema-top-bar .logo span {
     color: #7c4dff;
-    text-shadow: 0 0 15px rgba(124, 77, 255, 0.6);
+    text-shadow: 0 0 10px rgba(124, 77, 255, 0.5);
 }
-
-.top-bar-left { z-index: 100; }
-
 .city-selector-container { position: relative; }
-
 .city-selector-btn {
     background: #161626;
-    border: 1px solid #1f1f33;
-    color: #a0aec0;
-    font-size: 0.95rem;
+    border: 1px solid #2d2d44;
+    color: #cbd5e1;
+    padding: 8px 14px;
+    border-radius: 6px;
     cursor: pointer;
+    font-weight: 600;
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 10px 16px;
-    border-radius: 8px;
+}
+.city-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #0f0f1a;
+    border: 1px solid #2d2d44;
+    border-radius: 6px;
+    display: none;
+    flex-direction: column;
+    z-index: 101;
+    margin-top: 5px;
+    min-width: 160px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+.city-selector-container.open .city-dropdown-menu { display: flex; }
+.city-option {
+    padding: 10px 15px;
+    cursor: pointer;
+    color: #94a3b8;
+    transition: background 0.2s, color 0.2s;
+}
+.city-option:hover {
+    background: #7c4dff;
+    color: #fff;
+}
+.mobile-login-link {
+    background: transparent;
+    border: 1px solid #7c4dff;
+    color: #7c4dff;
+    padding: 6px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+.mobile-login-link:hover {
+    background: rgba(124, 77, 255, 0.1);
+}
+
+/* СЕТКА КАТАЛОГА ФИЛЬМОВ С HOVER-ЭФФЕКТОМ */
+.main-layout {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+.section-title {
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+    border-left: 5px solid #7c4dff;
+    padding-left: 15px;
+    font-weight: 800;
+}
+.movies-ultimate-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 30px;
+}
+
+/* КАРТОЧКА ФИЛЬМА */
+.movie-ultimate-card {
+    background: #0f0f1a;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid #1e1e2f;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), border-color 0.3s;
+    aspect-ratio: 2/3;
+}
+.movie-ultimate-card:hover {
+    transform: translateY(-5px);
+    border-color: #7c4dff;
+    box-shadow: 0 10px 20px rgba(124, 77, 255, 0.15);
+}
+.card-poster-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+.movie-ultimate-card:hover .card-poster-img {
+    transform: scale(1.03);
+    filter: blur(4px) brightness(0.25);
+}
+
+/* ОВЕРЛЕЙ ПРИ НАВЕДЕНИИ */
+.card-hover-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    background: linear-gradient(to top, rgba(15,15,26,0.95) 60%, rgba(15,15,26,0.4) 100%);
+}
+.movie-ultimate-card:hover .card-hover-overlay {
+    opacity: 1;
+    pointer-events: auto;
+}
+.hover-title {
+    font-size: 1.15rem;
+    margin: 0 0 8px 0;
+    color: #fff;
+    font-weight: 700;
+    line-height: 1.3;
+}
+.hover-meta {
+    font-size: 0.85rem;
+    color: #cbd5e1;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+.hover-badge-age {
+    background: #3b3b54;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 0.75rem;
+}
+.hover-genre {
+    color: #94a3b8;
+    font-size: 0.8rem;
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+.hover-sessions-label {
+    font-size: 0.75rem;
+    color: #7c4dff;
+    font-weight: bold;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.hover-sessions-list {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+.hover-session-badge {
+    background: rgba(124, 77, 255, 0.15);
+    border: 1px solid rgba(124, 77, 255, 0.4);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    color: #b499ff;
     font-weight: 600;
 }
 
-.city-selector-btn:hover { color: #fff; border-color: #7c4dff; }
-
-.city-dropdown-menu {
-    position: absolute;
-    top: calc(100% + 5px);
+/* ПОЛНОЭКРАННЫЙ СЛОЙ БРОНИРОВАНИЯ (MODAL OVERLAY) */
+.booking-modal-overlay {
+    position: fixed;
+    top: 0;
     left: 0;
-    background: #11111f;
-    border: 1px solid #1f1f33;
-    border-radius: 8px;
-    min-width: 200px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
-    display: none;
-    flex-direction: column;
-    padding: 6px 0;
-    z-index: 999;
-}
-
-.city-selector-container.open .city-dropdown-menu { display: flex; }
-
-.city-option {
-    padding: 12px 16px;
-    color: #a0aec0;
-    font-size: 0.95rem;
-    cursor: pointer;
-}
-
-.city-option:hover { color: #fff; background: rgba(124, 77, 255, 0.2); }
-
-/* ДЛЯ ПК: СЕТКА ФИЛЬМОВ */
-.main-layout {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.section-title {
-    font-size: 1.6rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    border-left: 4px solid #7c4dff;
-    padding-left: 12px;
-    margin: 20px 0;
-}
-
-.section-subtitle-mobile { display: none; }
-.mobile-sub-navigation { display: none; }
-.top-bar-right { display: block; }
-.movie-meta-tags { display: none; }
-
-.movies-responsive-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 25px;
-}
-
-.movie-premium-card {
-    background: #11111f;
-    border-radius: 12px;
-    overflow: hidden;
-    border: 1px solid #1f1f33;
-    cursor: pointer;
-    transition: all 0.25s ease;
-}
-
-.movie-premium-card:hover, .movie-premium-card.active {
-    border-color: #7c4dff;
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(124, 77, 255, 0.2);
-}
-
-.poster-wrapper {
-    position: relative;
-    padding-top: 145%;
-    background: #161626;
-}
-
-.poster-wrapper img {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    object-fit: cover;
-}
-
-.movie-info { padding: 15px; }
-.movie-info h3 { margin: 0 0 10px 0; font-size: 1.05rem; color: #fff; }
-
-.badge-price-pc {
-    display: inline-block;
-    background: rgba(0, 230, 118, 0.1);
-    color: #00e676;
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 0.85rem;
-    font-weight: 700;
-}
-
-/* ЗОНА СЕАНСОВ И МЕТАДАННЫХ */
-.booking-workspace {
-    background: #11111f;
-    border: 1px solid #1f1f33;
-    border-radius: 16px;
-    padding: 30px;
-    margin-top: 40px;
-}
-
-.dynamic-main-title { font-size: 1.8rem; color: #fff; margin-bottom: 10px; }
-
-.movie-extended-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    background: #161626;
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 25px;
-    border: 1px solid #1f1f33;
-}
-
-.meta-item { font-size: 0.95rem; color: #a0aec0; }
-.meta-item strong { color: #7c4dff; }
-
-.block-subtitle { font-size: 1.25rem; margin: 20px 0 15px 0; color: #fff; font-weight: 600; }
-
-.session-time-slots { display: flex; gap: 12px; flex-wrap: wrap; }
-
-.time-slot-btn {
-    background: #222235;
-    border: 1px solid #32324d;
-    color: #fff;
-    padding: 10px 22px;
-    border-radius: 25px; /* Капсулы */
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.time-slot-btn:hover { border-color: #7c4dff; background: rgba(124, 77, 255, 0.1); }
-.time-slot-btn.active {
-    background: #7c4dff !important;
-    border-color: #7c4dff !important;
-    box-shadow: 0 0 12px rgba(124, 77, 255, 0.5);
-}
-
-.section-divider { border: 0; height: 1px; background: #1f1f33; margin: 35px 0; }
-
-/* ИНТЕРАКТИВНЫЙ ЗАЛ (22 СТОЛБЦА С ПРОХОДАМИ) */
-.interactive-hall-viewport {
     width: 100%;
-    overflow-x: auto;
-    background: #0b0b14;
-    padding: 40px 20px;
-    border-radius: 12px;
-    border: 1px solid #1f1f33;
+    height: 100%;
+    background: rgba(5, 5, 11, 0.96);
+    z-index: 200;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
 }
-
-.interactive-hall-wrapper {
-    min-width: 800px;
+.modal-content-wrapper {
+    background: #0f0f1a;
+    border: 1px solid #1e1e2f;
+    width: 100%;
+    max-width: 1300px;
+    height: 90vh;
+    border-radius: 16px;
+    position: relative;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    overflow: hidden;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.6);
 }
-
-.cinema-glowing-screen {
-    width: 75%;
-    height: 4px;
-    background: #fff;
-    box-shadow: 0 4px 25px #fff;
-    text-align: center;
-    color: rgba(255, 255, 255, 0.2);
-    font-size: 0.75rem;
-    letter-spacing: 6px;
-    margin-bottom: 40px;
-}
-
-.dynamic-hall-grid { display: flex; flex-direction: column; gap: 10px; }
-
-/* Сетка под схему: 6 мест, проход, 10 мест, проход, 6 мест */
-.hall-row {
-    display: grid;
-    grid-template-columns: repeat(6, 30px) 25px repeat(10, 30px) 25px repeat(6, 30px);
-    gap: 6px;
-    align-items: center;
-}
-
-.seat {
-    width: 30px;
-    height: 28px;
-    background-color: #3b3b54;
-    border-radius: 6px 6px 4px 4px;
-    cursor: pointer;
-    transition: background 0.15s ease;
-}
-
-.seat.selected { background-color: #00cec9 !important; box-shadow: 0 0 10px rgba(0, 206, 201, 0.6); }
-
-.seat.occupied {
-    background: #2a1818 !important;
-    border: 1px solid #ff5252 !important;
-    cursor: not-allowed;
-    opacity: 0.6;
-}
-
-.passage { width: 25px; }
-
-/* КИНОБАР */
-.bar-container { margin-top: 35px; border-top: 1px solid #1f1f33; padding-top: 25px; }
-.bar-grid-sections { display: flex; flex-direction: column; gap: 25px; }
-.bar-section h4 { color: #7c4dff; margin: 0 0 12px 0; font-size: 1.05rem; }
-.bar-flex-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-.bar-card-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: #161626;
-    padding: 14px;
-    border-radius: 8px;
-    border: 1px solid #1f1f33;
-    cursor: pointer;
-}
-
-.bar-card-item input { width: 18px; height: 18px; accent-color: #7c4dff; }
-.bar-card-item span { font-size: 0.95rem; color: #e2e8f0; }
-
-/* ЛИЧНЫЙ КАБИНЕТ */
-.auth-container { margin-top: 35px; border-top: 1px solid #1f1f33; padding-top: 25px; }
-.auth-box-fields { display: flex; flex-direction: column; gap: 12px; max-width: 360px; }
-
-.auth-box-fields input {
-    background: #161626;
-    border: 1px solid #1f1f33;
-    padding: 14px;
-    border-radius: 8px;
+.close-modal-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: #222235;
+    border: 1px solid #3d3d5c;
     color: #fff;
-    font-size: 1rem;
-}
-
-.auth-box-fields input:focus { border-color: #7c4dff; outline: none; }
-
-.action-accent-btn {
-    background: #7c4dff;
-    color: #fff;
-    border: none;
-    padding: 14px;
+    padding: 10px 20px;
     border-radius: 8px;
     cursor: pointer;
-    font-weight: 700;
-    font-size: 1rem;
+    z-index: 10;
+    font-weight: bold;
     transition: background 0.2s;
 }
+.close-modal-btn:hover {
+    background: #ef4444;
+    border-color: #ef4444;
+}
+.modal-grid-layout {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    height: 100%;
+    width: 100%;
+}
 
-.action-accent-btn:hover { background: #693be6; }
-.status-warning { font-size: 0.9rem; color: #ff5252; margin: 4px 0 0 0; }
+/* ЛЕВЫЙ ИНФО-САЙДБАР */
+.modal-sidebar-info {
+    background: #0a0a12;
+    padding: 40px 30px;
+    border-right: 1px solid #1e1e2f;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+.modal-poster-box {
+    width: 100%;
+    aspect-ratio: 2/3;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 25px;
+    border: 1px solid #2d2d44;
+}
+.modal-poster-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.modal-sidebar-info h2 {
+    font-size: 1.5rem;
+    margin: 0 0 15px 0;
+    color: #fff;
+    font-weight: 800;
+    line-height: 1.3;
+}
+.modal-badges {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.badge-age {
+    background: #7c4dff;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 0.85rem;
+}
+.badge-rating {
+    background: #00e676;
+    color: #000;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 0.85rem;
+}
+.modal-meta-row {
+    margin: 8px 0;
+    font-size: 0.95rem;
+    color: #94a3b8;
+}
+.modal-meta-row span { color: #fff; }
+.modal-description {
+    font-size: 0.9rem;
+    color: #64748b;
+    line-height: 1.6;
+    margin-top: 20px;
+    border-top: 1px solid #1e1e2f;
+    padding-top: 20px;
+}
 
-/* КАССОВАЯ ПАНЕЛЬ */
-.checkout-sticky-panel {
-    margin-top: 40px;
+/* ПРАВАЯ РАБОЧАЯ ОБЛАСТЬ (СТРИМ ШАГОВ) */
+.modal-workspace-flow {
+    padding: 40px;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+.step-container { margin-bottom: 45px; }
+.step-title {
+    font-size: 1.25rem;
+    color: #fff;
+    margin-top: 0;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #2d2d44;
+    padding-bottom: 10px;
+    font-weight: 700;
+}
+
+/* СЕТКА СЕАНСОВ В МОДАЛКЕ */
+.modal-sessions-grid {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+.modal-session-card-btn {
     background: #161626;
-    border: 1px solid #1f1f33;
-    padding: 20px 25px;
+    border: 1px solid #2d2d44;
+    padding: 14px 28px;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    color: #fff;
+    transition: all 0.2s;
+}
+.modal-session-card-btn:hover { border-color: #7c4dff; background: #1c1c30; }
+.modal-session-card-btn.active {
+    background: #7c4dff;
+    border-color: #7c4dff;
+    box-shadow: 0 0 15px rgba(124,77,255,0.4);
+}
+.modal-session-card-btn .time {
+    font-size: 1.25rem;
+    font-weight: bold;
+    display: block;
+}
+.modal-session-card-btn .hall-type {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    margin-top: 6px;
+    letter-spacing: 0.5px;
+}
+.modal-session-card-btn.active .hall-type { color: rgba(255,255,255,0.8); }
+
+/* ИНТЕРАКТИВНЫЙ ИНТЕРФЕЙС ЗАЛА */
+.mobile-zoom-hint {
+    display: none;
+    background: rgba(124,77,255,0.08);
+    color: #b499ff;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+    text-align: center;
+    border: 1px dashed rgba(124,77,255,0.3);
+}
+.interactive-hall-viewport {
+    width: 100%;
+    background: #040408;
+    padding: 40px 20px;
+    border-radius: 14px;
+    border: 1px solid #1e1e2f;
+    box-sizing: border-box;
+    overflow: auto;
+    position: relative;
+}
+.interactive-hall-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transform-origin: center top;
+    min-width: 760px;
+}
+.cinema-glowing-screen {
+    width: 70%;
+    height: 4px;
+    background: #fff;
+    box-shadow: 0 4px 25px rgba(255,255,255,0.8);
+    margin-bottom: 45px;
+    text-align: center;
+    color: rgba(255,255,255,0.2);
+    font-size: 0.75rem;
+    letter-spacing: 8px;
+    font-weight: bold;
+}
+.dynamic-hall-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.hall-row {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+}
+.seat {
+    width: 26px;
+    height: 24px;
+    background: #232335;
+    border-radius: 5px 5px 2px 2px;
+    cursor: pointer;
+    transition: background 0.1s, transform 0.1s;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+.seat:hover:not(.occupied) {
+    background: #464669;
+    transform: scale(1.1);
+}
+.seat.selected {
+    background: #00cec9 !important;
+    border-color: #00cec9;
+    box-shadow: 0 0 10px rgba(0,206,201,0.6);
+}
+.seat.occupied {
+    background: #1c1414 !important;
+    border: 1px solid #ef4444;
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+.passage {
+    width: 24px;
+    pointer-events: none;
+}
+
+/* СЕТКА ПРЕМИУМ КИНОБАРА */
+.bar-matrix-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+.bar-row-item {
+    background: #161626;
+    border: 1px solid #1e1e2f;
     border-radius: 12px;
+    padding: 20px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: border-color 0.2s;
+}
+.bar-row-item:hover { border-color: #2d2d44; }
+.bar-item-details h4 {
+    margin: 0 0 6px 0;
+    font-size: 1.1rem;
+    color: #fff;
+    font-weight: 700;
+}
+.bar-item-details p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #64748b;
+    line-height: 1.4;
+}
+.bar-size-selector-group {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+.size-tab-label {
+    background: #222235;
+    border: 1px solid #3d3d5c;
+    color: #94a3b8;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 700;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 65px;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+.size-tab-label input { display: none; }
+.size-tab-label .size-price {
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-top: 4px;
+    color: #64748b;
+}
+.size-tab-label:has(input:checked) {
+    background: rgba(124,77,255,0.12);
+    border-color: #7c4dff;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(124,77,255,0.2);
+}
+.size-tab-label:has(input:checked) .size-price {
+    color: #00e676;
+}
+
+/* БЛОК АВТОРИЗАЦИИ И РАСЧЕТА СТОИМОСТИ */
+.auth-box-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 30px;
+    background: #0a0a12;
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid #1e1e2f;
+    align-items: center;
+}
+.auth-box-fields input {
+    background: #161626;
+    border: 1px solid #2d2d44;
+    padding: 14px;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.95rem;
+}
+.auth-box-fields input:focus {
+    border-color: #7c4dff;
+    outline: none;
+    background: #1c1c30;
+}
+.action-accent-btn {
+    background: #222235;
+    border: 1px solid #3d3d5c;
+    color: #fff;
+    padding: 14px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.action-accent-btn:hover {
+    background: #7c4dff;
+    border-color: #7c4dff;
+}
+.status-warning {
+    grid-column: span 2;
+    margin: 5px 0 0 0;
+    font-size: 0.9rem;
+    color: #ef4444;
+    font-weight: 500;
+}
+
+/* ИТОГОВАЯ КАРТОЧКА ЗАКАЗА */
+.checkout-summary-card {
+    background: linear-gradient(90deg, #161626 0%, #1f1f38 100%);
+    border: 1px solid #2d2d44;
+    padding: 30px;
+    border-radius: 14px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-
-.left-totals p { margin: 4px 0; color: #a0aec0; font-size: 1rem; }
-.final-price-row { font-size: 1.5rem; font-weight: 800; color: #fff !important; }
-.final-price-row span { color: #00e676; }
-
+.summary-text-block p {
+    margin: 4px 0;
+    font-size: 1rem;
+    color: #94a3b8;
+}
+.highlight-count {
+    color: #fff;
+    font-weight: bold;
+}
+.summary-total {
+    font-size: 1.5rem !important;
+    font-weight: 900;
+    color: #fff !important;
+    margin-top: 8px !important;
+}
+.summary-total span {
+    color: #00e676;
+    text-shadow: 0 0 10px rgba(0,230,118,0.2);
+}
 .main-order-submit {
     background: #00e676;
-    color: #000;
+    color: #05050a;
     border: none;
-    padding: 16px 36px;
+    padding: 16px 40px;
     font-weight: 800;
-    font-size: 1.1rem;
-    border-radius: 8px;
+    font-size: 1.05rem;
+    border-radius: 10px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: transform 0.2s, opacity 0.2s;
+}
+.main-order-submit:hover:not(:disabled) {
+    transform: scale(1.02);
+    background: #00ff82;
+}
+.main-order-submit:disabled {
+    background: #252538;
+    color: #4e4e6a;
+    cursor: not-allowed;
 }
 
-.main-order-submit:disabled { background: #222230; color: #555; cursor: not-allowed; box-shadow: none; }
-
-/* ЭЛЕКТРОННЫЙ ЧЕК И БАНКОВСКАЯ ОШИБКА */
+/* БЛОК КАССОВОГО ЧЕКА И ОШИБКИ */
 .payment-receipt-block {
-    margin-top: 35px;
-    background: #0b0b14;
+    background: #040408;
     padding: 25px;
-    border-radius: 12px;
-    border-left: 4px solid #ff5252;
-    border: 1px solid #1f1f33;
+    border-radius: 10px;
+    margin-top: 30px;
+    border: 1px dashed #ef4444;
 }
-
-.receipt-text-container { font-family: monospace; white-space: pre-wrap; color: #c3c7db; font-size: 0.95rem; line-height: 1.4; }
+.payment-receipt-block pre {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 0.9rem;
+    color: #cbd5e1;
+    white-space: pre-wrap;
+    margin: 0;
+    line-height: 1.5;
+}
 .secure-error-banner {
     margin-top: 20px;
-    background: rgba(255, 82, 82, 0.08);
-    border: 1px dashed #ff5252;
-    color: #ff5252;
-    padding: 15px;
-    border-radius: 8px;
+    color: #ef4444;
     font-weight: 700;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
+    border-top: 1px solid #3a1c1c;
+    padding-top: 20px;
     line-height: 1.5;
 }
 
-/* ==========================================================================
-   АДАПТИВНАЯ МОБИЛЬНАЯ ВЕРСТКА ПОД СТИЛЬ ПРИЛОЖЕНИЯ КИНОТЕАТР.РУ
-   ========================================================================== */
-@media (max-width: 768px) {
-    body { background: #130f22 !important; }
-
-    .cinema-top-bar {
-        display: grid !important;
-        grid-template-columns: auto 1fr auto;
-        grid-template-rows: auto auto;
-        row-gap: 15px;
-        padding: 12px 16px !important;
-        background: #18142c !important;
-        border-bottom: 2px solid #211c38 !important;
+/* ОПТИМИЗАЦИЯ ДЛЯ ПЛАНШЕТОВ */
+@media (max-width: 1024px) {
+    .modal-grid-layout { grid-template-columns: 1fr; }
+    .modal-sidebar-info {
+        border-right: none;
+        border-bottom: 1px solid #1e1e2f;
+        height: auto;
+        padding: 30px;
     }
-
-    .cinema-top-bar .logo {
-        position: static !important;
-        transform: none !important;
-        grid-column: 2;
-        justify-self: center;
-        font-size: 1.4rem !important;
-    }
-
-    .top-bar-left { grid-column: 1; }
-    .top-bar-right { grid-column: 3; display: block !important; }
-
-    .mobile-login-link {
-        display: block;
-        background: transparent;
-        border: none;
-        color: #e2e8f0;
-        font-size: 0.95rem;
-    }
-
-    /* Мобильный скролл навигации */
-    .mobile-sub-navigation {
-        display: flex;
-        grid-column: 1 / span 3;
-        grid-row: 2;
-        gap: 20px;
-        overflow-x: auto;
-        padding-bottom: 4px;
-    }
-    .mobile-sub-navigation::-webkit-scrollbar { display: none; }
-
-    .sub-nav-item {
-        color: #8b86a3;
-        text-decoration: none;
-        font-size: 0.95rem;
-        white-space: nowrap;
-        padding-bottom: 6px;
-        border-bottom: 2px solid transparent;
-    }
-
-    .sub-nav-item.active { color: #fff; border-bottom-color: #7c4dff; }
-
-    .section-title { border-left: none !important; padding-left: 0 !important; font-size: 1.3rem !important; margin: 20px 0 4px 16px !important; font-weight: 700; }
-    .section-subtitle-mobile { display: block; color: #8b86a3; font-size: 0.9rem; margin: 0 0 16px 16px; }
-
-    /* МОБИЛЬНАЯ ГОРИЗОНТАЛЬНАЯ КАРУСЕЛЬ КАРТОЧЕК */
-    .movies-responsive-grid {
-        display: flex !important;
-        flex-direction: row !important;
-        overflow-x: auto !important;
-        scroll-snap-type: x mandatory;
-        gap: 14px !important;
-        padding: 0 16px 20px 16px !important;
-    }
-    .movies-responsive-grid::-webkit-scrollbar { display: none; }
-
-    .movie-premium-card {
-        flex: 0 0 150px !important;
-        scroll-snap-align: start;
-        background: transparent !important;
-        border: none !important;
-        border-radius: 0 !important;
-        transform: none !important;
-        padding: 0 !important;
-    }
-
-    .badge-price-pc { display: none !important; }
-    .poster-wrapper { border-radius: 10px !important; overflow: hidden; }
-    .movie-info { padding: 8px 0 0 0 !important; }
-    .movie-info h3 { font-size: 0.95rem !important; font-weight: 400; margin-top: 4px !important; line-height: 1.3; }
-
-    /* Отображение скрытых на ПК мобильных тегов под изображением */
-    .movie-meta-tags { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
-
-    .age-badge {
-        font-size: 0.75rem;
-        background: #211c38;
-        border: 1px solid #3d3561;
-        color: #a09cb4;
-        padding: 1px 4px;
-        border-radius: 4px;
-        font-weight: 600;
-    }
-
-    .movie-genres { font-size: 0.8rem; color: #8b86a3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-    .booking-workspace { padding: 20px 16px; border-radius: 0; border-left: none; border-right: none; }
-    .bar-flex-grid { grid-template-columns: 1fr; }
-    .checkout-sticky-panel { flex-direction: column; gap: 15px; align-items: flex-start; }
-    .main-order-submit { width: 100%; text-align: center; }
+    .modal-poster-box { display: none; }
+    .modal-content-wrapper { height: 95vh; }
 }
+
+/* ОПТИМИЗАЦИЯ ДЛЯ МОБИЛЬНЫХ СМАРТФОНОВ (ЭКСТРЕМАЛЬНЫЙ UX ПОД ТАЧ) */
+@media (max-width: 768px) {
+    .cinema-top-bar { padding: 15px 20px; }
+    .main-layout { padding: 25px 0;
