@@ -1,12 +1,14 @@
 /* Базовые настройки сброса */
-* { box-sizing: border-box; }
+* {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #0a0a0a; /* Еще более глубокий черный */
+    background: #111; /* Темная премиальная тема */
     color: #fff;
 }
-.hidden { display: none !important; }
 
 /* =========================================
    ШАПКА (HEADER)
@@ -15,123 +17,537 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 5%;
-    background: #141414;
+    padding: 15px 30px;
+    background: #1a1a1a;
     border-bottom: 1px solid #333;
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    flex-wrap: wrap;
+    gap: 10px;
 }
-.logo { font-size: 26px; font-weight: 900; letter-spacing: 2px; }
-.logo span { color: #e50914; }
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.logo span {
+    color: #e50914; /* Акцентный красный цвет */
+}
 
 .city-selector-container { position: relative; }
+
 .city-selector-btn, .mobile-login-link {
-    background: #222; color: #fff; border: 1px solid #444;
-    padding: 10px 18px; border-radius: 4px; cursor: pointer; transition: 0.2s;
-    font-size: 14px;
+    background: #222;
+    color: #fff;
+    border: 1px solid #444;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.2s;
 }
-.city-selector-btn:hover, .mobile-login-link:hover { background: #333; }
+
+.city-selector-btn:hover, .mobile-login-link:hover {
+    background: #333;
+}
+
 .city-dropdown-menu {
-    display: none; position: absolute; top: 110%; left: 0; width: 200px;
-    background: #222; border: 1px solid #444; border-radius: 4px; z-index: 200;
+    display: none;
+    position: absolute;
+    top: 110%;
+    left: 0;
+    width: 200px;
+    background: #222;
+    border: 1px solid #444;
+    border-radius: 4px;
+    z-index: 200;
+    max-height: 300px;
+    overflow-y: auto;
 }
+
 .city-dropdown-menu.show { display: block; }
-.city-option { padding: 12px 15px; cursor: pointer; transition: 0.2s; }
-.city-option:hover { background: #e50914; color: white; }
+
+.city-option {
+    padding: 12px 15px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.city-option:hover {
+    background: #e50914;
+    color: white;
+}
 
 /* =========================================
    КАТАЛОГ ФИЛЬМОВ
    ========================================= */
-.main-layout { padding: 30px 5%; max-width: 1400px; margin: 0 auto; }
-.section-title { font-size: 28px; margin-bottom: 30px; border-left: 4px solid #e50914; padding-left: 15px; }
+.catalog-section {
+    padding: 30px;
+}
+
+.section-title {
+    font-size: 28px;
+    margin-bottom: 20px;
+    border-left: 4px solid #e50914;
+    padding-left: 10px;
+}
 
 .movies-ultimate-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 30px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
 }
+
 .movie-card {
-    background: #1a1a1a; border-radius: 8px; overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer; border: 1px solid #2a2a2a;
-    display: flex; flex-direction: column;
+    background: #222;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    border: 1px solid #333;
 }
+
 .movie-card:hover {
-    transform: scale(1.05); /* УВЕЛИЧЕНИЕ ПРИ НАВЕДЕНИИ */
-    box-shadow: 0 10px 25px rgba(229, 9, 20, 0.4);
+    transform: scale(1.05); /* Увеличение при наведении как просили */
+    box-shadow: 0 5px 20px rgba(229, 9, 20, 0.5);
     border-color: #e50914;
     z-index: 2;
 }
-.movie-card img { width: 100%; height: 320px; object-fit: cover; }
-.movie-card-info { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; }
-.movie-card h3 { margin: 0 0 10px 0; font-size: 18px; line-height: 1.2; }
-.movie-card-meta { font-size: 13px; color: #aaa; margin-top: auto; display: flex; justify-content: space-between; align-items: center; }
-.mc-age { background: #333; padding: 2px 6px; border-radius: 4px; color: white; font-weight: bold; }
+
+.movie-card img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+.movie-card-info {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.movie-card h3 {
+    font-size: 15px;
+    margin: 0 0 10px 0;
+    text-align: center;
+}
+
+.movie-card-meta {
+    font-size: 12px;
+    color: #aaa;
+    display: flex;
+    justify-content: space-between;
+    margin-top: auto;
+}
+.mc-age { background: #444; padding: 2px 5px; border-radius: 3px; color: #fff; }
 
 /* =========================================
-   СТРАНИЦА ФИЛЬМА
+   МОДАЛЬНОЕ ОКНО И LAYOUT
    ========================================= */
-.back-btn { background: none; color: #aaa; border: none; font-size: 16px; cursor: pointer; margin-bottom: 20px; padding: 0; }
-.back-btn:hover { color: #fff; text-decoration: underline; }
+.booking-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
 
-.movie-detailed-header { display: flex; gap: 40px; margin-bottom: 40px; background: #1a1a1a; padding: 30px; border-radius: 12px; }
-.detailed-poster img { width: 280px; border-radius: 8px; box-shadow: 0 10px 20px rgba(0,0,0,0.6); }
-.detailed-info h1 { margin-top: 0; font-size: 36px; margin-bottom: 15px; }
-.badge-age, .badge-country { padding: 6px 12px; border-radius: 4px; font-size: 14px; font-weight: bold; background: #333; margin-right: 10px; }
-.modal-meta-row { font-size: 16px; color: #ccc; margin: 15px 0; }
-.modal-description { font-size: 16px; color: #bbb; line-height: 1.6; margin-top: 20px; border-left: 3px solid #e50914; padding-left: 15px; }
+.hidden {
+    display: none !important;
+}
 
-.booking-section { background: #1a1a1a; padding: 30px; border-radius: 12px; margin-bottom: 30px; border: 1px solid #2a2a2a; }
-.step-title { margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 25px; font-size: 22px; }
+.modal-content-wrapper {
+    background: #1a1a1a;
+    width: 95%;
+    max-width: 1300px;
+    height: 90vh;
+    border-radius: 12px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #333;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    overflow: hidden;
+}
 
-/* Сеансы */
+.close-modal-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid #444;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    z-index: 10;
+    transition: 0.2s;
+}
+
+.close-modal-btn:hover {
+    background: #e50914;
+    border-color: #e50914;
+}
+
+.modal-grid-layout {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    overflow: hidden;
+}
+
+.modal-sidebar-info {
+    width: 350px;
+    background: #222;
+    padding: 25px;
+    border-right: 1px solid #333;
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+
+.modal-poster-box img {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.modal-badges {
+    margin-bottom: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.badge-age, .badge-rating {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.badge-age { background: #444; color: #fff; }
+.badge-rating { background: #28a745; color: #fff; }
+
+.modal-meta-row {
+    font-size: 14px;
+    color: #ccc;
+    margin: 8px 0;
+}
+
+.modal-description {
+    font-size: 14px;
+    color: #bbb;
+    line-height: 1.5;
+    margin-top: 15px;
+    background: #111;
+    padding: 15px;
+    border-radius: 6px;
+    border-left: 3px solid #e50914;
+}
+
+.modal-workspace-flow {
+    flex-grow: 1;
+    padding: 30px;
+    overflow-y: auto;
+    position: relative;
+    scroll-behavior: smooth;
+}
+
+.step-title {
+    margin-top: 0;
+    color: #fff;
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.step-container {
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px dashed #444;
+}
+
 .session-btn {
-    background: #222; color: white; border: 1px solid #444; padding: 12px 25px; margin: 0 10px 10px 0;
-    border-radius: 6px; cursor: pointer; transition: 0.2s; font-size: 16px; font-weight: bold;
+    background: #2a2a2a;
+    color: white;
+    border: 1px solid #444;
+    padding: 12px 20px;
+    margin: 5px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 15px;
 }
-.session-btn:hover, .session-btn.active { background: #e50914; border-color: #ff0a16; transform: translateY(-2px); }
 
-/* Зал */
-.interactive-hall-viewport { overflow-x: auto; padding: 20px 0; }
-.interactive-hall-wrapper { min-width: max-content; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
+.session-btn:hover, .session-btn.active {
+    background: #e50914;
+    border-color: #ff0a16;
+    transform: translateY(-2px);
+}
+
+/* =========================================
+   ЗАЛ И КРЕСЛА (ОГРОМНЫЙ)
+   ========================================= */
+.mobile-zoom-hint {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 15px;
+    background: #222;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+.interactive-hall-viewport {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 500px; /* Чтобы зал не занимал весь экран */
+    background: #111;
+    padding: 30px 20px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    cursor: grab;
+}
+
+.interactive-hall-wrapper {
+    min-width: 1200px; /* Принудительная ширина для огромного зала */
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .cinema-glowing-screen {
-    background: linear-gradient(to bottom, #444, #111); width: 80%; text-align: center; margin-bottom: 40px;
-    border-radius: 50% 50% 0 0 / 20px 20px 0 0; letter-spacing: 15px; font-weight: bold; color: #666;
-    padding: 10px; box-shadow: 0 15px 25px rgba(255,255,255,0.03); text-indent: 15px;
+    background: linear-gradient(to bottom, #444, #111);
+    padding: 10px;
+    width: 80%;
+    text-align: center;
+    margin: 0 auto 40px auto;
+    border-radius: 50% 50% 0 0 / 20px 20px 0 0;
+    letter-spacing: 15px;
+    font-weight: bold;
+    color: #666;
+    box-shadow: 0 10px 20px rgba(255,255,255,0.02);
+    text-indent: 15px;
 }
-.seat {
-    width: 35px; height: 35px; margin: 4px; display: inline-flex; align-items: center; justify-content: center;
-    cursor: pointer; background-color: #333; border: 1px solid #222; border-radius: 8px 8px 4px 4px;
-    font-size: 11px; font-weight: bold; color: #888; transition: 0.2s;
-}
-.seat:hover:not(.occupied) { background-color: #555; color: #fff; transform: scale(1.1); }
-.seat.selected { background-color: #e50914; color: white; border-color: #ff0a16; box-shadow: 0 0 10px rgba(229, 9, 20, 0.5); }
-.seat.occupied { background-color: #111; color: #333; cursor: not-allowed; border: 1px solid #000; opacity: 0.6; }
 
-/* Бар */
-.bar-matrix-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-.bar-item-card { background: #222; border: 1px solid #333; border-radius: 8px; padding: 20px; text-align: center; }
-.bar-item-card h4 { margin: 0 0 15px 0; font-size: 18px; }
-.size-options { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; }
-.size-btn { background: #111; border: 1px solid #444; color: #ccc; padding: 8px 12px; border-radius: 4px; cursor: pointer; transition: 0.2s; flex: 1; }
-.size-btn:hover { background: #444; color: #fff; }
+.dynamic-hall-grid {
+    text-align: center;
+    line-height: 0;
+}
+
+.seat {
+    width: 30px;
+    height: 30px;
+    margin: 3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background-color: #333;
+    border: 1px solid #222;
+    border-radius: 6px 6px 3px 3px;
+    font-size: 10px;
+    font-weight: bold;
+    color: #888;
+    transition: all 0.2s;
+}
+
+.seat:hover:not(.occupied) {
+    background-color: #555;
+    color: #fff;
+    transform: scale(1.2);
+}
+
+.seat.selected {
+    background-color: #e50914;
+    border-color: #ff0a16;
+    color: white;
+    box-shadow: 0 0 12px rgba(229, 9, 20, 0.6);
+}
+
+.seat.occupied {
+    background-color: #1a1a1a;
+    color: #333;
+    cursor: not-allowed;
+    pointer-events: none;
+    border: 1px solid #111;
+    opacity: 0.5;
+}
+
+/* =========================================
+   БАР (С РАЗМЕРАМИ)
+   ========================================= */
+.bar-matrix-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
+    gap: 15px; 
+}
+.bar-item-card { 
+    background: #222; 
+    border: 1px solid #333; 
+    border-radius: 8px; 
+    padding: 15px; 
+    text-align: center; 
+}
+.bar-item-card h4 { margin: 0 0 15px 0; font-size: 16px; }
+.size-options { display: flex; justify-content: center; gap: 5px; margin-bottom: 15px; }
+.size-btn { 
+    background: #111; border: 1px solid #444; color: #ccc; 
+    padding: 6px 10px; border-radius: 4px; cursor: pointer; flex: 1; font-size: 12px;
+}
 .size-btn.active { background: #e50914; border-color: #e50914; color: white; }
-.add-bar-btn { width: 100%; background: #333; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer; transition: 0.2s; font-weight: bold; }
+.add-bar-btn { 
+    width: 100%; background: #333; color: white; border: none; 
+    padding: 8px; border-radius: 4px; cursor: pointer; font-weight: bold; 
+}
 .add-bar-btn:hover { background: #28a745; }
 
-/* Оформление */
-.checkout-summary-card { background: #222; padding: 30px; border-radius: 8px; border: 1px solid #333; }
-.summary-text-block h4 { margin: 15px 0 5px 0; color: #aaa; }
-.highlight-list { color: #fff; font-size: 16px; margin: 0 0 15px 0; line-height: 1.5; }
-.summary-total { font-size: 24px; font-weight: bold; margin-top: 20px; border-top: 1px solid #444; padding-top: 20px; }
-.main-order-submit { background: #28a745; color: white; border: none; padding: 18px 30px; font-size: 18px; font-weight: bold; border-radius: 6px; cursor: pointer; width: 100%; max-width: 400px; margin-top: 20px; transition: 0.2s; }
-.main-order-submit:hover { background: #218838; }
+/* =========================================
+   ОФОРМЛЕНИЕ И ОШИБКИ
+   ========================================= */
+.mt-10 { margin-top: 20px; }
 
-.secure-error-banner { background: rgba(229, 9, 20, 0.1); color: #ff6b6b; padding: 20px; border-left: 4px solid #e50914; margin-top: 25px; border-radius: 4px; line-height: 1.6; font-family: monospace; font-size: 14px; }
+.action-accent-btn {
+    background: #e50914;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: 0.2s;
+}
 
+.action-accent-btn:hover {
+    background: #ff0a16;
+    box-shadow: 0 0 15px rgba(229, 9, 20, 0.4);
+}
+
+.checkout-summary-card {
+    background: #222;
+    padding: 25px;
+    border-radius: 8px;
+    border: 1px solid #333;
+}
+
+.highlight-list {
+    color: #aaa;
+    margin: 5px 0 15px 0;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.summary-total {
+    font-size: 22px;
+    font-weight: bold;
+    margin-top: 15px;
+    border-top: 1px solid #444;
+    padding-top: 15px;
+}
+
+.main-order-submit {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 20px;
+    transition: 0.2s;
+}
+
+.main-order-submit:hover:not(:disabled) {
+    background: #218838;
+}
+
+.main-order-submit:disabled {
+    background: #444;
+    color: #777;
+    cursor: not-allowed;
+}
+
+.secure-error-banner {
+    background: rgba(229, 9, 20, 0.1);
+    color: #ff6b6b;
+    padding: 20px;
+    border-left: 4px solid #e50914;
+    border-radius: 4px;
+    line-height: 1.6;
+    font-family: monospace;
+    font-size: 14px;
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: #111; }
+::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #666; }
+
+/* =========================================
+   МОБИЛЬНЫЙ АДАПТИВ & СЛАЙДЕР ПОЛЗУНОК
+   ========================================= */
 @media (max-width: 768px) {
-    .cinema-top-bar { flex-direction: column; gap: 15px; }
-    .movie-detailed-header { flex-direction: column; align-items: center; text-align: center; }
-    .movie-detailed-header img { width: 100%; max-width: 300px; }
+    .cinema-top-bar {
+        padding: 15px;
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+
+    .catalog-section { padding: 15px; }
+
+    /* ТОТ САМЫЙ ПОЛЗУНОК КАК НА kinoteatr.ru */
+    .movies-ultimate-grid {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        gap: 15px;
+        padding-bottom: 20px;
+    }
+
+    .movie-card {
+        flex: 0 0 65%; /* Ширина карточки на мобилке */
+        scroll-snap-align: center;
+    }
+    
+    .movie-card img { height: 350px; }
+
+    .modal-grid-layout {
+        flex-direction: column;
+        overflow-y: auto;
+    }
+
+    .modal-sidebar-info {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #333;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .modal-poster-box {
+        max-width: 200px;
+        margin: 0 auto 15px auto;
+    }
+
+    .modal-workspace-flow {
+        padding: 15px;
+        overflow-y: visible;
+    }
 }
