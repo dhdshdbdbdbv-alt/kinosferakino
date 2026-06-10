@@ -34,8 +34,7 @@
     <main class="main-layout">
         <section class="catalog-section">
             <h2 class="section-title">Сейчас в прокате</h2>
-            <div id="movies-grid" class="movies-ultimate-grid">
-                </div>
+            <div id="movies-grid" class="movies-ultimate-grid"></div>
         </section>
     </main>
 
@@ -50,18 +49,22 @@
                     </div>
                     <h2 id="modal-movie-title"></h2>
                     <div class="modal-badges">
-                        <span id="modal-badge-age" class="badge-age"></span>
-                        <span id="modal-badge-rating" class="badge-rating"></span>
+                        <span id="modal-badge-age" class="badge-age">16+</span>
+                        <span id="modal-badge-rating" class="badge-rating">8.5</span>
                     </div>
-                    <p class="modal-meta-row"><strong>Жанр:</strong> <span id="modal-text-genre"></span></p>
-                    <p class="modal-meta-row"><strong>Хронометраж:</strong> <span id="modal-text-duration"></span></p>
-                    <p class="modal-description">Погрузитесь в просмотр в залах повышенной комфортности Киносферы. Премиальные лазерные проекторы, динамический многоканальный звук Dolby Atmos и полностью раскладывающиеся кресла-реклайнеры.</p>
+                    <p class="modal-meta-row"><strong>Жанр:</strong> <span id="modal-text-genre">Драма/Кино</span></p>
+                    <p class="modal-meta-row"><strong>Хронометраж:</strong> <span id="modal-text-duration">120 мин.</span></p>
+                    <p id="modal-text-description" class="modal-description"></p>
                 </div>
 
                 <div class="modal-workspace-flow">
-                    <div class="step-container">
+                    <div id="step-sessions-container" class="step-container">
                         <h3 class="step-title">1. Выберите время сеанса</h3>
-                        <div id="modal-sessions-grid" class="modal-sessions-grid"></div>
+                        <div id="modal-sessions-grid" class="modal-sessions-grid">
+                            <button class="session-btn" onclick="goToStep('step-hall-container')">14:30 (2D)</button>
+                            <button class="session-btn" onclick="goToStep('step-hall-container')">18:00 (IMAX)</button>
+                            <button class="session-btn" onclick="goToStep('step-hall-container')">21:15 (VIP)</button>
+                        </div>
                     </div>
 
                     <div id="step-hall-container" class="step-container hidden">
@@ -73,6 +76,7 @@
                                 <div id="dynamic-hall-grid" class="dynamic-hall-grid"></div>
                             </div>
                         </div>
+                        <button class="action-accent-btn mt-10" onclick="goToStep('step-checkout-container')">Подтвердить места</button>
                     </div>
 
                     <div id="step-bar-container" class="step-container hidden">
@@ -81,7 +85,7 @@
                     </div>
 
                     <div id="step-checkout-container" class="step-container hidden">
-                        <h3 class="step-title">4. Идентификация и подтверждение заказа</h3>
+                        <h3 class="step-title">3. Идентификация и подтверждение заказа</h3>
                         <div class="auth-box-fields">
                             <input type="text" id="client-login-field" placeholder="Логин (минимум 3 символа)">
                             <input type="password" id="client-pass-field" placeholder="Пароль (минимум 4 символа)">
@@ -92,6 +96,7 @@
                         <div class="checkout-summary-card">
                             <div class="summary-text-block">
                                 <p>Выбрано билетов: <span id="summary-seats-count" class="highlight-count">0</span> шт.</p>
+                                <p id="summary-seats-list" class="highlight-list"></p>
                                 <p class="summary-total">Итого к оплате: <span id="summary-total-sum">0</span> ₽</p>
                             </div>
                             <button id="final-checkout-btn" class="main-order-submit" disabled>Оформить заказ</button>
