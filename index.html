@@ -22,87 +22,103 @@
                     <div class="city-option" onclick="selectCity('Новосибирск')">Новосибирск</div>
                     <div class="city-option" onclick="selectCity('Екатеринбург')">Екатеринбург</div>
                     <div class="city-option" onclick="selectCity('Казань')">Казань</div>
+                    <div class="city-option" onclick="selectCity('Нижний Новгород')">Нижний Новгород</div>
+                    <div class="city-option" onclick="selectCity('Челябинск')">Челябинск</div>
+                    <div class="city-option" onclick="selectCity('Красноярск')">Красноярск</div>
+                    <div class="city-option" onclick="selectCity('Самара')">Самара</div>
+                    <div class="city-option" onclick="selectCity('Уфа')">Уфа</div>
+                    <div class="city-option" onclick="selectCity('Ростов-на-Дону')">Ростов-на-Дону</div>
+                    <div class="city-option" onclick="selectCity('Омск')">Омск</div>
+                    <div class="city-option" onclick="selectCity('Краснодар')">Краснодар</div>
+                    <div class="city-option" onclick="selectCity('Воронеж')">Воронеж</div>
+                    <div class="city-option" onclick="selectCity('Пермь')">Пермь</div>
+                    <div class="city-option" onclick="selectCity('Волгоград')">Волгоград</div>
                 </div>
             </div>
         </div>
-        <div class="logo" onclick="goHome()" style="cursor: pointer;">КИНО<span>СФЕРА</span></div>
+        <div class="logo">КИНО<span>СФЕРА</span></div>
         <div class="top-bar-right">
             <span id="user-greeting" class="hidden" style="margin-right: 15px; color: #ccc;"></span>
-            <button class="mobile-login-link" id="auth-btn" onclick="handleAuth()">Войти / Регистрация</button>
+            <button class="mobile-login-link" id="top-bar-auth-btn" onclick="handleAuth()">Вход / Регистрация</button>
         </div>
     </header>
 
-    <main id="home-view" class="main-layout">
+    <main class="main-layout">
         <section class="catalog-section">
-            <h2 class="section-title">Сейчас в кино</h2>
+            <h2 class="section-title">Сейчас в прокате</h2>
             <div id="movies-grid" class="movies-ultimate-grid"></div>
         </section>
     </main>
 
-    <main id="movie-view" class="main-layout hidden">
-        <div class="movie-page-container">
-            <button class="back-btn" onclick="goHome()">← Назад к афише</button>
+    <div id="booking-modal-overlay" class="booking-modal-overlay hidden">
+        <div class="modal-content-wrapper">
+            <button id="close-modal-btn" class="close-modal-btn" onclick="closeModal()">✕ Закрыть</button>
             
-            <div class="movie-detailed-header">
-                <div class="detailed-poster">
-                    <img id="detail-poster" src="" alt="Постер">
-                </div>
-                <div class="detailed-info">
-                    <h1 id="detail-title"></h1>
+            <div class="modal-grid-layout">
+                <div class="modal-sidebar-info">
+                    <div class="modal-poster-box">
+                        <img id="modal-movie-poster" src="" alt="Постер">
+                    </div>
+                    <h2 id="modal-movie-title"></h2>
                     <div class="modal-badges">
-                        <span id="detail-age" class="badge-age"></span>
-                        <span id="detail-country" class="badge-country"></span>
+                        <span id="modal-badge-age" class="badge-age"></span>
+                        <span id="modal-badge-rating" class="badge-rating"></span>
                     </div>
-                    <p class="modal-meta-row"><strong>Жанр:</strong> <span id="detail-genre"></span></p>
-                    <div id="detail-description" class="modal-description"></div>
+                    <p class="modal-meta-row"><strong>Жанр:</strong> <span id="modal-text-genre"></span></p>
+                    <p class="modal-meta-row"><strong>Страна:</strong> <span id="modal-text-country"></span></p>
+                    <p class="modal-meta-row"><strong>Хронометраж:</strong> <span id="modal-text-duration"></span></p>
+                    <p id="modal-text-description" class="modal-description"></p>
                 </div>
-            </div>
 
-            <div class="booking-section">
-                <h3 class="step-title">1. Выберите сеанс</h3>
-                <div id="sessions-container" class="sessions-list">
+                <div class="modal-workspace-flow">
+                    <div id="step-sessions-container" class="step-container">
+                        <h3 class="step-title">1. Выберите время сеанса</h3>
+                        <div id="modal-sessions-grid" class="modal-sessions-grid"></div>
                     </div>
-            </div>
 
-            <div id="hall-section" class="booking-section hidden">
-                <h3 class="step-title">2. Выберите места (<span id="selected-session-time" style="color:#e50914;"></span>)</h3>
-                <div class="interactive-hall-viewport">
-                    <div class="interactive-hall-wrapper">
-                        <div class="cinema-glowing-screen">ЭКРАН</div>
-                        <div id="hall-grid" class="dynamic-hall-grid"></div>
+                    <div id="step-hall-container" class="step-container hidden">
+                        <h3 class="step-title">2. Выберите места в зале</h3>
+                        <div class="mobile-zoom-hint">💡 На смартфонах зал огромный. Используйте свайп для прокрутки и просмотра всех мест.</div>
+                        <div class="interactive-hall-viewport" id="hall-viewport">
+                            <div class="interactive-hall-wrapper" id="hall-wrapper">
+                                <div class="cinema-glowing-screen">ЭКРАН</div>
+                                <div id="dynamic-hall-grid" class="dynamic-hall-grid"></div>
+                            </div>
+                        </div>
+                        <button class="action-accent-btn mt-10" onclick="goToStep('step-bar-container')">Подтвердить места</button>
                     </div>
-                </div>
-            </div>
 
-            <div id="bar-section" class="booking-section hidden">
-                <h3 class="step-title">3. Кинобар и Комбо-наборы</h3>
-                <div id="bar-grid" class="bar-matrix-grid">
+                    <div id="step-bar-container" class="step-container hidden">
+                        <h3 class="step-title">3. Премиальный Кинобар & Комбо</h3>
+                        <div id="dynamic-bar-menu" class="bar-matrix-grid"></div>
+                        <button class="action-accent-btn mt-10" onclick="goToStep('step-checkout-container')" style="margin-top: 20px; width: 100%;">Перейти к оплате</button>
                     </div>
-            </div>
 
-            <div id="checkout-section" class="booking-section hidden">
-                <h3 class="step-title">4. Ваш заказ</h3>
-                <div class="checkout-summary-card">
-                    <div class="summary-text-block">
-                        <h4>Билеты:</h4>
-                        <p id="summary-seats-list" class="highlight-list">Ничего не выбрано</p>
-                        <h4>Бар:</h4>
-                        <p id="summary-bar-list" class="highlight-list">Ничего не выбрано</p>
-                        <p class="summary-total">Итого к оплате: <span id="summary-total-sum">0</span> ₽</p>
-                    </div>
-                    <button id="final-checkout-btn" class="main-order-submit" onclick="processCheckout()">Оформить заказ и оплатить</button>
-                    
-                    <div id="payment-receipt-block" class="payment-receipt-block hidden">
-                        <h4 style="margin-top:0;">Чек операции:</h4>
-                        <pre id="receipt-text-container" style="background:#111; padding:15px; border-radius:5px; color:#ccc;"></pre>
-                        <div class="secure-error-banner">
-                            ❌ КРИТИЧЕСКАЯ ОШИБКА ШЛЮЗА: Транзакция отклонена банком-эквайером. Код ошибки: [ERR_BANK_9902]. Запрос заблокирован по соображениям безопасности. Пожалуйста, обратитесь в поддержку или используйте другой способ оплаты.
+                    <div id="step-checkout-container" class="step-container hidden">
+                        <h3 class="step-title">4. Идентификация и подтверждение заказа</h3>
+                        
+                        <div class="checkout-summary-card">
+                            <div class="summary-text-block">
+                                <h4>Билеты:</h4>
+                                <p id="summary-seats-list" class="highlight-list">Ничего не выбрано</p>
+                                <h4>Бар:</h4>
+                                <p id="summary-bar-list" class="highlight-list">Ничего не выбрано</p>
+                                <p class="summary-total">Итого к оплате: <span id="summary-total-sum">0</span> ₽</p>
+                            </div>
+                            <button id="final-checkout-btn" class="main-order-submit" disabled onclick="processCheckout()">Оформить заказ</button>
+                        </div>
+
+                        <div id="payment-receipt-block" class="payment-receipt-block hidden">
+                            <pre id="receipt-text-container" style="background:#111; padding:15px; border-radius:5px; color:#ccc; margin-bottom:15px;"></pre>
+                            <div class="secure-error-banner">
+                                ❌ КРИТИЧЕСКАЯ ОШИБКА ШЛЮЗА: Транзакция отклонена банком-эквайером. Код ошибки: [ERR_BANK_9902]. Запрос заблокирован по соображениям безопасности. Пожалуйста, обратитесь в поддержку или используйте другой способ оплаты.
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
 
     <script src="main.js"></script>
 </body>
