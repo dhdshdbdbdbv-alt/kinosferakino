@@ -1,4 +1,4 @@
-// ПОЛНАЯ БАЗА ДАННЫХ ФИЛЬМОВ (ВСЕ ПОСТЕРЫ СО СКРИНШОТА ИЗОБРАЖЕНИЕ.JPG ИСПРАВЛЕНЫ И ДОБАВЛЕНЫ)
+// ПОЛНАЯ БАЗА ДАННЫХ ФИЛЬМОВ
 const moviesDatabase = {
     "asyaklyachkina": { title: "История Аси Клячиной", poster: "asyaklyachkinasstory.jpg", age: "12+", rating: "7.9", genre: "драма, мелодрама", duration: "1 ч. 50 мин.", basePrice: 350, sessions: ["12:00", "16:30"] },
     "backrooms": { title: "Закулисье", poster: "backrooms.jpg", age: "16+", rating: "6.2", genre: "хоррор, триллер", duration: "1 ч. 35 мин.", basePrice: 400, sessions: ["19:00", "23:40"] },
@@ -56,6 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setupCitySelector();
     setupModalEvents();
     setupAuthLogic();
+    setupCheckoutLogic(); // Инициализация слушателя чекаут-кнопки
 });
 
 // 1. РЕНДЕР КАТАЛОГА ФИЛЬМОВ НА ГЛАВНУЮ СТРАНИЦУ
@@ -367,16 +368,20 @@ function updateOrderSummary() {
 
     // Кнопка финального заказа
     const checkoutBtn = document.getElementById("final-checkout-btn");
-    if (ticketsCount > 0 && isAuthorized) {
-        checkoutBtn.removeAttribute("disabled");
-    } else {
-        checkoutBtn.setAttribute("disabled", "true");
+    if (checkoutBtn) {
+        if (ticketsCount > 0 && isAuthorized) {
+            checkoutBtn.removeAttribute("disabled");
+        } else {
+            checkoutBtn.setAttribute("disabled", "true");
+        }
     }
 }
 
 // 8. ОФОРМЛЕНИЕ ЗАКАЗА, ГЕНЕРАЦИЯ ЧЕКА И ИМИТАЦИЯ СБОЯ ТРАНЗАКЦИИ
-const checkoutBtn = document.getElementById("final-checkout-btn");
-if (checkoutBtn) {
+function setupCheckoutLogic() {
+    const checkoutBtn = document.getElementById("final-checkout-btn");
+    if (!checkoutBtn) return;
+
     checkoutBtn.addEventListener("click", () => {
         const receiptBlock = document.getElementById("payment-receipt-block");
         const container = document.getElementById("receipt-text-container");
