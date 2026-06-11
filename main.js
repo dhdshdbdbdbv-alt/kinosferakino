@@ -1,61 +1,60 @@
 /**
- * main.js — Система "КИНОСФЕРА" (Суровые цены и глобальный счетчик)
+ * main.js — Система "КИНОСФЕРА" (Динамическое расписание и сниженные цены)
  */
 
-// Добавлено свойство price для "суровых" цен
 const moviesData = [
-    { id: 1, title: "Майкл", poster: "Michael_(2026_film)_poster.jpg", genre: "Музыкальный, Байопик", age: "18+", price: 1200 },
-    { id: 2, title: "День рождения", poster: "birthday.jpg", genre: "Триллер", age: "18+", price: 850 },
-    { id: 3, title: "Богатыри", poster: "bogatyry.jpg", genre: "Фэнтези, Экшен", age: "16+", price: 950 },
-    { id: 4, title: "Братья Карамазовы", poster: "brothers-karamazovy.jpg", genre: "Драма", age: "16+", price: 800 },
-    { id: 5, title: "Грязные деньги", poster: "gryznyedengi.jpg", genre: "Боевик", age: "18+", price: 900 },
-    { id: 6, title: "Ветры прошлого", poster: "images.jpg", genre: "Драма, Детектив", age: "16+", price: 850 },
-    { id: 7, title: "Убить Билла", poster: "killbill.jpg", genre: "Боевик, Триллер", age: "18+", price: 1500 },
-    { id: 8, title: "Коммерсант", poster: "komers.jpg", genre: "Бизнес-драма", age: "16+", price: 1000 },
-    { id: 9, title: "Кощей", poster: "koshey.jpg", genre: "Темное фэнтези", age: "16+", price: 950 },
-    { id: 10, title: "Лео и Тиг", poster: "leoandtig.jpg", genre: "Анимация, Семейный", age: "6+", price: 650 },
-    { id: 11, title: "Момо", poster: "momo.jpg", genre: "Сказка, Фэнтези", age: "12+", price: 750 },
-    { id: 12, title: "Шевели перьями", poster: "moveyourwings.jpg", genre: "Анимация", age: "6+", price: 600 },
-    { id: 13, title: "Никто не верил", poster: "nbt.jpg", genre: "Спорт, Драма", age: "12+", price: 850 },
-    { id: 14, title: "Не одна дома", poster: "neodnadoma.jpg", genre: "Комедия", age: "12+", price: 800 },
-    { id: 15, title: "Закулисье", poster: "new-official-backrooms-poster.jpg", genre: "Хоррор", age: "18+", price: 1100 },
-    { id: 16, title: "Обсессия", poster: "obessy.jpg", genre: "Триллер", age: "18+", price: 1000 },
-    { id: 17, title: "Пропасть", poster: "propast.jpg", genre: "Катастрофа", age: "16+", price: 950 },
-    { id: 18, title: "Чудесный мир", poster: "wondaryworld.jpg", genre: "Приключения", age: "12+", price: 900 },
-    { id: 19, title: "Молодые и влюбленные", poster: "young-and-loved.jpg", genre: "Мелодрама", age: "16+", price: 850 }
+    { id: 1, title: "Майкл", poster: "Michael_(2026_film)_poster.jpg", genre: "Музыкальный, Байопик", age: "18+", price: 850, sessions: ["16:40", "19:20", "22:15"] },
+    { id: 2, title: "День рождения", poster: "birthday.jpg", genre: "Триллер", age: "18+", price: 650, sessions: ["20:00", "22:30", "00:15"] },
+    { id: 3, title: "Богатыри", poster: "bogatyry.jpg", genre: "Фэнтези, Экшен", age: "16+", price: 700, sessions: ["12:15", "15:30", "18:45", "21:00"] },
+    { id: 4, title: "Братья Карамазовы", poster: "brothers-karamazovy.jpg", genre: "Драма", age: "16+", price: 550, sessions: ["14:00", "17:20", "20:30"] },
+    { id: 5, title: "Грязные деньги", poster: "gryznyedengi.jpg", genre: "Боевик", age: "18+", price: 750, sessions: ["18:15", "21:10", "23:40"] },
+    { id: 6, title: "Ветры прошлого", poster: "images.jpg", genre: "Драма, Детектив", age: "16+", price: 600, sessions: ["13:45", "16:20", "19:00"] },
+    { id: 7, title: "Убить Билла", poster: "killbill.jpg", genre: "Боевик, Триллер", age: "18+", price: 900, sessions: ["19:30", "22:00"] },
+    { id: 8, title: "Коммерсант", poster: "komers.jpg", genre: "Бизнес-драма", age: "16+", price: 650, sessions: ["15:00", "18:20", "21:40"] },
+    { id: 9, title: "Кощей", poster: "koshey.jpg", genre: "Темное фэнтези", age: "16+", price: 600, sessions: ["11:30", "14:15", "17:00"] },
+    { id: 10, title: "Лео и Тиг", poster: "leoandtig.jpg", genre: "Анимация, Семейный", age: "6+", price: 450, sessions: ["09:30", "11:45", "14:00"] },
+    { id: 11, title: "Момо", poster: "momo.jpg", genre: "Сказка, Фэнтези", age: "12+", price: 500, sessions: ["10:00", "12:30", "15:15"] },
+    { id: 12, title: "Шевели перьями", poster: "moveyourwings.jpg", genre: "Анимация", age: "6+", price: 450, sessions: ["10:15", "13:00"] },
+    { id: 13, title: "Никто не верил", poster: "nbt.jpg", genre: "Спорт, Драма", age: "12+", price: 550, sessions: ["14:30", "17:45"] },
+    { id: 14, title: "Не одна дома", poster: "neodnadoma.jpg", genre: "Комедия", age: "12+", price: 500, sessions: ["12:00", "15:40", "18:10"] },
+    { id: 15, title: "Закулисье", poster: "new-official-backrooms-poster.jpg", genre: "Хоррор", age: "18+", price: 700, sessions: ["21:30", "23:55"] },
+    { id: 16, title: "Обсессия", poster: "obessy.jpg", genre: "Триллер", age: "18+", price: 750, sessions: ["19:40", "22:15"] },
+    { id: 17, title: "Пропасть", poster: "propast.jpg", genre: "Катастрофа", age: "16+", price: 800, sessions: ["16:00", "19:10", "21:45"] },
+    { id: 18, title: "Чудесный мир", poster: "wondaryworld.jpg", genre: "Приключения", age: "12+", price: 650, sessions: ["11:00", "13:30", "16:15"] },
+    { id: 19, title: "Молодые и влюбленные", poster: "young-and-loved.jpg", genre: "Мелодрама", age: "16+", price: 550, sessions: ["14:15", "17:00", "19:45"] }
 ];
 
-// Цены бара адаптированы под суровые реалии
+// Цены бара снижены для реализма
 const BAR_MENU = [
     {
         id: "cat_combo", name: "🔥 Комбо",
         items: [
-            { id: "combo_max", name: "Комбо «MAX»", desc: "Ведро попкорна (L) + 2 Напитка + Начос", price: 2950 },
-            { id: "combo_duo", name: "Комбо на двоих", desc: "Попкорн (M) + 2 Напитка", price: 1850 },
-            { id: "combo_solo", name: "Комбо Эгоист", desc: "Попкорн (S) + 1 Напиток", price: 1100 }
+            { id: "combo_max", name: "Комбо «MAX»", desc: "Ведро попкорна (L) + 2 Напитка + Начос", price: 2150 },
+            { id: "combo_duo", name: "Комбо на двоих", desc: "Попкорн (M) + 2 Напитка", price: 1350 },
+            { id: "combo_solo", name: "Комбо Эгоист", desc: "Попкорн (S) + 1 Напиток", price: 850 }
         ]
     },
     {
         id: "cat_popcorn", name: "🍿 Попкорн",
         items: [
-            { id: "pop_l", name: "Гигант (L)", desc: "Соленый / Сладкий / Сырный", price: 1100 },
-            { id: "pop_m", name: "Стандарт (M)", desc: "Соленый / Сладкий", price: 850 },
-            { id: "pop_s", name: "Малый (S)", desc: "Соленый / Сладкий", price: 650 }
+            { id: "pop_l", name: "Гигант (L)", desc: "Соленый / Сладкий / Сырный", price: 800 },
+            { id: "pop_m", name: "Стандарт (M)", desc: "Соленый / Сладкий", price: 600 },
+            { id: "pop_s", name: "Малый (S)", desc: "Соленый / Сладкий", price: 450 }
         ]
     },
     {
         id: "cat_drinks", name: "🥤 Напитки",
         items: [
-            { id: "drink_cola_l", name: "Кола (0.8л)", desc: "Со льдом", price: 450 },
-            { id: "drink_cola_m", name: "Кола (0.5л)", desc: "Со льдом", price: 300 },
-            { id: "drink_water", name: "Вода (0.5л)", desc: "Газ / Без газа", price: 250 }
+            { id: "drink_cola_l", name: "Кола (0.8л)", desc: "Со льдом", price: 350 },
+            { id: "drink_cola_m", name: "Кола (0.5л)", desc: "Со льдом", price: 250 },
+            { id: "drink_water", name: "Вода (0.5л)", desc: "Газ / Без газа", price: 150 }
         ]
     },
     {
         id: "cat_snacks", name: "🍫 Снеки",
         items: [
-            { id: "snack_nachos", name: "Начос", desc: "С сырным соусом", price: 650 },
-            { id: "snack_nuts", name: "Арахис", desc: "Соленый", price: 400 }
+            { id: "snack_nachos", name: "Начос", desc: "С сырным соусом", price: 500 },
+            { id: "snack_nuts", name: "Арахис", desc: "Соленый", price: 250 }
         ]
     }
 ];
@@ -85,7 +84,6 @@ function renderCatalog() {
         card.className = 'movie-card';
         card.onclick = () => openBookingModal(movie.id);
         
-        // Добавлена плашка с ценой на постер
         card.innerHTML = `
             <div class="movie-card-poster">
                 <img src="${movie.poster}" alt="${movie.title}" onerror="this.src='https://via.placeholder.com/300x450/2a2a35/fff?text=Нет+постера'">
@@ -139,10 +137,23 @@ function openBookingModal(id) {
     document.getElementById('modal-movie-genre').textContent = `Жанр: ${movie.genre}`;
     document.getElementById('modal-movie-price').textContent = `Билет: ${movie.price} ₽`;
 
+    // ГЕНЕРАЦИЯ ДИНАМИЧЕСКИХ СЕАНСОВ
+    const sessionsGrid = document.getElementById('dynamic-sessions-grid');
+    if (sessionsGrid) {
+        sessionsGrid.innerHTML = '';
+        movie.sessions.forEach(time => {
+            const btn = document.createElement('button');
+            btn.className = 'session-btn';
+            btn.textContent = time;
+            btn.onclick = () => goToStep('step-hall-container');
+            sessionsGrid.appendChild(btn);
+        });
+    }
+
     document.querySelectorAll('.step-container').forEach(el => el.classList.add('hidden'));
     document.getElementById('step-sessions-container').classList.remove('hidden');
     document.getElementById('payment-receipt-block').classList.add('hidden');
-    document.getElementById('global-total-badge').classList.add('hidden'); // Скрыт на этапе сеансов
+    document.getElementById('global-total-badge').classList.add('hidden');
     
     renderSeats();
     renderBarTabs();
@@ -162,7 +173,6 @@ function goToStep(stepId) {
     const targetStep = document.getElementById(stepId);
     if (targetStep) targetStep.classList.remove('hidden');
 
-    // Показываем глобальный счетчик на шагах после сеансов
     const badge = document.getElementById('global-total-badge');
     if (stepId === 'step-sessions-container') {
         badge.classList.add('hidden');
@@ -170,7 +180,6 @@ function goToStep(stepId) {
         badge.classList.remove('hidden');
     }
 
-    // Сброс зума при заходе в зал
     if (stepId === 'step-hall-container') {
         currentHallZoom = window.innerWidth < 600 ? 0.6 : 1; 
         applyZoom();
@@ -295,10 +304,9 @@ function updateService(id, change) {
     updateCheckoutSummary();
 }
 
-// Глобальный пересчет корзины
 function updateCheckoutSummary() {
     const ticketsCount = currentOrder.selectedSeats.length;
-    const ticketsSum = ticketsCount * currentOrder.ticketPrice; // Цена берется из фильма
+    const ticketsSum = ticketsCount * currentOrder.ticketPrice;
     
     let servicesSum = 0;
     let servicesDetails = [];
@@ -315,10 +323,8 @@ function updateCheckoutSummary() {
 
     const totalSum = ticketsSum + servicesSum;
     
-    // Обновление глобального бейджа
     document.getElementById('global-badge-sum').textContent = totalSum;
 
-    // Обновление деталей оформления
     document.getElementById('summary-seats-count').textContent = ticketsCount;
     document.getElementById('summary-total-sum').textContent = `${totalSum} ₽`;
     
