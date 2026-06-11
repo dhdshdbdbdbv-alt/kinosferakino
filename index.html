@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Сеть кинотеатров «КИНОСФЕРА»</title>
-    <link rel="stylesheet" href="css.css?v=2.0">
+    <link rel="stylesheet" href="css.css?v=3.0">
 </head>
 <body>
 
@@ -29,8 +29,20 @@
             <div class="city-list">
                 <button class="city-option" data-city="Москва">Москва</button>
                 <button class="city-option" data-city="Санкт-Петербург">Санкт-Петербург</button>
+                <button class="city-option" data-city="Новосибирск">Новосибирск</button>
                 <button class="city-option" data-city="Екатеринбург">Екатеринбург</button>
                 <button class="city-option" data-city="Казань">Казань</button>
+                <button class="city-option" data-city="Нижний Новгород">Нижний Новгород</button>
+                <button class="city-option" data-city="Красноярск">Красноярск</button>
+                <button class="city-option" data-city="Челябинск">Челябинск</button>
+                <button class="city-option" data-city="Самара">Самара</button>
+                <button class="city-option" data-city="Уфа">Уфа</button>
+                <button class="city-option" data-city="Ростов-на-Дону">Ростов-на-Дону</button>
+                <button class="city-option" data-city="Омск">Омск</button>
+                <button class="city-option" data-city="Краснодар">Краснодар</button>
+                <button class="city-option" data-city="Воронеж">Воронеж</button>
+                <button class="city-option" data-city="Пермь">Пермь</button>
+                <button class="city-option" data-city="Волгоград">Волгоград</button>
             </div>
             <button class="nav-btn-back close-mini-modal" style="width: 100%; margin-top: 15px;">Отмена</button>
         </div>
@@ -82,11 +94,11 @@
                 <div class="flow-header">
                     <button class="nav-btn-back" onclick="goToStep('step-details-container')">← Назад</button>
                     <h2 class="step-title-center">Расписание</h2>
-                    <div style="width: 60px;"></div> </div>
+                    <div style="width: 60px;"></div>
+                </div>
                 <div class="context-movie-title" id="context-title-sessions"></div>
                 
-                <div id="dynamic-sessions-grid" class="sessions-grid">
-                    </div>
+                <div id="dynamic-sessions-grid" class="sessions-grid"></div>
             </div>
 
             <div id="step-hall-container" class="step-container hidden">
@@ -157,14 +169,13 @@
                     <strong>СИСТЕМНЫЙ СБОЙ ТРАНЗАКЦИИ:</strong><br><br>
                     Код ошибки: #ERR-8902-SEC.<br>
                     Ответ шлюза: Отказ в доступе к базе данных (LocalHost/CinemaDB).<br>
-                    Возможная причина: повреждение ключа шифрования (AES-256). Транзакция отменена.
-                    В настоящий момент привычные средсваоплаты не доступны. Уже ведется работа над исправлением поломки. Вы можете оплатить переводом на номер +79196382853 ozon. По поводу дальнейше помощи можете обратиться в нашу поддержку telegram: @KINOSFERA_support
+                    Возможная причина: Нарушение структуры файла .accounts или повреждение ключа шифрования (AES-256). Транзакция отменена.
                 </div>
             </div>
 
         </div>
     </div>
 
-    <script src="main.js?v=2.0"></script>
+    <script src="main.js?v=3.0"></script>
 </body>
 </html>
