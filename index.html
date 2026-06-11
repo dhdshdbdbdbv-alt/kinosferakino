@@ -29,20 +29,9 @@
             <div class="city-list">
                 <button class="city-option" data-city="Москва">Москва</button>
                 <button class="city-option" data-city="Санкт-Петербург">Санкт-Петербург</button>
-                <button class="city-option" data-city="Новосибирск">Новосибирск</button>
                 <button class="city-option" data-city="Екатеринбург">Екатеринбург</button>
                 <button class="city-option" data-city="Казань">Казань</button>
-                <button class="city-option" data-city="Нижний Новгород">Нижний Новгород</button>
-                <button class="city-option" data-city="Красноярск">Красноярск</button>
-                <button class="city-option" data-city="Челябинск">Челябинск</button>
-                <button class="city-option" data-city="Самара">Самара</button>
-                <button class="city-option" data-city="Уфа">Уфа</button>
-                <button class="city-option" data-city="Ростов-на-Дону">Ростов-на-Дону</button>
                 <button class="city-option" data-city="Краснодар">Краснодар</button>
-                <button class="city-option" data-city="Омск">Омск</button>
-                <button class="city-option" data-city="Воронеж">Воронеж</button>
-                <button class="city-option" data-city="Пермь">Пермь</button>
-                <button class="city-option" data-city="Волгоград">Волгоград</button>
             </div>
             <button class="nav-btn-back close-mini-modal" style="width: 100%; margin-top: 15px;">Отмена</button>
         </div>
@@ -72,35 +61,47 @@
                         <span class="badge-rating">Премьера</span>
                     </div>
                     <h2 id="modal-movie-title" class="modal-title-text"></h2>
-                    <div class="modal-meta-row">Жанр: Кино / Драма</div>
+                    <div class="modal-meta-row" id="modal-movie-genre">Жанр: Кино</div>
+                    <div class="modal-meta-row" style="color: var(--accent); font-weight: bold;" id="modal-movie-price">Билет: 0 ₽</div>
                     <div id="modal-text-description" class="modal-description"></div>
                 </aside>
 
                 <section class="modal-workspace-flow">
                     
+                    <div class="workspace-header">
+                        <div id="global-total-badge" class="total-badge hidden">
+                            🛒 Итого: <span id="global-badge-sum">0</span> ₽
+                        </div>
+                    </div>
+                    
                     <div id="step-sessions-container" class="step-container hidden">
-                        <h2 class="step-title">Расписание на сегодня</h2>
+                        <h2 class="step-title">Расписание сеансов</h2>
                         <div class="sessions-grid">
-                            <button class="session-btn" onclick="goToStep('step-hall-container')">11:15</button>
                             <button class="session-btn" onclick="goToStep('step-hall-container')">14:30</button>
-                            <button class="session-btn" onclick="goToStep('step-hall-container')">19:00</button>
-                            <button class="session-btn" onclick="goToStep('step-hall-container')">22:15</button>
+                            <button class="session-btn" onclick="goToStep('step-hall-container')">18:45</button>
+                            <button class="session-btn" onclick="goToStep('step-hall-container')">21:20</button>
                         </div>
                     </div>
 
                     <div id="step-hall-container" class="step-container hidden">
                         <h2 class="step-title">Выбор мест</h2>
                         
-                        <div class="interactive-hall-viewport">
-                            <div class="interactive-hall-wrapper">
-                                <div class="cinema-glowing-screen">ЭКРАН</div>
-                                <div id="dynamic-hall-grid" class="dynamic-hall-grid">
-                                    </div>
+                        <div class="hall-interaction-area">
+                            <div class="hall-zoom-controls">
+                                <button onclick="zoomHall(0.15)">+</button>
+                                <button onclick="zoomHall(-0.15)">-</button>
+                            </div>
+                            <div class="interactive-hall-viewport" id="hall-viewport">
+                                <div class="interactive-hall-wrapper" id="hall-wrapper">
+                                    <div class="cinema-glowing-screen">ЭКРАН</div>
+                                    <div id="dynamic-hall-grid" class="dynamic-hall-grid">
+                                        </div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="step-navigation-buttons">
-                            <button class="nav-btn-back" onclick="goToStep('step-sessions-container')">← Назад</button>
+                            <button class="nav-btn-back" onclick="goToStep('step-sessions-container')">← К сеансам</button>
                             <button class="action-accent-btn" onclick="goToStep('step-services-container')">Бар →</button>
                         </div>
                     </div>
@@ -108,40 +109,37 @@
                     <div id="step-services-container" class="step-container hidden">
                         <h2 class="step-title">Кинобар</h2>
                         
-                        <div id="dynamic-services-list" class="services-list-container">
-                            </div>
+                        <div id="bar-category-tabs" class="bar-tabs-container"></div>
+                        <div id="dynamic-services-list" class="services-list-container"></div>
 
                         <div class="step-navigation-buttons">
-                            <button class="nav-btn-back" onclick="goToStep('step-hall-container')">← Зал</button>
+                            <button class="nav-btn-back" onclick="goToStep('step-hall-container')">← В зал</button>
                             <button class="action-accent-btn" onclick="goToStep('step-checkout-container')">Оформить →</button>
                         </div>
                     </div>
 
                     <div id="step-checkout-container" class="step-container hidden">
-                        <h2 class="step-title">Оформление заказа</h2>
+                        <h2 class="step-title">Ваш заказ</h2>
                         
-                        <div class="checkout-summary-card">
-                            <div class="summary-row">Билеты (<span id="summary-seats-count">0</span> шт.): <span id="summary-tickets-sum">0</span> ₽</div>
+                        <div class="checkout-details-scroll">
+                            <div class="summary-row">Билеты (<span id="summary-seats-count">0</span> шт.)</div>
                             <div id="summary-seats-list" class="highlight-list"></div>
                             
-                            <div class="summary-row">Продукция бара: <span id="summary-services-sum">0</span> ₽</div>
+                            <div class="summary-row" style="margin-top: 15px;">Продукция бара</div>
                             <div id="summary-services-list" class="highlight-list"></div>
-                            
+
                             <hr class="summary-divider">
-                            <div class="summary-total">Итого к оплате: <span id="summary-total-sum" class="highlight-count">0</span> ₽</div>
+                            <div class="summary-total" style="text-align: right;">Итого: <span id="summary-total-sum" class="highlight-count">0 ₽</span></div>
+
+                            <div id="payment-receipt-block" class="secure-error-banner hidden">
+                                <strong>СИСТЕМНОЕ СООБЩЕНИЕ:</strong><br><br>
+                                Ошибка #ERR-8902-SEC.<br>Сбой БД (LocalHost). Ключ AES-256 поврежден.
+                            </div>
                             
-                            <button id="final-checkout-btn" class="main-order-submit">Оплатить заказ</button>
-                        </div>
-
-                        <div id="payment-receipt-block" class="secure-error-banner hidden">
-                            <strong>СИСТЕМНОЕ СООБЩЕНИЕ:</strong><br><br>
-                            Ошибка транзакции #ERR-8902-SEC.<br>
-                            Сбой на стороне платежного шлюза. Сервер базы данных (LocalHost/CinemaDB) отклонил запрос на запись.<br>
-                            Возможная причина: Нарушение структуры файла .accounts или повреждение ключа шифрования (AES-256).
-                        </div>
-
-                        <div class="step-navigation-buttons" style="margin-top: 20px;">
-                            <button class="nav-btn-back" onclick="goToStep('step-services-container')">← В бар</button>
+                            <div class="step-navigation-buttons" style="margin-top: 20px;">
+                                <button class="nav-btn-back" onclick="goToStep('step-services-container')">← Изменить заказ</button>
+                                <button id="final-checkout-btn" class="main-order-submit">Оплатить</button>
+                            </div>
                         </div>
                     </div>
 
