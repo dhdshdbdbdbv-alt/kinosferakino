@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Сеть кинотеатров «КИНОСФЕРА»</title>
-    <link rel="stylesheet" href="css.css?v=1.1">
+    <link rel="stylesheet" href="css.css?v=2.0">
 </head>
 <body>
 
@@ -18,7 +18,7 @@
 
     <main class="catalog-section">
         <h1 class="section-title">Сегодня в КИНО</h1>
-        <div class="subtitle-text">Все фильмы (19)</div>
+        <div class="subtitle-text">Все фильмы (21)</div>
         <div id="movies-grid" class="movies-ultimate-grid">
             </div>
     </main>
@@ -31,7 +31,6 @@
                 <button class="city-option" data-city="Санкт-Петербург">Санкт-Петербург</button>
                 <button class="city-option" data-city="Екатеринбург">Екатеринбург</button>
                 <button class="city-option" data-city="Казань">Казань</button>
-                <button class="city-option" data-city="Краснодар">Краснодар</button>
             </div>
             <button class="nav-btn-back close-mini-modal" style="width: 100%; margin-top: 15px;">Отмена</button>
         </div>
@@ -48,97 +47,124 @@
     </div>
 
     <div id="booking-modal-overlay" class="booking-modal-overlay hidden">
-        <div class="modal-content-wrapper">
+        <div class="modal-content-wrapper flow-wrapper">
             <button id="close-modal-btn" class="close-modal-btn">✕</button>
 
-            <div class="modal-grid-layout">
-                <aside class="modal-sidebar-info">
-                    <div class="modal-poster-box">
-                        <img id="modal-movie-poster" src="" alt="Постер">
+            <div id="step-details-container" class="step-container hidden">
+                <div class="movie-details-layout">
+                    <div class="details-poster-col">
+                        <img id="detail-poster" src="" alt="Постер">
                     </div>
-                    <div class="modal-badges">
-                        <span class="badge-age badge-outline">18+</span>
-                        <span class="badge-rating" style="background:#e50914; border:none; padding: 2px 6px; border-radius: 4px; color:white; font-size:11px;">Премьера</span>
-                    </div>
-                    <h2 id="modal-movie-title" class="modal-title-text"></h2>
-                    <div class="modal-meta-row" id="modal-movie-genre">Жанр: Кино</div>
-                    <div class="modal-meta-row" style="color: var(--accent); font-weight: bold;" id="modal-movie-price">Билет: 0 ₽</div>
-                </aside>
-
-                <section class="modal-workspace-flow">
-                    
-                    <div class="workspace-header">
-                        <div id="global-total-badge" class="total-badge hidden">
-                            🛒 Итого: <span id="global-badge-sum">0</span> ₽
+                    <div class="details-info-col">
+                        <h2 id="detail-title" class="detail-main-title"></h2>
+                        <div class="detail-badges">
+                            <span id="detail-age" class="badge-outline"></span>
+                            <span id="detail-genre" class="detail-genre-text"></span>
+                        </div>
+                        <div class="detail-meta-grid">
+                            <div class="meta-item"><span>Страна:</span> <span id="detail-country"></span></div>
+                            <div class="meta-item"><span>Режиссер:</span> <span id="detail-director"></span></div>
+                            <div class="meta-item"><span>В ролях:</span> <span id="detail-cast"></span></div>
+                        </div>
+                        <div class="detail-description">
+                            <h3>О фильме</h3>
+                            <p id="detail-desc"></p>
+                        </div>
+                        <div class="detail-action-footer">
+                            <div class="detail-price-hint" id="detail-price">Билет: 0 ₽</div>
+                            <button class="action-accent-btn full-width-btn" onclick="goToStep('step-sessions-container')">Выбрать сеанс →</button>
                         </div>
                     </div>
-                    
-                    <div id="step-sessions-container" class="step-container hidden">
-                        <h2 class="step-title">Расписание сеансов</h2>
-                        <div id="dynamic-sessions-grid" class="sessions-grid"></div>
-                    </div>
-
-                    <div id="step-hall-container" class="step-container hidden">
-                        <h2 class="step-title">Выбор мест</h2>
-                        
-                        <div class="hall-interaction-area">
-                            <div class="hall-zoom-controls">
-                                <button onclick="zoomHall(0.15)">+</button>
-                                <button onclick="zoomHall(-0.15)">-</button>
-                            </div>
-                            <div class="interactive-hall-viewport" id="hall-viewport">
-                                <div class="interactive-hall-wrapper" id="hall-wrapper">
-                                    <div class="cinema-glowing-screen">ЭКРАН</div>
-                                    <div id="dynamic-hall-grid" class="dynamic-hall-grid"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="step-navigation-buttons">
-                            <button class="nav-btn-back" onclick="goToStep('step-sessions-container')">← К сеансам</button>
-                            <button class="action-accent-btn" onclick="goToStep('step-services-container')">Бар →</button>
-                        </div>
-                    </div>
-
-                    <div id="step-services-container" class="step-container hidden">
-                        <h2 class="step-title">Кинобар</h2>
-                        <div id="bar-category-tabs" class="bar-tabs-container"></div>
-                        <div id="dynamic-services-list" class="services-list-container"></div>
-                        <div class="step-navigation-buttons">
-                            <button class="nav-btn-back" onclick="goToStep('step-hall-container')">← В зал</button>
-                            <button class="action-accent-btn" onclick="goToStep('step-checkout-container')">Оформить →</button>
-                        </div>
-                    </div>
-
-                    <div id="step-checkout-container" class="step-container hidden">
-                        <h2 class="step-title">Ваш заказ</h2>
-                        <div class="checkout-details-scroll">
-                            <div class="summary-row">Билеты (<span id="summary-seats-count">0</span> шт.)</div>
-                            <div id="summary-seats-list" class="highlight-list"></div>
-                            
-                            <div class="summary-row" style="margin-top: 15px;">Продукция бара</div>
-                            <div id="summary-services-list" class="highlight-list"></div>
-
-                            <hr class="summary-divider">
-                            <div class="summary-total" style="text-align: right;">Итого: <span id="summary-total-sum" class="highlight-count">0 ₽</span></div>
-
-                            <div id="payment-receipt-block" class="secure-error-banner hidden">
-                                <strong>СИСТЕМНОЕ СООБЩЕНИЕ:</strong><br><br>
-                                Ошибка #ERR-8902-SEC.<br>Сбой БД (LocalHost). Ключ AES-256 поврежден.  В настоящий момент привычные средсваоплаты не доступны. Уже ведется работа над исправлением поломки. Вы можете оплатить переводом на номер +79196382853 ozon. По поводу дальнейше помощи можете обратиться в нашу поддержку telegram: @KINOSFERA_support 
-                            </div>
-                            
-                            <div class="step-navigation-buttons" style="margin-top: 20px;">
-                                <button class="nav-btn-back" onclick="goToStep('step-services-container')">← Изменить заказ</button>
-                                <button id="final-checkout-btn" class="main-order-submit">Оплатить</button>
-                            </div>
-                        </div>
-                    </div>
-
-                </section>
+                </div>
             </div>
+
+            <div id="step-sessions-container" class="step-container hidden">
+                <div class="flow-header">
+                    <button class="nav-btn-back" onclick="goToStep('step-details-container')">← Назад</button>
+                    <h2 class="step-title-center">Расписание</h2>
+                    <div style="width: 60px;"></div> </div>
+                <div class="context-movie-title" id="context-title-sessions"></div>
+                
+                <div id="dynamic-sessions-grid" class="sessions-grid">
+                    </div>
+            </div>
+
+            <div id="step-hall-container" class="step-container hidden">
+                <div class="flow-header">
+                    <button class="nav-btn-back" onclick="goToStep('step-sessions-container')">← Назад</button>
+                    <h2 class="step-title-center">Выбор мест</h2>
+                    <div class="mini-cart-total"><span id="hall-badge-sum">0</span> ₽</div>
+                </div>
+                <div class="context-movie-title" id="context-title-hall"></div>
+                
+                <div class="hall-interaction-area">
+                    <div class="hall-zoom-controls">
+                        <button onclick="zoomHall(0.15)">+</button>
+                        <button onclick="zoomHall(-0.15)">-</button>
+                    </div>
+                    <div class="interactive-hall-viewport" id="hall-viewport">
+                        <div class="interactive-hall-wrapper" id="hall-wrapper">
+                            <div class="cinema-glowing-screen">ЭКРАН</div>
+                            <div id="dynamic-hall-grid" class="dynamic-hall-grid"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-navigation-buttons">
+                    <button class="action-accent-btn full-width-btn" onclick="goToStep('step-services-container')">Перейти в Бар →</button>
+                </div>
+            </div>
+
+            <div id="step-services-container" class="step-container hidden">
+                <div class="flow-header">
+                    <button class="nav-btn-back" onclick="goToStep('step-hall-container')">← Зал</button>
+                    <h2 class="step-title-center">Кинобар</h2>
+                    <div class="mini-cart-total"><span id="bar-badge-sum">0</span> ₽</div>
+                </div>
+
+                <div id="bar-category-tabs" class="bar-tabs-container"></div>
+                <div id="dynamic-services-list" class="services-list-container"></div>
+
+                <div class="step-navigation-buttons">
+                    <button class="action-accent-btn full-width-btn" onclick="goToStep('step-checkout-container')">Оформить заказ →</button>
+                </div>
+            </div>
+
+            <div id="step-checkout-container" class="step-container hidden">
+                <div class="flow-header">
+                    <button class="nav-btn-back" onclick="goToStep('step-services-container')">← В бар</button>
+                    <h2 class="step-title-center">Электронный чек</h2>
+                    <div style="width: 60px;"></div>
+                </div>
+
+                <div class="receipt-paper">
+                    <h3 class="receipt-title">Сеть кинотеатров «КИНОСФЕРА»</h3>
+                    <div class="receipt-divider"></div>
+                    
+                    <div class="receipt-row"><strong>Фильм:</strong> <span id="receipt-movie"></span></div>
+                    <div class="receipt-row"><strong>Билеты (<span id="receipt-seats-count">0</span>):</strong></div>
+                    <div class="receipt-sub-row" id="receipt-seats-list"></div>
+                    
+                    <div class="receipt-divider"></div>
+                    <div class="receipt-row"><strong>Продукция бара:</strong></div>
+                    <div class="receipt-sub-row" id="receipt-services-list"></div>
+
+                    <div class="receipt-divider-thick"></div>
+                    <div class="receipt-total">ИТОГО К ОПЛАТЕ: <span id="receipt-total-sum">0 ₽</span></div>
+                </div>
+
+                <div id="payment-receipt-block" class="secure-error-banner">
+                    <strong>СИСТЕМНЫЙ СБОЙ ТРАНЗАКЦИИ:</strong><br><br>
+                    Код ошибки: #ERR-8902-SEC.<br>
+                    Ответ шлюза: Отказ в доступе к базе данных (LocalHost/CinemaDB).<br>
+                    Возможная причина: повреждение ключа шифрования (AES-256). Транзакция отменена.
+                    В настоящий момент привычные средсваоплаты не доступны. Уже ведется работа над исправлением поломки. Вы можете оплатить переводом на номер +79196382853 ozon. По поводу дальнейше помощи можете обратиться в нашу поддержку telegram: @KINOSFERA_support
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <script src="main.js?v=1.1"></script>
+    <script src="main.js?v=2.0"></script>
 </body>
 </html>
