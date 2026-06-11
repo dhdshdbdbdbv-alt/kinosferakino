@@ -1,13 +1,13 @@
 /**
- * main.js — Система "КИНОСФЕРА" (Скоро в кино + Даты + Умный бар)
+ * main.js — Система "КИНОСФЕРА" (Расширенные спец. показы)
  */
 
 // Системная дата (сегодня)
 const SYSTEM_TODAY = new Date("2026-06-11T00:00:00");
 
-// Массив ВСЕХ фильмов (и текущих, и будущих)
+// Массив ВСЕХ фильмов (32 штуки)
 const moviesData = [
-    // --- ТЕКУЩИЙ ПРОКАТ ---
+    // --- ТЕКУЩИЙ ПРОКАТ (21 фильм) ---
     { id: 20, title: "Звероэволюция", poster: "zveroevolution.jpg", genre: "Боевик", age: "18+", price: 650, isUpcoming: false, country: "Франция", director: "Жан-Люк Мартель", cast: "Венсан Кассель", desc: "Секретная лаборатория создает новый вид хищников. Элитный отряд наемников отправляется в закрытую зону." },
     { id: 21, title: "Холоп 3", poster: "holop3.jpg", genre: "Комедия", age: "12+", price: 550, isUpcoming: false, country: "Россия", director: "Клим Шипенко", cast: "Милош Бикович", desc: "Новые герои, совершенно неожиданная историческая эпоха и старые добрые методы исправления характера." },
     { id: 1, title: "Майкл", poster: "Michael_(2026_film)_poster.jpg", genre: "Байопик", age: "18+", price: 700, isUpcoming: false, country: "США", director: "Антуан Фукуа", cast: "Джаафар Джексон", desc: "История восхождения легендарного Короля поп-музыки." },
@@ -20,8 +20,17 @@ const moviesData = [
     { id: 8, title: "Коммерсант", poster: "komers.jpg", genre: "Бизнес-драма", age: "16+", price: 500, isUpcoming: false, country: "Великобритания", director: "Гай Ричи", cast: "Чарли Ханнэм", desc: "Холодная и расчетливая бизнес-драма о циничном мире." },
     { id: 9, title: "Кощей", poster: "koshey.jpg", genre: "Фэнтези", age: "16+", price: 450, isUpcoming: false, country: "Россия", director: "Олег Трофим", cast: "Тихон Жизневский", desc: "История становления самого известного злодея русских сказок." },
     { id: 10, title: "Лео и Тиг", poster: "leoandtig.jpg", genre: "Анимация", age: "6+", price: 400, isUpcoming: false, country: "Россия", director: "Александр Люткевич", cast: "Озвучка: Дмитрий Назаров", desc: "Анимационная история для всей семьи." },
+    { id: 11, title: "Момо", poster: "momo.jpg", genre: "Сказка, Фэнтези", age: "12+", price: 400, isUpcoming: false, country: "Германия", director: "Кристиан Диттер", cast: "Мартина Гдек", desc: "Экранизация всемирно известной сказки. Удивительная история о девочке, обладающей уникальным даром." },
+    { id: 12, title: "Шевели перьями", poster: "moveyourwings.jpg", genre: "Анимация", age: "6+", price: 400, isUpcoming: false, country: "США", director: "Крис Рено", cast: "Озвучка: Стив Карелл", desc: "Вдохновляющий анимационный фильм о маленьком, но очень гордом воробье." },
+    { id: 13, title: "Никто не верил", poster: "nbt.jpg", genre: "Спорт, Драма", age: "12+", price: 450, isUpcoming: false, country: "США", director: "Бен Аффлек", cast: "Мэтт Дэймон", desc: "Спортивная драма о тренере-аутсайдере, который собирает команду из проблемных подростков с улиц." },
+    { id: 14, title: "Не одна дома", poster: "neodnadoma.jpg", genre: "Комедия", age: "12+", price: 400, isUpcoming: false, country: "Россия", director: "Александр Бойков", cast: "Марина Неелова", desc: "Искрометная комедия о находчивой пенсионерке, которая устраивает грабителям настоящий квест на выживание." },
+    { id: 15, title: "Закулисье", poster: "new-official-backrooms-poster.jpg", genre: "Хоррор", age: "18+", price: 550, isUpcoming: false, country: "США", director: "Джеймс Ван", cast: "Патрик Уилсон", desc: "Леденящий кровь хоррор о лиминальных пространствах и неизведанных нижних уровнях." },
+    { id: 16, title: "Обсессия", poster: "obessy.jpg", genre: "Триллер", age: "18+", price: 600, isUpcoming: false, country: "Великобритания", director: "Кристофер Нолан", cast: "Киллиан Мерфи", desc: "Пугающий триллер о гениальном композиторе, который в поисках идеального звука теряет связь с реальностью." },
+    { id: 17, title: "Пропасть", poster: "propast.jpg", genre: "Катастрофа", age: "16+", price: 550, isUpcoming: false, country: "Норвегия", director: "Роар Утхауг", cast: "Кристоффер Йонер", desc: "Группа профессиональных альпинистов оказывается заперта в глубокой расщелине после схода мощной лавины." },
+    { id: 18, title: "Чудесный мир", poster: "wondaryworld.jpg", genre: "Приключения", age: "12+", price: 500, isUpcoming: false, country: "США", director: "Стивен Спилберг", cast: "Том Холланд", desc: "Трое подростков находят портал в параллельную экосистему глубоко под землей." },
+    { id: 19, title: "Молодые и влюбленные", poster: "young-and-loved.jpg", genre: "Мелодрама", age: "16+", price: 450, isUpcoming: false, country: "Франция", director: "Селин Сьямма", cast: "Адель Энель", desc: "Трогательная мелодрама о первой любви, разбитых надеждах и сложном выборе взросления." },
     
-    // --- СКОРО В КИНО (Новые файлы) ---
+    // --- СКОРО В КИНО (11 фильмов) ---
     { id: 101, title: "Бизнес ночью", poster: "buisnesatnight.jpg", genre: "Триллер", age: "18+", price: 600, isUpcoming: true, releaseDate: "2026-06-25", country: "США", director: "Дэвид Финчер", cast: "Кристиан Бэйл", desc: "Когда закон засыпает, просыпаются настоящие деньги. Но за них придется заплатить высокую цену." },
     { id: 102, title: "Цыпленок: Пух и прах", poster: "chickenpuhandprah.jpg", genre: "Анимация", age: "6+", price: 450, isUpcoming: true, releaseDate: "2026-06-18", country: "Великобритания", director: "Питер Лорд", cast: "Саймон Пегг", desc: "Пернатые герои снова в деле! Самое дерзкое ограбление курятника века." },
     { id: 103, title: "Колония", poster: "colony(2026).jpg", genre: "Фантастика", age: "16+", price: 700, isUpcoming: true, releaseDate: "2026-07-02", country: "США", director: "Дени Вильнев", cast: "Оскар Айзек", desc: "Экспедиция на Марс находит то, что человечеству лучше было бы никогда не тревожить." },
@@ -39,29 +48,58 @@ const BAR_MENU = [
     {
         id: "cat_combo", name: "🔥 Комбо",
         items: [
-            { id: "combo", name: "Кино Комбо", hasFlavor: true, flavors: ["Карамель", "Сырный", "Соленый", "Микс"], options: [
-                { id: "combo_l", name: "Размер L (Для двоих)", price: 1100, img: "comboLfortwins.jpg" },
-                { id: "combo_m", name: "Размер M (Соло)", price: 800, img: "cjmboforalone.jpg" },
-                { id: "combo_s", name: "Детский Набор", price: 550, img: "comboforkids.jpg" }
-            ]}
+            {
+                id: "combo", name: "Кино Комбо", hasFlavor: true,
+                flavors: ["Карамель", "Сырный", "Соленый", "Микс"],
+                options: [
+                    { id: "combo_l", name: "Размер L (Для двоих)", price: 1100, img: "comboLfortwins.jpg" },
+                    { id: "combo_m", name: "Размер M (Соло)", price: 800, img: "cjmboforalone.jpg" },
+                    { id: "combo_s", name: "Детский Набор", price: 550, img: "comboforkids.jpg" }
+                ]
+            }
         ]
     },
     {
         id: "cat_popcorn", name: "🍿 Попкорн",
         items: [
-            { id: "popcorn", name: "Попкорн", hasFlavor: true, flavors: [ { name: "Карамель", img: "caramelpop.jpg" }, { name: "Сырный", img: "chesypop.jpg" }, { name: "Соленый", img: "saltypop.jpg" } ], options: [
-                { id: "pop_l", name: "Ведро L", price: 500 },
-                { id: "pop_m", name: "Ведро M", price: 350 },
-                { id: "pop_s", name: "Ведро S", price: 200 }
-            ]}
+            {
+                id: "popcorn", name: "Попкорн", hasFlavor: true,
+                flavors: [
+                    { name: "Карамель", img: "caramelpop.jpg" },
+                    { name: "Сырный", img: "chesypop.jpg" },
+                    { name: "Соленый", img: "saltypop.jpg" }
+                ],
+                options: [
+                    { id: "pop_l", name: "Ведро L", price: 500 },
+                    { id: "pop_m", name: "Ведро M", price: 350 },
+                    { id: "pop_s", name: "Ведро S", price: 200 }
+                ]
+            }
         ]
     },
     {
         id: "cat_drinks", name: "🥤 Напитки",
         items: [
-            { id: "cola", name: "Добрый Cola", hasFlavor: false, options: [ { id: "cola_08", name: "Стакан 0.8л", price: 200, img: "dobrycola.jpg" }, { id: "cola_05", name: "Стакан 0.5л", price: 150, img: "dobrycola.jpg" } ] },
-            { id: "orange", name: "Добрый Апельсин", hasFlavor: false, options: [ { id: "orange_08", name: "Стакан 0.8л", price: 200, img: "orangedobry.jpg" }, { id: "orange_05", name: "Стакан 0.5л", price: 150, img: "orangedobry.jpg" } ] },
-            { id: "water", name: "Вода", hasFlavor: false, options: [ { id: "water_05", name: "Бутылка 0.5л", price: 100, img: "bonaquawater.jpg" } ] }
+            {
+                id: "cola", name: "Добрый Cola", hasFlavor: false,
+                options: [
+                    { id: "cola_08", name: "Стакан 0.8л", price: 200, img: "dobrycola.jpg" },
+                    { id: "cola_05", name: "Стакан 0.5л", price: 150, img: "dobrycola.jpg" }
+                ]
+            },
+            {
+                id: "orange", name: "Добрый Апельсин", hasFlavor: false,
+                options: [
+                    { id: "orange_08", name: "Стакан 0.8л", price: 200, img: "orangedobry.jpg" },
+                    { id: "orange_05", name: "Стакан 0.5л", price: 150, img: "orangedobry.jpg" }
+                ]
+            },
+            {
+                id: "water", name: "Вода", hasFlavor: false,
+                options: [
+                    { id: "water_05", name: "Бутылка 0.5л", price: 100, img: "bonaquawater.jpg" }
+                ]
+            }
         ]
     }
 ];
@@ -131,9 +169,9 @@ function renderPromoBanners() {
     if(!slider) return;
     slider.innerHTML = '';
     
-    // Берем 3 случайных фильма
+    // Берем 10 случайных фильмов для большого слайдера
     const shuffled = [...moviesData].sort(() => 0.5 - Math.random());
-    const promos = shuffled.slice(0, 3);
+    const promos = shuffled.slice(0, 10);
 
     promos.forEach(movie => {
         const banner = document.createElement('div');
@@ -228,7 +266,6 @@ function openBookingModal(id) {
     document.getElementById('context-title-hall').textContent = `Фильм: ${movie.title}`;
     document.getElementById('receipt-movie').textContent = movie.title;
 
-    // Генерация Дат
     const dateContainer = document.getElementById('date-tabs-container');
     if (dateContainer) {
         dateContainer.innerHTML = '';
@@ -242,10 +279,9 @@ function openBookingModal(id) {
             btn.onclick = () => selectDate(dEl.formattedText, btn);
             dateContainer.appendChild(btn);
         });
-        currentOrder.selectedDate = dates[0].formattedText; // Дефолт
+        currentOrder.selectedDate = dates[0].formattedText;
     }
 
-    // Генерация Сеансов
     renderSessions(movie);
 
     document.querySelectorAll('.step-container').forEach(el => el.classList.add('hidden'));
@@ -266,7 +302,7 @@ function selectDate(dateStr, btnElement) {
     btnElement.classList.add('active');
     
     const movie = moviesData.find(m => m.id === currentOrder.movieId);
-    renderSessions(movie); // Можно перемешать сеансы для разных дат, если нужно
+    renderSessions(movie); 
 }
 
 function renderSessions(movie) {
@@ -369,7 +405,6 @@ function applyZoom() {
     if (wrapper) wrapper.style.transform = `scale(${currentHallZoom})`;
 }
 
-// Умный Бар
 function renderBarTabs() {
     const tabsContainer = document.getElementById('bar-category-tabs');
     if (!tabsContainer) return;
