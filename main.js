@@ -1,5 +1,5 @@
 /**
- * main.js — Система "КИНОСФЕРА"
+ * main.js — Система "КИНОСФЕРА" (С защитой от сбоев рендера)
  */
 
 const moviesData = [
@@ -68,9 +68,16 @@ window.zoomHall = zoomHall;
 window.switchBarTab = switchBarTab;
 
 document.addEventListener('DOMContentLoaded', () => {
-    renderCatalog();
-    initGlobalModals();
-    initStaticEventListeners();
+    try {
+        renderCatalog();
+        initGlobalModals();
+        initStaticEventListeners();
+    } catch (error) {
+        // Если JS упадет, мы увидим ошибку, а не пустой экран
+        const grid = document.getElementById('movies-grid');
+        if (grid) grid.innerHTML = `<div style="color:red; font-size:20px; padding:20px;">Системная ошибка JS: ${error.message}</div>`;
+        console.error(error);
+    }
 });
 
 function renderCatalog() {
@@ -83,16 +90,16 @@ function renderCatalog() {
         card.className = 'movie-card';
         card.onclick = () => openBookingModal(movie.id);
         
+        // НОВЫЙ ДИЗАЙН КАРТОЧКИ (как на скриншоте Kinoteatr.ru)
         card.innerHTML = `
             <div class="movie-card-poster">
-                <img src="${movie.poster}" alt="${movie.title}" onerror="this.src='https://via.placeholder.com/300x450/2a2a35/fff?text=Нет+постера'">
-                <div class="movie-badges-overlay">
-                    <span class="badge">${movie.age}</span>
-                    <span class="badge badge-price">${movie.price} ₽</span>
-                </div>
+                <img src="${movie.poster}" alt="${movie.title}" onerror="this.src='https://via.placeholder.com/300x450/2a2535/fff?text=Нет+постера'">
             </div>
-            <h3>${movie.title}</h3>
-            <div class="movie-genre">${movie.genre}</div>
+            <div class="movie-meta-bottom">
+                <span class="badge-outline">${movie.age}</span>
+                <span class="movie-genre-text">${movie.genre}</span>
+            </div>
+            <h3 class="movie-title-bottom">${movie.title}</h3>
         `;
         grid.appendChild(card);
     });
@@ -136,7 +143,7 @@ function openBookingModal(id) {
     document.getElementById('modal-movie-genre').textContent = `Жанр: ${movie.genre}`;
     document.getElementById('modal-movie-price').textContent = `Билет: ${movie.price} ₽`;
 
-    // Генерация сеансов (С ЗАЩИТОЙ)
+    // Генерация сеансов
     const sessionsGrid = document.getElementById('dynamic-sessions-grid');
     if (sessionsGrid) {
         sessionsGrid.innerHTML = '';
@@ -190,7 +197,6 @@ function goToStep(stepId) {
     }
 }
 
-// Зал
 function renderSeats() {
     const container = document.getElementById('dynamic-hall-grid');
     if (!container) return;
@@ -245,7 +251,6 @@ function applyZoom() {
     if (wrapper) wrapper.style.transform = `scale(${currentHallZoom})`;
 }
 
-// Бар
 function renderBarTabs() {
     const tabsContainer = document.getElementById('bar-category-tabs');
     if (!tabsContainer) return;
@@ -325,7 +330,6 @@ function updateCheckoutSummary() {
     const totalSum = ticketsSum + servicesSum;
     
     document.getElementById('global-badge-sum').textContent = totalSum;
-
     document.getElementById('summary-seats-count').textContent = ticketsCount;
     document.getElementById('summary-total-sum').textContent = `${totalSum} ₽`;
     
