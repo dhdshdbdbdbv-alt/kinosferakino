@@ -11,48 +11,37 @@
     <header class="cinema-top-bar">
         <div class="top-bar-left">
             <div class="city-selector-container" id="city-dropdown-wrapper">
-                <button class="city-selector-btn" id="active-city-btn" onclick="toggleCityDropdown()">
+                <button class="city-selector-btn" id="active-city-btn">
                     <span class="geo-icon">📍</span> 
                     <span id="current-city-name">Москва</span>
                     <span class="arrow-icon">▼</span>
                 </button>
-                <div class="city-dropdown-menu" id="city-menu">
-                    <div class="city-option" onclick="selectCity('Москва')">Москва</div>
-                    <div class="city-option" onclick="selectCity('Санкт-Петербург')">Санкт-Петербург</div>
-                    <div class="city-option" onclick="selectCity('Новосибирск')">Новосибирск</div>
-                    <div class="city-option" onclick="selectCity('Екатеринбург')">Екатеринбург</div>
-                    <div class="city-option" onclick="selectCity('Казань')">Казань</div>
-                    <div class="city-option" onclick="selectCity('Нижний Новгород')">Нижний Новгород</div>
-                    <div class="city-option" onclick="selectCity('Челябинск')">Челябинск</div>
-                    <div class="city-option" onclick="selectCity('Красноярск')">Красноярск</div>
-                    <div class="city-option" onclick="selectCity('Самара')">Самара</div>
-                    <div class="city-option" onclick="selectCity('Уфа')">Уфа</div>
-                    <div class="city-option" onclick="selectCity('Ростов-на-Дону')">Ростов-на-Дону</div>
-                    <div class="city-option" onclick="selectCity('Омск')">Омск</div>
-                    <div class="city-option" onclick="selectCity('Краснодар')">Краснодар</div>
-                    <div class="city-option" onclick="selectCity('Воронеж')">Воронеж</div>
-                    <div class="city-option" onclick="selectCity('Пермь')">Пермь</div>
-                    <div class="city-option" onclick="selectCity('Волгоград')">Волгоград</div>
+                <div class="city-dropdown-menu">
+                    <div class="city-option" data-city="Москва">Москва</div>
+                    <div class="city-option" data-city="Санкт-Петербург">Санкт-Петербург</div>
+                    <div class="city-option" data-city="Новосибирск">Новосибирск</div>
+                    <div class="city-option" data-city="Екатеринбург">Екатеринбург</div>
+                    <div class="city-option" data-city="Казань">Казань</div>
                 </div>
             </div>
         </div>
         <div class="logo">КИНО<span>СФЕРА</span></div>
         <div class="top-bar-right">
-            <span id="user-greeting" class="hidden" style="margin-right: 15px; color: #ccc;"></span>
-            <button class="mobile-login-link" id="top-bar-auth-btn" onclick="handleAuth()">Вход / Регистрация</button>
+            <button class="mobile-login-link" id="top-bar-auth-btn">Войти</button>
         </div>
     </header>
 
     <main class="main-layout">
         <section class="catalog-section">
             <h2 class="section-title">Сейчас в прокате</h2>
-            <div id="movies-grid" class="movies-ultimate-grid"></div>
+            <div id="movies-grid" class="movies-ultimate-grid">
+                </div>
         </section>
     </main>
 
     <div id="booking-modal-overlay" class="booking-modal-overlay hidden">
         <div class="modal-content-wrapper">
-            <button id="close-modal-btn" class="close-modal-btn" onclick="closeModal()">✕ Закрыть</button>
+            <button id="close-modal-btn" class="close-modal-btn">✕ Закрыть</button>
             
             <div class="modal-grid-layout">
                 <div class="modal-sidebar-info">
@@ -65,53 +54,54 @@
                         <span id="modal-badge-rating" class="badge-rating"></span>
                     </div>
                     <p class="modal-meta-row"><strong>Жанр:</strong> <span id="modal-text-genre"></span></p>
-                    <p class="modal-meta-row"><strong>Страна:</strong> <span id="modal-text-country"></span></p>
                     <p class="modal-meta-row"><strong>Хронометраж:</strong> <span id="modal-text-duration"></span></p>
-                    <p id="modal-text-description" class="modal-description"></p>
+                    <p class="modal-description">Погрузитесь в просмотр в залах повышенной комфортности Киносферы. Премиальные лазерные проекторы, динамический многоканальный звук Dolby Atmos и полностью раскладывающиеся кресла-реклайнеры.</p>
                 </div>
 
                 <div class="modal-workspace-flow">
-                    <div id="step-sessions-container" class="step-container">
+                    <div class="step-container">
                         <h3 class="step-title">1. Выберите время сеанса</h3>
                         <div id="modal-sessions-grid" class="modal-sessions-grid"></div>
                     </div>
 
                     <div id="step-hall-container" class="step-container hidden">
                         <h3 class="step-title">2. Выберите места в зале</h3>
-                        <div class="mobile-zoom-hint">💡 На смартфонах зал огромный. Используйте свайп для прокрутки и просмотра всех мест.</div>
+                        <div class="mobile-zoom-hint">💡 На смартфонах сетка оптимизирована. Разворачивайте экран для лучшего обзора.</div>
                         <div class="interactive-hall-viewport" id="hall-viewport">
                             <div class="interactive-hall-wrapper" id="hall-wrapper">
                                 <div class="cinema-glowing-screen">ЭКРАН</div>
                                 <div id="dynamic-hall-grid" class="dynamic-hall-grid"></div>
                             </div>
                         </div>
-                        <button class="action-accent-btn mt-10" onclick="goToStep('step-bar-container')">Подтвердить места</button>
                     </div>
 
                     <div id="step-bar-container" class="step-container hidden">
                         <h3 class="step-title">3. Премиальный Кинобар & Комбо</h3>
                         <div id="dynamic-bar-menu" class="bar-matrix-grid"></div>
-                        <button class="action-accent-btn mt-10" onclick="goToStep('step-checkout-container')" style="margin-top: 20px; width: 100%;">Перейти к оплате</button>
                     </div>
 
                     <div id="step-checkout-container" class="step-container hidden">
                         <h3 class="step-title">4. Идентификация и подтверждение заказа</h3>
-                        
+                        <div class="auth-box-fields">
+                            <input type="text" id="client-login-field" placeholder="Логин (минимум 3 символа)">
+                            <input type="password" id="client-pass-field" placeholder="Пароль (минимум 4 символа)">
+                            <button id="submit-account-btn" class="action-accent-btn">Проверить данные</button>
+                            <p id="account-validation-status" class="status-warning">Пройдите авторизацию для разблокировки бронирования</p>
+                        </div>
+
                         <div class="checkout-summary-card">
                             <div class="summary-text-block">
-                                <h4>Билеты:</h4>
-                                <p id="summary-seats-list" class="highlight-list">Ничего не выбрано</p>
-                                <h4>Бар:</h4>
-                                <p id="summary-bar-list" class="highlight-list">Ничего не выбрано</p>
+                                <p>Выбрано билетов: <span id="summary-seats-count" class="highlight-count">0</span> шт.</p>
+                                <p>Товаров из бара: <span id="summary-bar-count" class="highlight-count">0</span> шт.</p>
                                 <p class="summary-total">Итого к оплате: <span id="summary-total-sum">0</span> ₽</p>
                             </div>
-                            <button id="final-checkout-btn" class="main-order-submit" disabled onclick="processCheckout()">Оформить заказ</button>
+                            <button id="final-checkout-btn" class="main-order-submit" disabled>Оформить заказ</button>
                         </div>
 
                         <div id="payment-receipt-block" class="payment-receipt-block hidden">
-                            <pre id="receipt-text-container" style="background:#111; padding:15px; border-radius:5px; color:#ccc; margin-bottom:15px;"></pre>
+                            <pre id="receipt-text-container"></pre>
                             <div class="secure-error-banner">
-                                ❌ КРИТИЧЕСКАЯ ОШИБКА ШЛЮЗА: Транзакция отклонена банком-эквайером. Код ошибки: [ERR_BANK_9902]. Запрос заблокирован по соображениям безопасности. Пожалуйста, обратитесь в поддержку или используйте другой способ оплаты.
+                                ❌ КРИТИЧЕСКАЯ ОШИБКА ШЛЮЗА: Транзакция отклонена банком-эквайером. Код ошибки: [ERR_BANK_9902]. Запрос заблокирован по соображениям безопасности.
                             </div>
                         </div>
                     </div>
