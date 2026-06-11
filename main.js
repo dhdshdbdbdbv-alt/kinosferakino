@@ -1,235 +1,157 @@
-// ================= МАССИВНАЯ БАЗА ДАННЫХ ИЗ СКРИНШОТА =================
-// Имена файлов строго соответствуют тем, что на картинке!
-const moviesData = [
-    {
-        id: 1, title: "Убить Билла", poster: "killbill.jpg",
-        age: "18+", rating: "8.5", genre: "Боевик / Триллер", country: "США", duration: "111 мин.",
-        desc: "Беременная наемная убийца по кличке Черная Мамба получает пулю в голову во время собственного бракосочетания. Пролежав в коме четыре года, она приходит в себя и решает отомстить.",
-        sessions: ["10:00 (2D)", "14:30 (IMAX)", "21:00 (VIP)"]
-    },
-    {
-        id: 2, title: "Майкл", poster: "Michael_(2026_film)_poster.jpg",
-        age: "16+", rating: "8.0", genre: "Биография / Музыка", country: "США", duration: "135 мин.",
-        desc: "Глубокий и честный взгляд на сложную жизнь легендарного Майкла Джексона, от его первых шагов в Jackson 5 до статуса мировой поп-иконы.",
-        sessions: ["12:15 (2D)", "16:45 (IMAX)", "19:30 (2D)"]
-    },
-    {
-        id: 3, title: "Братья Карамазовы", poster: "brothers-karamazovy.jpg",
-        age: "16+", rating: "8.2", genre: "Драма / Экранизация", country: "Россия", duration: "140 мин.",
-        desc: "История сложных отношений в семье Карамазовы. Страсть, алчность, духовные искания и детективная интрига вокруг убийства главы семейства.",
-        sessions: ["11:00 (2D)", "18:00 (VIP)"]
-    },
-    {
-        id: 4, title: "Закулисье", poster: "backrooms.jpg",
-        age: "16+", rating: "7.1", genre: "Ужасы / Фантастика", country: "США", duration: "95 мин.",
-        desc: "Случайный шаг сквозь реальность переносит героев в бесконечные монотонные желтые коридоры. Им предстоит выжить там, где обитают жуткие сущности.",
-        sessions: ["13:00 (2D)", "23:50 (IMAX)"]
-    },
-    {
-        id: 5, title: "Кощей. Начало", poster: "koshey.jpg",
-        age: "6+", rating: "7.5", genre: "Мультфильм / Приключения", country: "Россия", duration: "90 мин.",
-        desc: "История молодого Кощея, который еще не стал Бессмертным злодеем, а был доблестным воином, ищущим свою любовь и спасающим мир от монстров.",
-        sessions: ["09:30 (3D)", "12:00 (2D)", "14:15 (2D)"]
-    },
-    {
-        id: 6, title: "Лео и Тиг", poster: "leoandtig.jpg",
-        age: "0+", rating: "8.1", genre: "Мультфильм", country: "Россия", duration: "85 мин.",
-        desc: "Новые приключения леопарда Лео и тигренка Тига в сказочной тайге, где они исследуют природу и помогают друзьям.",
-        sessions: ["10:15 (2D)", "13:45 (2D)"]
-    },
-    {
-        id: 7, title: "История Аси Клячиной...", poster: "asyaklyachkinasstory.jpg",
-        age: "12+", rating: "7.8", genre: "Драма / Мелодрама", country: "СССР", duration: "99 мин.",
-        desc: "Классика кинематографа. Пронзительная история любви, гордости и сложного выбора простой деревенской женщины.",
-        sessions: ["15:00 (VIP)"]
-    },
-    {
-        id: 8, title: "Тролли возвращаются", poster: "trolleyscomeback.jpg",
-        age: "6+", rating: "6.9", genre: "Мультфильм / Комедия", country: "США", duration: "92 мин.",
-        desc: "Музыкальные и вечно веселые тролли сталкиваются с новой угрозой, которая заставит их объединиться с давними врагами ради спасения музыки.",
-        sessions: ["11:30 (3D)", "16:00 (2D)"]
-    },
-    {
-        id: 9, title: "Одержимость", poster: "obessy.jpg",
-        age: "18+", rating: "8.5", genre: "Триллер / Драма", country: "США", duration: "106 мин.",
-        desc: "Молодой барабанщик попадает под руководство деспотичного дирижера, готового выжать из него гениальность любой ценой.",
-        sessions: ["19:15 (IMAX)", "22:00 (VIP)"]
-    },
-    {
-        id: 10, title: "Пропасть", poster: "propast.jpg",
-        age: "16+", rating: "6.5", genre: "Триллер / Выживание", country: "США", duration: "100 мин.",
-        desc: "Группа альпинистов оказывается в смертельной ловушке на отвесной скале. Чтобы выжить, им придется принимать жестокие решения.",
-        sessions: ["17:30 (2D)", "20:45 (IMAX)"]
-    },
-    {
-        id: 11, title: "Преступление на 3 этаже", poster: "crimeonthethirdfloor.jpg",
-        age: "16+", rating: "7.2", genre: "Детектив / Триллер", country: "Россия", duration: "110 мин.",
-        desc: "В элитном ЖК происходит загадочное убийство. У каждого из жильцов есть мотив, а детективу предстоит распутать клубок лжи.",
-        sessions: ["18:20 (2D)", "21:40 (VIP)"]
-    },
-    {
-        id: 12, title: "Шевели крыльями", poster: "moveyourwings.jpg",
-        age: "6+", rating: "7.0", genre: "Мультфильм", country: "Европа", duration: "88 мин.",
-        desc: "Забавные пернатые герои отправляются в большое путешествие на юг, но сбиваются с курса и попадают в невероятные переделки.",
-        sessions: ["09:45 (3D)", "14:00 (2D)"]
-    }
+// ПОЛНАЯ БАЗА ДАННЫХ ФИЛЬМОВ ДО КОНЦА
+const moviesDatabase = {
+    "asyaklyachkina": { title: "История Аси Клячиной", poster: "asyaklyachkinasstory.jpg", age: "12+", rating: "7.9", genre: "драма, мелодрама", duration: "1 ч. 50 мин.", basePrice: 350, sessions: ["12:00", "16:30"] },
+    "backrooms": { title: "Закулисье", poster: "backrooms.jpg", age: "16+", rating: "6.2", genre: "хоррор, триллер", duration: "1 ч. 35 мин.", basePrice: 400, sessions: ["19:00", "23:40"] },
+    "birthday": { title: "День рождения", poster: "birthday.jpg", age: "18+", rating: "7.1", genre: "триллер, детектив", duration: "2 ч. 05 мин.", basePrice: 450, sessions: ["14:20", "21:30"] },
+    "bogatiry": { title: "Три богатыря", poster: "bogatiry.jpg", age: "6+", rating: "8.2", genre: "мультфильм, приключения", duration: "1 ч. 25 мин.", basePrice: 300, sessions: ["10:00", "13:40"] },
+    "karamazovy": { title: "Братья Карамазовы", poster: "brothers-karamazovy.jpg", age: "16+", rating: "9.1", genre: "драма, классика", duration: "3 ч. 10 мин.", basePrice: 500, sessions: ["15:00", "19:30"] },
+    "crimeonfloor3": { title: "Преступление на 3 этаже", poster: "crimeonthethirdfloor.jpg", age: "16+", rating: "6.8", genre: "детектив, криминал", duration: "1 ч. 48 мин.", basePrice: 380, sessions: ["11:15", "17:45"] },
+    "danyandmany": { title: "Дани и Мэни", poster: "danyandmany.jpg", age: "0+", rating: "7.4", genre: "семейная комедия", duration: "1 ч. 32 мин.", basePrice: 320, sessions: ["10:30", "13:00"] },
+    "dramma": { title: "ДРАМА!", poster: "dramma.jpg", age: "16+", rating: "8.0", genre: "драма, искусство", duration: "2 ч. 15 мин.", basePrice: 420, sessions: ["16:00", "20:45"] },
+    "dengi": { title: "Грязные деньги", poster: "gryznyedengi.jpg", age: "18+", rating: "7.8", genre: "криминал, экшен", duration: "1 ч. 52 мин.", basePrice: 440, sessions: ["18:20", "22:10"] },
+    "images": { title: "Отражения", poster: "images.jpg", age: "16+", rating: "6.9", genre: "психологический триллер", duration: "1 ч. 44 мин.", basePrice: 390, sessions: ["13:50", "19:10"] },
+    "bill": { title: "Убить Билла", poster: "killbill.jpg", age: "18+", rating: "8.6", genre: "боевик, триллер", duration: "1 ч. 51 мин.", basePrice: 450, sessions: ["17:00", "22:30"] },
+    "killingparty": { title: "Убийственная вечеринка", poster: "killingparty.jpg", age: "18+", rating: "7.3", genre: "черная комедия", duration: "1 ч. 40 мин.", basePrice: 410, sessions: ["20:00", "00:15"] },
+    "komers": { title: "Коммерсант", poster: "komers.jpg", age: "16+", rating: "7.5", genre: "комедия, драма", duration: "1 ч. 42 мин.", basePrice: 370, sessions: ["12:10", "15:30"] },
+    "koshey": { title: "Кощей", poster: "koshey.jpg", age: "6+", rating: "7.0", genre: "фэнтези, приключения", duration: "1 ч. 30 мин.", basePrice: 310, sessions: ["09:30", "11:40"] },
+    "leo": { title: "Лео и Тиг", poster: "leoandtig.jpg", age: "0+", rating: "7.3", genre: "мультфильм, детский", duration: "1 ч. 12 мин.", basePrice: 280, sessions: ["09:00", "11:00"] },
+    "michael": { title: "Майкл (2026)", poster: "Michael_(2026_film)_poster.jpg", age: "18+", rating: "9.4", genre: "биография, музыка", duration: "2 ч. 35 мин.", basePrice: 600, sessions: ["14:00", "20:00"] },
+    "momo": { title: "Момо", poster: "momo.jpg", age: "18+", rating: "6.5", genre: "хоррор, мистика", duration: "1 ч. 36 мин.", basePrice: 400, sessions: ["21:15", "23:50"] },
+    "monk": { title: "Монах: Возвращение", poster: "monkfromborleycomeback.jpg", age: "16+", rating: "6.7", genre: "ужасы, драма", duration: "1 ч. 55 мин.", basePrice: 380, sessions: ["18:40", "22:00"] },
+    "movewings": { title: "Шевели перьями", poster: "moveyourwings.jpg", age: "0+", rating: "7.1", genre: "мультфильм, семейный", duration: "1 ч. 24 мин.", basePrice: 300, sessions: ["10:15", "12:45"] },
+    "nbt": { title: "Никто не верил", poster: "nbt.jpg", age: "12+", rating: "8.3", genre: "документальный, спорт", duration: "1 ч. 46 мин.", basePrice: 340, sessions: ["14:10", "18:00"] },
+    "backrooms_new": { title: "Закулисье: Официальный", poster: "new-official-backrooms-poster.jpg", age: "16+", rating: "6.4", genre: "триллер, фантастика", duration: "1 ч. 50 мин.", basePrice: 420, sessions: ["16:15", "21:15"] },
+    "notalone": { title: "Один дома 3: Другая история", poster: "notaloneathome3.jpg", age: "6+", rating: "5.8", genre: "комедия, приключения", duration: "1 ч. 38 мин.", basePrice: 330, sessions: ["11:30", "15:15"] },
+    "obessy": { title: "Обсессия", poster: "obessy.jpg", age: "16+", rating: "7.6", genre: "драма, триллер", duration: "2 ч. 02 мин.", basePrice: 430, sessions: ["13:30", "19:00"] },
+    "propast": { title: "Пропасть", poster: "propast.jpg", age: "16+", rating: "7.9", genre: "детектив, триллер", duration: "2 ч. 05 мин.", basePrice: 440, sessions: ["15:20", "20:30"] },
+    "schoolmag": { title: "Школа волшебников", poster: "schoolofmajicians.jpg", age: "6+", rating: "7.2", genre: "фэнтези, семейный", duration: "1 ч. 44 мин.", basePrice: 320, sessions: ["09:45", "13:10"] },
+    "sevenversts": { title: "Семь верст до рассвета", poster: "sevenverstsbeforedawn.jpg", age: "12+", rating: "8.1", genre: "военная драма", duration: "2 ч. 10 мин.", basePrice: 360, sessions: ["11:00", "16:45"] },
+    "spacymasha": { title: "Космическая Малука", poster: "spacymasha.jpg", age: "0+", rating: "6.8", genre: "мультфильм, фантастика", duration: "1 ч. 22 мин.", basePrice: 290, sessions: ["10:00", "12:30"] },
+    "trolleys": { title: "Тролли возвращаются", poster: "trolleyscomeback.jpg", age: "6+", rating: "7.4", genre: "мультфильм, мюзикл", duration: "1 ч. 31 мин.", basePrice: 320, sessions: ["12:20", "15:00"] },
+    "uponmagictree": { title: "У волшебного дерева", poster: "uponmajictree.jpg", age: "0+", rating: "7.0", genre: "сказка, детский", duration: "1 ч. 28 мин.", basePrice: 280, sessions: ["09:15", "14:30"] },
+    "wind": { title: "Ветер", poster: "Wind.jpg", age: "16+", rating: "8.4", genre: "артхаус, драма", duration: "1 ч. 55 мин.", basePrice: 400, sessions: ["17:30", "21:00"] }
+};
+
+// БАЗА ТОВАРОВ КИНОБАРА
+const barCatalog = [
+    { id: 'popcorn_caramel', name: 'Попкорн Карамель', prices: { S: 300, M: 450, L: 600 } },
+    { id: 'popcorn_salt', name: 'Попкорн Соленый', prices: { S: 250, M: 400, L: 550 } },
+    { id: 'soda_cola', name: 'Газировка Cola', prices: { S: 150, M: 220, L: 280 } },
+    { id: 'nachos_cheese', name: 'Начос сырный', prices: { S: 350, M: 500, L: 650 } }
 ];
 
-const barItemsData = [
-    { id: 'b1', name: 'Карамельный Попкорн', prices: { S: 350, M: 450, L: 550 } },
-    { id: 'b2', name: 'Сырный Попкорн', prices: { S: 380, M: 480, L: 580 } },
-    { id: 'b3', name: 'Начос с соусом', prices: { S: 400, M: 500, L: 600 } },
-    { id: 'b4', name: 'Coca-Cola (Разлив)', prices: { S: 150, M: 200, L: 280 } },
-    { id: 'b5', name: 'Комбо "Свидание"', prices: { S: 800, M: 1000, L: 1300 } },
-    { id: 'b6', name: 'Мармеладные мишки', prices: { S: 200, M: 300, L: 400 } }
-];
+// СОСТОЯНИЕ ТЕКУЩЕЙ СЕССИИ
+let appState = {
+    currentPrice: 0,
+    selectedSeats: 0,
+    barCart: {} // Формат: { item_id: { S: 0, M: 0, L: 0 } }
+};
 
-// ================= СОСТОЯНИЯ =================
-let currentUser = null;
-let currentMovie = null;
-let selectedSession = null;
-let selectedSeats = [];
-let cartBar = []; 
-const SEAT_PRICE = 450;
-
-// Инициализация
-document.addEventListener("DOMContentLoaded", () => {
-    renderCatalog();
-});
-
-// ================= ШАПКА И ГОРОДА =================
-function toggleCityDropdown() {
-    document.getElementById("city-menu").classList.toggle("show");
-}
-
-function selectCity(city) {
-    document.getElementById("current-city-name").innerText = city;
-    toggleCityDropdown();
-}
-
-function handleAuth() {
-    if (currentUser) {
-        alert("Вы уже авторизованы как: " + currentUser);
-        return;
-    }
-    const username = prompt("Создание локального аккаунта.\nВведите ваше имя:");
-    if (username && username.trim().length > 2) {
-        currentUser = username.trim();
-        document.getElementById("top-bar-auth-btn").innerText = "Выйти";
-        const greeting = document.getElementById("user-greeting");
-        greeting.innerText = "Привет, " + currentUser;
-        greeting.classList.remove("hidden");
-    }
-}
-
-// ================= КАТАЛОГ =================
-function renderCatalog() {
-    const grid = document.getElementById("movies-grid");
-    grid.innerHTML = "";
-    moviesData.forEach(movie => {
-        const card = document.createElement("div");
-        card.className = "movie-card";
-        card.onclick = () => openModal(movie.id);
+// 1. РЕНДЕРИНГ ГЛАВНОГО КАТАЛОГА (С ПЕРЕРАБОТКОЙ ПОД CSS)
+function initApp() {
+    const grid = document.getElementById('movies-grid');
+    grid.innerHTML = ''; // Очистка перед рендером
+    
+    for (const [key, movie] of Object.entries(moviesDatabase)) {
+        const card = document.createElement('div');
+        card.className = 'movie-ultimate-card';
+        card.onclick = () => openBookingModal(key);
         
         card.innerHTML = `
-            <img src="${movie.poster}" alt="${movie.title}" onerror="this.src='https://via.placeholder.com/200x300?text=Нет+постера'">
-            <div class="movie-card-info">
-                <h3>${movie.title}</h3>
-                <div class="movie-card-meta">
-                    <span>${movie.genre.split(' / ')[0]}</span>
-                    <span class="mc-age">${movie.age}</span>
+            <img class="card-poster-img" src="${movie.poster}" alt="${movie.title}">
+            <div class="card-hover-overlay">
+                <h3 class="hover-title">${movie.title}</h3>
+                <div class="hover-meta">
+                    <span class="hover-badge-age">${movie.age}</span>
+                    <span>★ ${movie.rating}</span>
+                </div>
+                <div class="hover-genre">${movie.genre}</div>
+                <div class="hover-sessions-list">
+                    ${movie.sessions.map(time => `<span class="hover-session-badge">${time}</span>`).join('')}
                 </div>
             </div>
         `;
         grid.appendChild(card);
-    });
+    }
 }
 
-// ================= МОДАЛЬНОЕ ОКНО И ШАГИ =================
-function openModal(movieId) {
-    currentMovie = moviesData.find(m => m.id === movieId);
-    if (!currentMovie) return;
+// 2. ОТКРЫТИЕ МОДАЛЬНОГО ОКНА БРОНИРОВАНИЯ
+function openBookingModal(movieKey) {
+    const movie = moviesDatabase[movieKey];
+    appState.currentPrice = movie.basePrice;
+    appState.selectedSeats = 0;
+    appState.barCart = {}; // Обнуляем бар при новом заказе
 
-    // Сброс старых данных
-    selectedSession = null;
-    selectedSeats = [];
-    cartBar = [];
+    // Обновляем левый блок инфо
+    document.getElementById('modal-movie-poster').src = movie.poster;
+    document.getElementById('modal-movie-title').textContent = movie.title;
+    document.getElementById('modal-badge-age').textContent = movie.age;
+    document.getElementById('modal-badge-rating').textContent = `★ ${movie.rating}`;
+    document.getElementById('modal-text-genre').textContent = movie.genre;
+    document.getElementById('modal-text-duration').textContent = movie.duration;
+
+    renderSessions(movie.sessions);
+    renderHall();
+    renderBar();
+    recalculateTotals();
+
+    // Сбрасываем видимость шагов
+    document.getElementById('step-hall-container').classList.add('hidden');
+    document.getElementById('step-bar-container').classList.add('hidden');
+    document.getElementById('step-checkout-container').classList.add('hidden');
     
-    // Скрытие шагов
-    document.getElementById("step-hall-container").classList.add("hidden");
-    document.getElementById("step-bar-container").classList.add("hidden");
-    document.getElementById("step-checkout-container").classList.add("hidden");
-    document.getElementById("payment-receipt-block").classList.add("hidden");
-    document.getElementById("final-checkout-btn").classList.remove("hidden");
+    // Показываем модалку
+    document.getElementById('booking-modal-overlay').classList.remove('hidden');
+}
 
-    // Инфо о фильме
-    document.getElementById("modal-movie-poster").src = currentMovie.poster;
-    document.getElementById("modal-movie-title").innerText = currentMovie.title;
-    document.getElementById("modal-badge-age").innerText = currentMovie.age;
-    document.getElementById("modal-badge-rating").innerText = "КП: " + currentMovie.rating;
-    document.getElementById("modal-text-genre").innerText = currentMovie.genre;
-    document.getElementById("modal-text-country").innerText = currentMovie.country;
-    document.getElementById("modal-text-duration").innerText = currentMovie.duration;
-    document.getElementById("modal-text-description").innerText = currentMovie.desc;
-
-    // Рендер сеансов
-    const sessGrid = document.getElementById("modal-sessions-grid");
-    sessGrid.innerHTML = "";
-    currentMovie.sessions.forEach(time => {
-        const btn = document.createElement("button");
-        btn.className = "session-btn";
-        btn.innerText = time;
+// 3. РЕНДЕРИНГ СЕАНСОВ
+function renderSessions(sessions) {
+    const container = document.getElementById('modal-sessions-grid');
+    container.innerHTML = '';
+    
+    sessions.forEach(time => {
+        const btn = document.createElement('button');
+        btn.className = 'modal-session-card-btn';
+        btn.innerHTML = `
+            <span class="time">${time}</span>
+            <span class="hall-type">LUX ATMOS</span>
+        `;
         btn.onclick = () => {
-            document.querySelectorAll(".session-btn").forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-            selectedSession = time;
-            goToStep('step-hall-container');
-            generateHugeHall();
-            renderBar();
+            document.querySelectorAll('.modal-session-card-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('step-hall-container').classList.remove('hidden'); // Открываем зал
         };
-        sessGrid.appendChild(btn);
+        container.appendChild(btn);
     });
-
-    document.getElementById("booking-modal-overlay").classList.remove("hidden");
 }
 
-function closeModal() {
-    document.getElementById("booking-modal-overlay").classList.add("hidden");
-}
-
-function goToStep(stepId) {
-    if(stepId === 'step-hall-container' && !selectedSession) return;
+// 4. РЕНДЕРИНГ ЗАЛА
+function renderHall() {
+    const grid = document.getElementById('dynamic-hall-grid');
+    grid.innerHTML = '';
     
-    const step = document.getElementById(stepId);
-    step.classList.remove("hidden");
-    updateCheckout();
-    
-    // Плавный скролл к шагу внутри модалки
-    step.scrollIntoView({ behavior: "smooth", block: "start" });
-}
-
-// ================= ОГРОМНЫЙ ЗАЛ =================
-function generateHugeHall() {
-    const grid = document.getElementById("dynamic-hall-grid");
-    grid.innerHTML = "";
-    selectedSeats = [];
-
-    const rows = 15;      // Огромное количество рядов
-    const seatsPerRow = 30; // Огромное количество мест
+    const rows = 8;
+    const seatsPerRow = 12;
 
     for (let r = 1; r <= rows; r++) {
-        const rowDiv = document.createElement("div");
-        rowDiv.style.marginBottom = "3px";
+        const rowDiv = document.createElement('div');
+        rowDiv.className = 'hall-row';
+        rowDiv.innerHTML = `<div class="row-label">Ряд ${r}</div>`;
+        
         for (let s = 1; s <= seatsPerRow; s++) {
-            const seat = document.createElement("div");
-            seat.className = "seat";
-            seat.innerText = s;
+            if (s === 7) rowDiv.innerHTML += `<div class="passage"></div>`; // Проход по центру
             
-            // Генерация занятых мест (соотношение 1 к 5 = 20%)
-            if (Math.random() < 0.20) {
-                seat.classList.add("occupied");
-            } else {
-                seat.onclick = () => toggleSeat(seat, r, s);
+            const isOccupied = Math.random() < 0.15; // 15% мест занято
+            const seat = document.createElement('div');
+            seat.className = `seat ${isOccupied ? 'occupied' : ''}`;
+            
+            if (!isOccupied) {
+                seat.onclick = function() {
+                    this.classList.toggle('selected');
+                    appState.selectedSeats += this.classList.contains('selected') ? 1 : -1;
+                    checkFlowProgression();
+                    recalculateTotals();
+                };
             }
             rowDiv.appendChild(seat);
         }
@@ -237,125 +159,135 @@ function generateHugeHall() {
     }
 }
 
-function toggleSeat(element, row, seatNum) {
-    const seatId = `Ряд ${row} Место ${seatNum}`;
-    const exists = selectedSeats.findIndex(s => s.id === seatId);
-
-    if (exists !== -1) {
-        selectedSeats.splice(exists, 1);
-        element.classList.remove("selected");
-    } else {
-        selectedSeats.push({ id: seatId });
-        element.classList.add("selected");
-    }
-    updateCheckout();
-}
-
-// ================= БАР =================
+// 5. РЕНДЕРИНГ КИНОБАРА С ЛОГИКОЙ МУЛЬТИРАЗМЕРОВ И СЧЕТЧИКОВ
 function renderBar() {
-    const grid = document.getElementById("dynamic-bar-menu");
-    if(grid.innerHTML !== "") return; 
+    const container = document.getElementById('dynamic-bar-menu');
+    container.innerHTML = '';
 
-    barItemsData.forEach(item => {
-        const card = document.createElement("div");
-        card.className = "bar-item-card";
-        
-        let selectedSize = 'M';
+    barCatalog.forEach(item => {
+        // Инициализируем стейт для каждого товара
+        appState.barCart[item.id] = { S: 0, M: 0, L: 0 };
 
-        card.innerHTML = `
-            <h4>${item.name}</h4>
-            <div class="size-options" id="sizes-${item.id}">
-                <button class="size-btn" data-size="S">S (${item.prices.S}₽)</button>
-                <button class="size-btn active" data-size="M">M (${item.prices.M}₽)</button>
-                <button class="size-btn" data-size="L">L (${item.prices.L}₽)</button>
-            </div>
-            <button class="add-bar-btn" id="add-${item.id}">Добавить</button>
-        `;
-        grid.appendChild(card);
+        const row = document.createElement('div');
+        row.className = 'bar-row-item';
 
-        const sizeBtns = card.querySelectorAll('.size-btn');
-        sizeBtns.forEach(btn => {
-            btn.onclick = () => {
-                sizeBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                selectedSize = btn.getAttribute('data-size');
-            };
+        let sizesHtml = '';
+        ['S', 'M', 'L'].forEach(size => {
+            sizesHtml += `
+                <div class="bar-size-card">
+                    <span class="size-title">Размер ${size}</span>
+                    <span class="size-price-label">${item.prices[size]} ₽</span>
+                    <div class="size-counter-controls">
+                        <button class="cnt-btn" onclick="updateBarCounter('${item.id}', '${size}', -1)">-</button>
+                        <span class="cnt-value" id="count-${item.id}-${size}">0</span>
+                        <button class="cnt-btn" onclick="updateBarCounter('${item.id}', '${size}', 1)">+</button>
+                    </div>
+                </div>
+            `;
         });
 
-        card.querySelector(`#add-${item.id}`).onclick = () => {
-            const price = item.prices[selectedSize];
-            const nameWithSize = `${item.name} (${selectedSize})`;
-            
-            const existing = cartBar.find(i => i.name === nameWithSize);
-            if (existing) {
-                existing.qty++;
-            } else {
-                cartBar.push({ name: nameWithSize, price: price, qty: 1 });
-            }
-            updateCheckout();
-        };
+        row.innerHTML = `
+            <div class="bar-item-details">
+                <h4>${item.name}</h4>
+                <p>Хрустящее дополнение к фильму</p>
+            </div>
+            <div class="bar-sizes-container">
+                ${sizesHtml}
+            </div>
+        `;
+        container.appendChild(row);
     });
 }
 
-// ================= ОФОРМЛЕНИЕ =================
-function updateCheckout() {
-    const seatsList = document.getElementById("summary-seats-list");
-    const barList = document.getElementById("summary-bar-list");
-    const totalEl = document.getElementById("summary-total-sum");
-
-    let total = 0;
-
-    if (selectedSeats.length > 0) {
-        seatsList.innerHTML = selectedSeats.map(s => `${s.id}`).join(", ");
-        total += selectedSeats.length * SEAT_PRICE;
-    } else {
-        seatsList.innerText = "Ничего не выбрано";
+// 6. ГЛОБАЛЬНАЯ ФУНКЦИЯ ДЛЯ КНОПОК БАРА (Внедряется в Window для onClick)
+window.updateBarCounter = function(itemId, size, delta) {
+    let currentCount = appState.barCart[itemId][size];
+    let newCount = currentCount + delta;
+    
+    if (newCount >= 0 && newCount <= 10) { // Лимит 10 штук одного размера
+        appState.barCart[itemId][size] = newCount;
+        document.getElementById(`count-${itemId}-${size}`).textContent = newCount;
+        recalculateTotals();
     }
+};
 
-    if (cartBar.length > 0) {
-        barList.innerHTML = cartBar.map(b => `${b.name} x${b.qty} (${b.price * b.qty}₽)`).join("<br>");
-        cartBar.forEach(b => total += (b.price * b.qty));
+// 7. ЛОГИКА ПРОДВИЖЕНИЯ ПО ШАГАМ (Если выбрано место, показываем бар и оплату)
+function checkFlowProgression() {
+    const barStep = document.getElementById('step-bar-container');
+    const checkoutStep = document.getElementById('step-checkout-container');
+    const submitBtn = document.getElementById('final-checkout-btn');
+
+    if (appState.selectedSeats > 0) {
+        barStep.classList.remove('hidden');
+        checkoutStep.classList.remove('hidden');
+        submitBtn.disabled = false;
     } else {
-        barList.innerText = "Ничего не выбрано";
+        barStep.classList.add('hidden');
+        checkoutStep.classList.add('hidden');
+        submitBtn.disabled = true;
     }
-
-    totalEl.innerText = total;
-
-    const btn = document.getElementById("final-checkout-btn");
-    btn.disabled = (selectedSeats.length === 0 && cartBar.length === 0);
 }
 
-function processCheckout() {
-    if (!currentUser) {
-        alert("Пожалуйста, нажмите 'Вход / Регистрация' в шапке сайта для оформления заказа.");
-        return;
+// 8. ПЕРЕСЧЕТ ИТОГОВ (Билеты + Бар)
+function recalculateTotals() {
+    let totalTicketsSum = appState.selectedSeats * appState.currentPrice;
+    let totalBarSum = 0;
+    let totalBarItems = 0;
+
+    for (let itemId in appState.barCart) {
+        for (let size in appState.barCart[itemId]) {
+            let qty = appState.barCart[itemId][size];
+            if (qty > 0) {
+                totalBarItems += qty;
+                // Ищем цену в каталоге
+                const itemData = barCatalog.find(i => i.id === itemId);
+                totalBarSum += qty * itemData.prices[size];
+            }
+        }
     }
 
-    const date = new Date().toLocaleString("ru-RU");
-    let receiptText = `=== КИНОСФЕРА: ФИСКАЛЬНЫЙ ЧЕК ===\n`;
-    receiptText += `Покупатель: ${currentUser}\n`;
-    receiptText += `Дата: ${date}\n`;
-    receiptText += `Фильм: ${currentMovie.title}\n`;
-    receiptText += `Сеанс: ${selectedSession}\n`;
-    receiptText += `---------------------------------\n`;
-    
-    if (selectedSeats.length > 0) {
-        receiptText += `БИЛЕТЫ (по ${SEAT_PRICE} ₽):\n`;
-        selectedSeats.forEach(s => receiptText += `- ${s.id}\n`);
-    }
+    const grandTotal = totalTicketsSum + totalBarSum;
 
-    if (cartBar.length > 0) {
-        receiptText += `\nБАР:\n`;
-        cartBar.forEach(b => receiptText += `- ${b.name} x${b.qty} = ${b.price * b.qty} ₽\n`);
-    }
-
-    const total = document.getElementById("summary-total-sum").innerText;
-    receiptText += `---------------------------------\n`;
-    receiptText += `ИТОГО К ОПЛАТЕ: ${total} ₽\n`;
-
-    document.getElementById("receipt-text-container").innerText = receiptText;
-    document.getElementById("payment-receipt-block").classList.remove("hidden");
-    document.getElementById("final-checkout-btn").classList.add("hidden");
-    
-    document.getElementById("payment-receipt-block").scrollIntoView({ behavior: "smooth", block: "end" });
+    document.getElementById('summary-seats-count').textContent = appState.selectedSeats;
+    document.getElementById('summary-bar-count').textContent = totalBarItems;
+    document.getElementById('summary-total-sum').textContent = grandTotal;
 }
+
+// 9. АВТОРИЗАЦИЯ И ОШИБКИ БАНКА (Заглушка для UI)
+document.getElementById('submit-account-btn').onclick = () => {
+    const status = document.getElementById('account-validation-status');
+    const login = document.getElementById('client-login-field').value;
+    const pass = document.getElementById('client-pass-field').value;
+
+    if (login.length >= 3 && pass.length >= 4) {
+        status.style.color = "#00e676";
+        status.textContent = "✅ Авторизация успешна. Вы можете оформить заказ.";
+    } else {
+        status.style.color = "#ef4444";
+        status.textContent = "⚠️ Логин или пароль слишком короткие!";
+    }
+};
+
+document.getElementById('final-checkout-btn').onclick = () => {
+    const receiptBlock = document.getElementById('payment-receipt-block');
+    const receiptText = document.getElementById('receipt-text-container');
+    
+    receiptText.textContent = `
+===== ЧЕК ОПЛАТЫ =====
+ТРАНЗАКЦИЯ: TXN-${Math.floor(Math.random() * 1000000)}
+БИЛЕТЫ: ${appState.selectedSeats} шт.
+БАР: ${document.getElementById('summary-bar-count').textContent} позиций
+ИТОГО К СПИСАНИЮ: ${document.getElementById('summary-total-sum').textContent} RUB
+======================
+ПОПЫТКА СОЕДИНЕНИЯ СО ШЛЮЗОМ...
+    `;
+    receiptBlock.classList.remove('hidden');
+};
+
+// 10. ЗАКРЫТИЕ МОДАЛКИ И ИНИЦИАЛИЗАЦИЯ
+document.getElementById('close-modal-btn').onclick = () => {
+    document.getElementById('booking-modal-overlay').classList.add('hidden');
+};
+
+// Запуск при загрузке страницы
+initApp();
