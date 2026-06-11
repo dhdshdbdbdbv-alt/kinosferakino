@@ -111,21 +111,26 @@ body {
 .seat.selected { background: var(--seat-selected); color: #000; font-weight: bold; box-shadow: 0 0 10px var(--seat-selected); }
 .seat.occupied { background: var(--seat-occupied); color: transparent; box-shadow: none; cursor: not-allowed; }
 
-/* Бар */
+/* НОВЫЙ БАР С КАРТИНКАМИ И SELECT */
 .bar-tabs-container { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 15px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
 .bar-tabs-container::-webkit-scrollbar { display: none; }
 .bar-tab { padding: 10px 20px; background: #2a2535; border-radius: 20px; white-space: nowrap; color: var(--text-muted); font-size: 14px; font-weight: bold; cursor: pointer; border: none; scroll-snap-align: start; transition: background 0.2s; }
 .bar-tab.active { background: var(--accent-red); color: white; }
-.services-list-container { max-height: 350px; overflow-y: auto; margin-bottom: 20px; }
-.services-list-container::-webkit-scrollbar { display: none; }
-.service-item { display: flex; justify-content: space-between; align-items: center; background: #1c1822; border: 1px solid #2a2535; padding: 15px; border-radius: 12px; margin-bottom: 10px; }
-.service-info h4 { margin: 0 0 5px 0; font-size: 15px; }
-.service-info p { margin: 0; color: var(--text-muted); font-size: 13px; line-height: 1.3; }
-.service-price { font-weight: bold; margin-top: 5px; color: #ddd; }
-.service-controls { display: flex; align-items: center; gap: 12px; background: #131118; padding: 5px; border-radius: 10px; }
-.control-btn { width: 34px; height: 34px; border-radius: 8px; border: none; background: #2a2535; color: white; font-size: 18px; cursor: pointer; transition: background 0.2s; }
+.services-list-container { max-height: 400px; overflow-y: auto; margin-bottom: 20px; padding-right: 5px; }
+.services-list-container::-webkit-scrollbar { width: 4px; }
+.services-list-container::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
+
+.service-item { display: flex; background: #1c1822; padding: 15px; border-radius: 12px; gap: 15px; border: 1px solid #2a2535; margin-bottom: 15px; align-items: center; }
+.service-img-box { width: 80px; height: 100px; flex-shrink: 0; background: #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; padding: 5px; box-sizing: border-box; }
+.service-img-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.service-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.service-info h4 { margin: 0 0 10px 0; font-size: 16px; color: #fff; }
+.service-selects { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 220px; }
+.service-select { background: #131118; border: 1px solid #444; color: white; padding: 10px; border-radius: 8px; font-size: 14px; outline: none; cursor: pointer; }
+.service-controls { display: flex; align-items: center; gap: 12px; background: #131118; padding: 8px; border-radius: 10px; align-self: stretch; }
+.control-btn { width: 36px; height: 36px; border-radius: 8px; border: none; background: #2a2535; color: white; font-size: 20px; cursor: pointer; transition: background 0.2s; display:flex; align-items:center; justify-content:center;}
 .control-btn:hover { background: #444; }
-.service-qty { font-size: 16px; font-weight: bold; width: 20px; text-align: center; }
+.service-qty { font-size: 18px; font-weight: bold; width: 24px; text-align: center; }
 
 /* Кнопки навигации */
 .step-navigation-buttons { display: flex; justify-content: space-between; align-items: center; gap: 15px; margin-top: 20px; }
@@ -165,12 +170,15 @@ body {
     .step-container { padding: 20px; }
     .close-modal-btn { top: 10px; right: 10px; background: rgba(0,0,0,0.5); }
     .sessions-grid { grid-template-columns: 1fr 1fr; }
+    
+    .service-item { flex-direction: column; align-items: stretch; }
+    .service-img-box { width: 100px; height: 120px; align-self: center; }
+    .service-selects { max-width: 100%; }
+    .service-controls { justify-content: space-between; }
 }
 
 @media (max-width: 480px) {
     .movie-card { flex: 0 0 140px; }
     .hall-interaction-area { margin: 0 -20px 20px; border-radius: 0; border-left: none; border-right: none; }
     .interactive-hall-viewport { height: 380px; }
-    .service-item { flex-direction: column; align-items: stretch; gap: 12px; }
-    .service-controls { justify-content: space-between; }
 }
