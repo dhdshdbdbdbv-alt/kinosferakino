@@ -27,9 +27,7 @@ body {
 .section-title { font-size: 24px; margin: 0 0 5px 0; }
 .subtitle-text { color: var(--text-muted); font-size: 14px; margin-bottom: 25px; }
 
-/* =========================================================
-   БАЗОВАЯ СЕТКА (ДЕСКТОП) - СТРОГО GRID! Без ползунков!
-   ========================================================= */
+/* БАЗОВАЯ СЕТКА (ДЕСКТОП) */
 .movies-ultimate-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -78,8 +76,8 @@ body {
 .modal-workspace-flow { padding: 30px; position: relative; }
 .step-title { margin-top: 0; margin-bottom: 20px; font-size: 20px; border-bottom: 1px solid #333; padding-bottom: 15px; }
 
-/* Счетчик пользователя */
-.workspace-header { position: absolute; top: 20px; right: 60px; z-index: 50; }
+/* Счетчик пользователя (Исправлено наложение!) */
+.workspace-header { position: absolute; top: 13px; right: 65px; z-index: 50; }
 .total-badge {
     background: #2a2a35; border: 1px solid #444; color: white;
     padding: 8px 15px; border-radius: 20px; font-size: 14px; font-weight: bold;
@@ -88,8 +86,8 @@ body {
 .total-badge span { color: var(--accent); }
 
 /* Сеансы */
-.sessions-grid { display: flex; gap: 15px; }
-.session-btn { background: #2a2a35; border: none; color: white; padding: 15px 25px; border-radius: 10px; cursor: pointer; font-size: 16px; font-weight: bold; flex: 1; }
+.sessions-grid { display: flex; flex-wrap: wrap; gap: 15px; }
+.session-btn { background: #2a2a35; border: none; color: white; padding: 15px 25px; border-radius: 10px; cursor: pointer; font-size: 16px; font-weight: bold; flex: 1 1 30%; }
 .session-btn:hover { background: var(--accent); }
 
 /* Зал */
@@ -130,15 +128,7 @@ body {
 .summary-total { font-size: 22px; font-weight: bold; }
 .highlight-count { color: var(--accent); }
 
-/* ИСПРАВЛЕНИЕ: Кнопки навигации больше не сползают */
-.step-navigation-buttons { 
-    display: flex; 
-    flex-wrap: wrap; 
-    justify-content: space-between; 
-    align-items: center; 
-    gap: 15px; 
-    margin-top: auto; 
-}
+.step-navigation-buttons { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; margin-top: auto; }
 .nav-btn-back { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 15px; padding: 10px 0; }
 .action-accent-btn, .main-order-submit {
     background: var(--accent); color: white; border: none; padding: 14px 28px;
@@ -147,9 +137,7 @@ body {
 
 .secure-error-banner { margin-top: 20px; background: rgba(229, 9, 20, 0.1); border: 1px solid var(--accent); padding: 15px; border-radius: 10px; color: #ff6b6b; font-size: 13px; line-height: 1.5; }
 
-/* =========================================================
-   МОБИЛЬНАЯ АДАПТАЦИЯ (Свайп фильмов ТОЛЬКО ТУТ!)
-   ========================================================= */
+/* МОБИЛЬНАЯ АДАПТАЦИЯ */
 @media (max-width: 900px) {
     .modal-grid-layout { grid-template-columns: 1fr; display: flex; flex-direction: column; min-height: auto; }
     .modal-sidebar-info { padding: 15px 20px; display: flex; gap: 15px; align-items: center; border-bottom: 1px solid #2a2a35; }
@@ -160,13 +148,10 @@ body {
     .modal-meta-row { font-size: 12px; margin-bottom: 0; }
     
     .modal-workspace-flow { padding: 20px; flex: 1; display: flex; flex-direction: column; }
-    
-    /* Скрываем верхний счетчик на мобилках (мало места), покажем инлайн */
     .workspace-header { display: none; } 
 }
 
 @media (max-width: 768px) {
-    /* Карусель (ползунок) переопределяет Grid только на телефонах */
     .movies-ultimate-grid {
         display: flex; flex-wrap: nowrap; overflow-x: auto; scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch; gap: 15px; padding-bottom: 20px;
@@ -177,7 +162,7 @@ body {
 
 @media (max-width: 480px) {
     .movie-card { flex: 0 0 140px; }
-    .sessions-grid { flex-direction: column; }
+    .session-btn { padding: 12px; font-size: 14px; }
     .hall-interaction-area { margin: 0 -15px 20px; border-radius: 0; border-left: none; border-right: none; }
     .interactive-hall-viewport { height: 380px; }
     .service-item { flex-direction: column; align-items: stretch; gap: 12px; }
