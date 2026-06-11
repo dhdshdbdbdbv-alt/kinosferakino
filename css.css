@@ -15,7 +15,7 @@
 body {
     margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background-color: var(--bg-dark); color: var(--text-main); -webkit-font-smoothing: antialiased;
-    overscroll-behavior-y: none;
+    overscroll-behavior-y: none; -webkit-tap-highlight-color: transparent;
 }
 
 /* Хедер и Каталог */
@@ -49,7 +49,9 @@ body {
 }
 .mini-modal-content { background: var(--bg-card); width: 100%; max-width: 350px; padding: 25px; border-radius: 16px; border: 1px solid #2a2535; }
 .mini-modal-content h3 { margin-top: 0; text-align: center; }
-.city-list { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; max-height: 50vh; overflow-y: auto; }
+.city-list { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; max-height: 50vh; overflow-y: auto; padding-right: 5px;}
+.city-list::-webkit-scrollbar { width: 4px; }
+.city-list::-webkit-scrollbar-thumb { background: #555; border-radius: 4px; }
 .city-option { background: #2a2535; border: none; color: white; padding: 12px; border-radius: 8px; cursor: pointer; }
 .city-option:hover { background: var(--accent-red); }
 
