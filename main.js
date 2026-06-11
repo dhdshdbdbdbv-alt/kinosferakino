@@ -1,11 +1,11 @@
 /**
- * main.js — Система "КИНОСФЕРА" (Добавлены настоящие Спецпоказы)
+ * main.js — Система "КИНОСФЕРА" (Без раздела спецпоказов)
  */
 
 const SYSTEM_TODAY = new Date("2026-06-11T00:00:00");
 
 const moviesData = [
-    // --- ТЕКУЩИЙ ПРОКАТ ---
+    // --- ТЕКУЩИЙ ПРОКАТ (21 фильм) ---
     { id: 20, title: "Звероэволюция", poster: "zveroevolution.jpg", genre: "Боевик", age: "18+", price: 650, isUpcoming: false, country: "Франция", director: "Жан-Люк Мартель", cast: "Венсан Кассель", desc: "Секретная лаборатория создает новый вид хищников. Элитный отряд наемников отправляется в закрытую зону." },
     { id: 21, title: "Холоп 3", poster: "holop3.jpg", genre: "Комедия", age: "12+", price: 550, isUpcoming: false, country: "Россия", director: "Клим Шипенко", cast: "Милош Бикович", desc: "Новые герои, совершенно неожиданная историческая эпоха и старые добрые методы исправления характера." },
     { id: 1, title: "Майкл", poster: "Michael_(2026_film)_poster.jpg", genre: "Байопик", age: "18+", price: 700, isUpcoming: false, country: "США", director: "Антуан Фукуа", cast: "Джаафар Джексон", desc: "История восхождения легендарного Короля поп-музыки." },
@@ -28,17 +28,7 @@ const moviesData = [
     { id: 18, title: "Чудесный мир", poster: "wondaryworld.jpg", genre: "Приключения", age: "12+", price: 500, isUpcoming: false, country: "США", director: "Стивен Спилберг", cast: "Том Холланд", desc: "Подростки находят портал в параллельную экосистему." },
     { id: 19, title: "Молодые и влюбленные", poster: "young-and-loved.jpg", genre: "Мелодрама", age: "16+", price: 450, isUpcoming: false, country: "Франция", director: "Селин Сьямма", cast: "Адель Энель", desc: "Трогательная мелодрама о первой любви и взрослении." },
 
-    // --- НОВЫЙ БЛОК: НАСТОЯЩИЕ СПЕЦПОКАЗЫ (Классика, Театр, Концерты) ---
-    { id: 201, title: "Интерстеллар (IMAX)", poster: "interstellar.jpg", genre: "Фантастика", age: "12+", price: 900, isSpecial: true, sessions: ["18:00", "21:30"], country: "США", director: "Кристофер Нолан", cast: "Мэттью Макконахи, Энн Хэтэуэй", desc: "Специальный показ культовой научно-фантастической драмы в оригинальном формате IMAX. Одно из главных визуальных событий десятилетия возвращается на большие экраны." },
-    { id: 202, title: "Лебединое озеро (Прямая трансляция)", poster: "swanlake.jpg", genre: "Театр / Балет", age: "6+", price: 1500, isSpecial: true, sessions: ["19:00"], country: "Россия", director: "Юрий Григорович", cast: "Труппа Большого театра", desc: "Прямая спутниковая трансляция легендарного балета П.И. Чайковского со сцены Большого театра. Бессмертная классика с эффектом полного присутствия." },
-    { id: 203, title: "Queen: Rock Montreal", poster: "queen.jpg", genre: "Концерт", age: "16+", price: 1000, isSpecial: true, sessions: ["20:00", "22:15"], country: "Великобритания", director: "Сол Суиммер", cast: "Фредди Меркьюри, Брайан Мэй", desc: "Легендарный концерт группы Queen 1981 года в невероятной цифровой реставрации 4K и с ремастерингом звука Dolby Atmos." },
-    { id: 204, title: "Криминальное чтиво (Sub)", poster: "pulpfiction.jpg", genre: "Триллер / Комедия", age: "18+", price: 700, isSpecial: true, sessions: ["19:30", "22:45"], country: "США", director: "Квентин Тарантино", cast: "Джон Траволта, Сэмюэл Л. Джексон", desc: "Специальный показ на английском языке с русскими субтитрами. Фильм, перевернувший мировой кинематограф в 90-х." },
-    { id: 205, title: "Унесенные призраками", poster: "spiritedaway.jpg", genre: "Аниме", age: "12+", price: 600, isSpecial: true, sessions: ["14:20", "17:00"], country: "Япония", director: "Хаяо Миядзаки", cast: "Студия Ghibli", desc: "Ретроспектива шедевров Хаяо Миядзаки. История девочки Тихиро, попавшей в мистический мир духов, в обновленном качестве." },
-    { id: 206, title: "Бойцовский клуб", poster: "fightclub.jpg", genre: "Триллер / Драма", age: "18+", price: 800, isSpecial: true, sessions: ["21:00", "23:45"], country: "США", director: "Дэвид Финчер", cast: "Брэд Питт, Эдвард Нортон", desc: "Спецпоказ к юбилею фильма. Первое правило бойцовского клуба: никому не рассказывать о бойцовском клубе." },
-    { id: 207, title: "Гамлет: Камбербэтч", poster: "hamlet.jpg", genre: "Театр в кино", age: "16+", price: 1200, isSpecial: true, sessions: ["18:30"], country: "Великобритания", director: "Линси Тернер", cast: "Бенедикт Камбербэтч", desc: "Постановка Национального театра Лондона. Бенедикт Камбербэтч исполняет главную роль в грандиозной театральной экранизации шекспировской трагедии." },
-    { id: 208, title: "Властелин колец: Братство кольца", poster: "lotr.jpg", genre: "Фэнтези / Эпос", age: "12+", price: 950, isSpecial: true, sessions: ["15:00", "19:40"], country: "Новая Зеландия", director: "Питер Джексон", cast: "Элайджа Вуд, Иэн Маккеллен", desc: "Расширенная режиссерская версия в 4K. Эпическое начало великого путешествия Фродо Бэггинса возвращается на огромный экран." },
-
-    // --- СКОРО В КИНО ---
+    // --- СКОРО В КИНО (11 фильмов) ---
     { id: 101, title: "Бизнес ночью", poster: "buisnesatnight.jpg", genre: "Триллер", age: "18+", price: 600, isUpcoming: true, releaseDate: "2026-06-25", country: "США", director: "Дэвид Финчер", cast: "Кристиан Бэйл", desc: "Когда закон засыпает, просыпаются настоящие деньги. Но за них придется заплатить высокую цену." },
     { id: 102, title: "Цыпленок: Пух и прах", poster: "chickenpuhandprah.jpg", genre: "Анимация", age: "6+", price: 450, isUpcoming: true, releaseDate: "2026-06-18", country: "Великобритания", director: "Питер Лорд", cast: "Саймон Пегг", desc: "Пернатые герои снова в деле! Самое дерзкое ограбление курятника века." },
     { id: 103, title: "Колония", poster: "colony(2026).jpg", genre: "Фантастика", age: "16+", price: 700, isUpcoming: true, releaseDate: "2026-07-02", country: "США", director: "Дени Вильнев", cast: "Оскар Айзек", desc: "Экспедиция на Марс находит то, что человечеству лучше было бы никогда не тревожить." },
@@ -138,25 +128,20 @@ document.addEventListener('DOMContentLoaded', () => {
 function renderCatalog() {
     const todayGrid = document.getElementById('movies-grid');
     const upcomingGrid = document.getElementById('upcoming-movies-grid');
-    const specialGrid = document.getElementById('special-movies-grid');
     
-    if (!todayGrid || !upcomingGrid || !specialGrid) return;
+    if (!todayGrid || !upcomingGrid) return;
     
     todayGrid.innerHTML = ''; 
     upcomingGrid.innerHTML = '';
-    specialGrid.innerHTML = '';
 
     moviesData.forEach(movie => {
         const card = document.createElement('div');
         card.className = 'movie-card';
         card.addEventListener('click', () => openBookingModal(movie.id));
         
-        let badgeHTML = '';
-        if (movie.isSpecial) {
-            badgeHTML = `<span class="badge-coming-soon" style="background:var(--accent); color:#000;">Спецпоказ</span>`;
-        } else if (movie.isUpcoming) {
-            badgeHTML = `<span class="badge-coming-soon">С ${formatDateShort(new Date(movie.releaseDate))}</span>`;
-        }
+        const badgeHTML = movie.isUpcoming 
+            ? `<span class="badge-coming-soon">С ${formatDateShort(new Date(movie.releaseDate))}</span>`
+            : '';
 
         card.innerHTML = `
             <div class="movie-card-poster">
@@ -170,9 +155,7 @@ function renderCatalog() {
             <h3 class="movie-title-bottom">${movie.title}</h3>
         `;
 
-        if (movie.isSpecial) {
-            specialGrid.appendChild(card);
-        } else if (movie.isUpcoming) {
+        if (movie.isUpcoming) {
             upcomingGrid.appendChild(card);
         } else {
             todayGrid.appendChild(card);
@@ -185,7 +168,7 @@ function renderPromoBanners() {
     if(!slider) return;
     slider.innerHTML = '';
     
-    // Для промо берем случайные фильмы
+    // Для промо берем случайные фильмы из существующей базы
     const shuffled = [...moviesData].sort(() => 0.5 - Math.random());
     const promos = shuffled.slice(0, 10);
 
@@ -272,10 +255,7 @@ function openBookingModal(id) {
     document.getElementById('detail-price').textContent = `Билет: ${movie.price || 500} ₽`;
     
     const releaseEl = document.getElementById('detail-release');
-    if (movie.isSpecial) {
-        releaseEl.textContent = "Специальный показ";
-        releaseEl.style.color = "var(--accent)";
-    } else if (movie.isUpcoming) {
+    if(movie.isUpcoming) {
         releaseEl.textContent = `В кино с ${formatDateShort(new Date(movie.releaseDate))}`;
         releaseEl.style.color = "var(--accent-red)";
     } else {
