@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Сеть кинотеатров «КИНОСФЕРА»</title>
     <link rel="stylesheet" href="css.css">
 </head>
@@ -10,7 +10,7 @@
 
     <header class="cinema-top-bar">
         <div class="logo">КИНО<span>СФЕРА</span></div>
-        <div style="display: flex; gap: 15px;">
+        <div class="header-actions">
             <button class="city-selector-btn">г. Москва ▼</button>
             <button class="mobile-login-link">Войти</button>
         </div>
@@ -36,8 +36,8 @@
                         <span class="badge-age">16+</span>
                         <span class="badge-rating">IMDb 8.1</span>
                     </div>
-                    <h2 id="modal-movie-title" style="margin: 0 0 10px 0; font-size: 22px;"></h2>
-                    <div class="modal-meta-row">Жанр: Драма, Триллер</div>
+                    <h2 id="modal-movie-title" class="modal-title-text"></h2>
+                    <div class="modal-meta-row">Жанр: Уточняется</div>
                     <div class="modal-meta-row">Продолжительность: 120 мин.</div>
                     <div id="modal-text-description" class="modal-description">
                         </div>
@@ -47,8 +47,7 @@
                     
                     <div id="step-sessions-container" class="step-container hidden">
                         <h2 class="step-title">Шаг 1: Выберите сеанс</h2>
-                        <p>Доступные сеансы на сегодня:</p>
-                        <div>
+                        <div class="sessions-grid">
                             <button class="session-btn" onclick="goToStep('step-hall-container')">10:00 (2D)</button>
                             <button class="session-btn" onclick="goToStep('step-hall-container')">12:30 (3D)</button>
                             <button class="session-btn" onclick="goToStep('step-hall-container')">15:15 (2D)</button>
@@ -59,7 +58,7 @@
 
                     <div id="step-hall-container" class="step-container hidden">
                         <h2 class="step-title">Шаг 2: Выберите места в зале</h2>
-                        <div class="mobile-zoom-hint">💡 Можно прокручивать зал влево-вправо на мобильных устройствах</div>
+                        <div class="mobile-zoom-hint">💡 Прокручивайте зал влево-вправо</div>
                         
                         <div class="interactive-hall-viewport">
                             <div class="interactive-hall-wrapper">
@@ -69,27 +68,74 @@
                             </div>
                         </div>
 
-                        <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-                            <button class="session-btn" onclick="goToStep('step-sessions-container')">← Назад к сеансам</button>
-                            <button class="action-accent-btn" onclick="goToStep('step-checkout-container')">Продолжить →</button>
+                        <div class="step-navigation-buttons">
+                            <button class="nav-btn-back" onclick="goToStep('step-sessions-container')">← К сеансам</button>
+                            <button class="action-accent-btn" onclick="goToStep('step-services-container')">Продолжить →</button>
+                        </div>
+                    </div>
+
+                    <div id="step-services-container" class="step-container hidden">
+                        <h2 class="step-title">Шаг 3: Дополнительные услуги</h2>
+                        
+                        <div class="services-list">
+                            <div class="service-item">
+                                <div class="service-info">
+                                    <h4>🍿 Попкорн Карамель (Большой)</h4>
+                                    <p>450 руб.</p>
+                                </div>
+                                <div class="service-controls">
+                                    <button onclick="updateService('popcorn', -1)">-</button>
+                                    <span id="qty-popcorn">0</span>
+                                    <button onclick="updateService('popcorn', 1)">+</button>
+                                </div>
+                            </div>
+                            <div class="service-item">
+                                <div class="service-info">
+                                    <h4>🥤 Напиток Кола (0.5л)</h4>
+                                    <p>200 руб.</p>
+                                </div>
+                                <div class="service-controls">
+                                    <button onclick="updateService('drink', -1)">-</button>
+                                    <span id="qty-drink">0</span>
+                                    <button onclick="updateService('drink', 1)">+</button>
+                                </div>
+                            </div>
+                            <div class="service-item">
+                                <div class="service-info">
+                                    <h4>🕶 3D Очки (Индивидуальные)</h4>
+                                    <p>150 руб.</p>
+                                </div>
+                                <div class="service-controls">
+                                    <button onclick="updateService('glasses', -1)">-</button>
+                                    <span id="qty-glasses">0</span>
+                                    <button onclick="updateService('glasses', 1)">+</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step-navigation-buttons">
+                            <button class="nav-btn-back" onclick="goToStep('step-hall-container')">← К местам</button>
+                            <button class="action-accent-btn" onclick="goToStep('step-checkout-container')">К оплате →</button>
                         </div>
                     </div>
 
                     <div id="step-checkout-container" class="step-container hidden">
-                        <h2 class="step-title">Шаг 3: Оформление заказа</h2>
+                        <h2 class="step-title">Шаг 4: Оформление заказа</h2>
                         
                         <div class="auth-box-fields">
-                            <h3 style="margin-top: 0;">Авторизация в системе лояльности</h3>
-                            <input type="text" id="client-login-field" placeholder="Логин или номер телефона" autocomplete="off">
-                            <input type="password" id="client-pass-field" placeholder="Пароль" autocomplete="off">
+                            <h3 style="margin-top: 0;">Авторизация</h3>
+                            <input type="text" id="client-login-field" placeholder="Логин (от 3 симв.)" autocomplete="off">
+                            <input type="password" id="client-pass-field" placeholder="Пароль (от 4 симв.)" autocomplete="off">
                             <button id="submit-account-btn" class="session-btn" style="margin-left: 0;">Проверить данные</button>
-                            <div id="account-validation-status" class="status-warning">Пройдите авторизацию для разблокировки бронирования</div>
+                            <div id="account-validation-status" class="status-warning">Пройдите авторизацию для оплаты</div>
                         </div>
 
                         <div class="checkout-summary-card">
-                            <div style="font-size: 18px;">Билетов выбрано: <span id="summary-seats-count" class="highlight-count">0</span></div>
+                            <div class="summary-row">Билеты (<span id="summary-seats-count">0</span> шт.): <span id="summary-tickets-sum">0</span> руб.</div>
                             <div id="summary-seats-list" class="highlight-list"></div>
-                            <div class="summary-total">Итого к оплате: <span id="summary-total-sum" class="highlight-count">0</span> руб.</div>
+                            <div class="summary-row">Доп. услуги: <span id="summary-services-sum">0</span> руб.</div>
+                            <hr class="summary-divider">
+                            <div class="summary-total">Итого: <span id="summary-total-sum" class="highlight-count">0</span> руб.</div>
                             
                             <button id="final-checkout-btn" class="main-order-submit" disabled>Оплатить заказ</button>
                         </div>
@@ -98,12 +144,11 @@
                             <strong>СИСТЕМНОЕ СООБЩЕНИЕ:</strong><br><br>
                             Ошибка транзакции #ERR-8902-SEC.<br>
                             Сбой на стороне платежного шлюза. Сервер базы данных (LocalHost/CinemaDB) отклонил запрос на запись.<br>
-                            Возможная причина: Нарушение структуры файла .accounts или повреждение ключа шифрования (AES-256).<br><br>
-                            <em>Пожалуйста, обратитесь к системному администратору для восстановления структуры хранения данных.</em>
+                            Возможная причина: Нарушение структуры файла .accounts или повреждение ключа шифрования (AES-256).
                         </div>
 
-                        <div class="mt-10">
-                            <button class="session-btn" style="margin-left: 0;" onclick="goToStep('step-hall-container')">← Назад к выбору мест</button>
+                        <div class="step-navigation-buttons" style="margin-top: 20px;">
+                            <button class="nav-btn-back" onclick="goToStep('step-services-container')">← К услугам</button>
                         </div>
                     </div>
 
