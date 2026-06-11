@@ -1,68 +1,60 @@
 /**
- * main.js — Исправленная, защищенная от сбоев версия
+ * main.js — Система "КИНОСФЕРА" (С расширенными фильмами и доп. услугами)
  */
 
 const moviesData = [
-    { id: 1, title: "История Аси Клячиной", poster: "asyaklyachkinasstory.jpg", description: "Классическая драма о жизни, искренней любви и непростых решениях в декорациях советской деревни." },
-    { id: 2, title: "Закулисье", poster: "backrooms.jpg", description: "Атмосферный хоррор, погружающий исследователей в бесконечные желтые лиминальные пространства и жуткие лабиринты." },
-    { id: 3, title: "День рождения", poster: "birthday.jpg", description: "Психологический триллер, где праздничный вечер в кругу друзей оборачивается чередой неожиданных и опасных откровений." },
-    { id: 4, title: "Богатыри", poster: "bogatyry.jpg", description: "Красочное и веселое анимационное приключение о легендарных защитниках земли русской и их новых подвигах." },
-    { id: 5, title: "Братья Карамазовы", poster: "brothers-karamazovy.jpg", description: "Глубокая экранизация великого романа о семейных тайнах, вопросах веры, суде и загадках человеческой души." },
-    { id: 6, title: "Преступление на третьем этаже", poster: "crimeonthethirdfloor.jpg", description: "Запутанный детективный неонуар, где под подозрением в таинственном преступлении оказывается каждый житель дома." },
-    { id: 7, title: "Дени и Мэнни", poster: "danyandmany.jpg", description: "Трогательная и добрая семейная комедия о невероятной преданной дружбе и веселых приключениях." },
-    { id: 8, title: "Драма!", poster: "dramma.jpg", description: "Ироничный и эксцентричный взгляд на скрытую закулисную жизнь актеров прямо во время главной премьеры года." },
-    { id: 9, title: "Грязные деньги", poster: "gryznyedengi.jpg", description: "Криминальный остросюжетный боевик о дерзком ограблении, которое внезапно пошло совсем не по плану синдиката." },
-    { id: 10, title: "Ветер времени", poster: "images.jpg", description: "Драматическая история о судьбоносных встречах, упущенных возможностях и неумолимом течении времени." },
-    { id: 11, title: "Убить Билла", poster: "killbill.jpg", description: "Культовый стильный экшен о профессиональной мести и поиске справедливости, ставшей единственным смыслом жизни." },
-    { id: 12, title: "Убийственная вечеринка", poster: "killingparty.jpg", description: "Черная комедия, где шумное праздничное мероприятие в особняке превращается в непредсказуемый квест на выживание." },
-    { id: 13, title: "Коммерсант", poster: "komers.jpg", description: "Остросюжетная бизнес-драма о жестких, бескомпромиссных правилах игры в мире больших денег и корпоративных войн." },
-    { id: 14, title: "Кощей", poster: "koshey.jpg", description: "Захватывающее фэнтези-приключение, раскрывающее древние тайны, истоки силы и молодость культового персонажа сказок." },
-    { id: 15, title: "Лео и Тиг", poster: "leoandtig.jpg", description: "Доброе и познавательное анимационное путешествие верных пятнистых друзей по бескрайней и загадочной тайге." },
-    { id: 16, title: "Майкл", poster: "MichaelL(2026_film)_poster.jpg", description: "Масштабный биографический фильм, раскрывающий историю жизни, грандиозных триумфов и личных тайн легендарного короля поп-музыки." },
-    { id: 17, title: "Момо", poster: "momo.jpg", description: "Волшебная сказочная история о маленькой девочке, способной противостоять серым господам и вернуть людям украденное время." },
-    { id: 18, title: "Монах из Борли: Возвращение", poster: "monkfromborleycomeback.jpg", description: "Мистический хоррор об исследовании самого паранормального и зловещего поместья в официальной истории." },
-    { id: 19, title: "Шевели перьями", poster: "moveyourwings.jpg", description: "Вдохновляющая анимационная история о маленьком птенце, мечтающем преодолеть страхи ради больших полетов." },
-    { id: 20, title: "Никто не верил", poster: "nbt.jpg", description: "Захватывающая спортивная драма, основанная на реальных событиях великой и волевой победы вопреки всем прогнозам." },
-    { id: 21, title: "Закулисье: Новая глава", poster: "new-official-backrooms-poster.jpg", description: "Новое леденящее душу погружение в исследование пугающих пустых коридоров и скрытых уровней лиминального мира." },
-    { id: 22, title: "Не одна дома 3", poster: "notaloneathome3.jpg", description: "Семейная новогодняя комедия о находчивом мальчике, который снова защищает свой дом от незадачливых грабителей." },
-    { id: 23, title: "Обсессия", poster: "obessy.jpg", description: "Глубокий психологический триллер о тонкой грани между искренним творческим увлечением и пугающей одержимостью." },
-    { id: 24, title: "Пропасть", poster: "propast.jpg", description: "Фильм-катастрофа о жестком выживании группы экстремалов в условиях смертельной опасности высоко в заснеженных горах." },
-    { id: 25, title: "Школа волшебников", poster: "schollofmajicians.jpg", description: "Фэнтезийная история о подростках, случайно открывших в себе древние магические способности и попавших в скрытую академию." },
-    { id: 26, title: "Семь вёрст до рассвета", poster: "sevenverstsbeforedawn.jpg", description: "Историческая военная драма о силе человеческого духа, верности долгу и непростом, опасном пути домой." },
-    { id: 27, title: "Космическая Маша", poster: "spacymasha.jpg", description: "Фантастическое приключение обычной школьницы, неожиданно ставшей капитаном настоящего межгалактического корабля." },
-    { id: 28, title: "Тролли: Возвращение", poster: "trolleyscomeback.jpg", description: "Яркое, безумно позитивное музыкальное приключение любимых героев, полное веселья, танцев и новых песен." },
-    { id: 29, title: "На волшебном дереве", poster: "uponmajictree.jpg", description: "Сказочная приключенческая история о поиске чудесного артефакта, способного исполнить самое заветное желание." },
-    { id: 30, title: "Ветер", poster: "Wind.jpg", description: "Глубокая драма о поиске своего места в мире, семейных узах и кардинальных переменах, которые приносит внезапная судьба." },
-    { id: 31, title: "Чудесный мир", poster: "wondaryworld.jpg", description: "Захватывающее приключенческое фэнтези о скрытой от человеческих глаз, удивительной и опасной экосистеме." },
-    { id: 32, title: "Молодые и влюбленные", poster: "young-and-loved.jpg", description: "Романтическая трогательная мелодрама о первой искренней любви, больших надеждах юности и взрослом жизненном выборе." }
+    { id: 1, title: "Майкл", poster: "Michael_(2026_film)_poster.jpg", description: "Грандиозный биографический эпос, погружающий зрителя в невероятную историю восхождения легендарного Короля поп-музыки. Фильм детально и без прикрас показывает не только величайшие триумфы на сцене, но и тяжелейшие личные драмы, судебные разбирательства и бремя мировой славы, которое пришлось нести Майклу." },
+    { id: 2, title: "День рождения", poster: "birthday.jpg", description: "Напряженный психологический триллер, где рутинное празднование дня рождения оборачивается настоящим кошмаром. Старые друзья собираются в загородном доме, но безобидные игры и воспоминания внезапно вскрывают мрачные тайны прошлого, превращая праздник в жестокую игру на выживание." },
+    { id: 3, title: "Богатыри", poster: "bogatyry.jpg", description: "Суровый исторический и фэнтезийный экшен 2026 года, кардинально переосмысляющий знакомые с детства былины. Никаких детских шуток и ярких красок — только грязь, сталь, кровь и тяжелый путь воинов, защищающих свои земли от хтонического, первобытного зла, пришедшего из-за северных гор." },
+    { id: 4, title: "Братья Карамазовы", poster: "brothers-karamazovy.jpg", description: "Масштабная философская драма по бессмертному роману Федора Достоевского. Глубокое и бескомпромиссное исследование темной стороны человеческой души, вопросов веры, вседозволенности и рокового стечения обстоятельств, приводящего к неотвратимой семейной трагедии." },
+    { id: 5, title: "Грязные деньги", poster: "gryznyedengi.jpg", description: "Динамичный и жесткий криминальный боевик о подпольной империи, где одно неверное решение запускает цепную реакцию насилия. Главный герой решает выйти из игры, сорвав последний куш, но криминальный синдикат не прощает предательства, открывая на него безжалостную охоту в каменных джунглях." },
+    { id: 6, title: "Ветры прошлого", poster: "images.jpg", description: "Проникновенная драма о фотографе, который, проявляя старые семейные пленки, случайно обнаруживает ключ к разгадке исчезновения своего брата 20 лет назад. Это путешествие по волнам памяти заставит его переосмыслить всю свою жизнь и столкнуться с горькой правдой." },
+    { id: 7, title: "Убить Билла", poster: "killbill.jpg", description: "Перевыпуск культового шедевра Квентина Тарантино на больших экранах. Эстетика боевых искусств, литры крови, самурайские мечи и непревзойденная история мести Черной Мамбы, которая пробуждается после комы, чтобы методично уничтожить отряд наемных убийц и их лидера." },
+    { id: 8, title: "Коммерсант", poster: "komers.jpg", description: "Холодная и расчетливая бизнес-драма о циничном мире высоких корпоративных ставок. Молодой и амбициозный аналитик бросает вызов опытным акулам бизнеса в попытке провести рейдерский захват крупнейшей компании, не подозревая, что на кону стоят не только деньги, но и его собственная жизнь." },
+    { id: 9, title: "Кощей", poster: "koshey.jpg", description: "Мрачное фэнтези, рассказывающее историю становления самого известного злодея русских сказок. Как молодой и благородный воин проклял свою душу ради спасения возлюбленной и превратился в бессмертного, бездушного владыку темного царства, скрывающего свою смерть на конце иглы." },
+    { id: 10, title: "Лео и Тиг: Большое приключение", poster: "leoandtig.jpg", description: "Яркая анимационная история для всей семьи. Неразлучные друзья, леопард Лео и тигренок Тиг, покидают родные леса Дальнего Востока, чтобы отправиться в грандиозное путешествие к неизведанным землям, где им предстоит спасти редких животных от коварных браконьеров." },
+    { id: 11, title: "Момо", poster: "momo.jpg", description: "Экранизация всемирно известной сказки Михаэля Энде. Удивительная история о девочке в безразмерном пиджаке, обладающей уникальным даром — умением слушать людей. Ей предстоит вступить в неравную схватку с Серыми Господами, ворующими у человечества их драгоценное время." },
+    { id: 12, title: "Шевели перьями", poster: "moveyourwings.jpg", description: "Вдохновляющий анимационный фильм о маленьком, но очень гордом воробье, который решает доказать всем, что он способен пересечь океан наравне с великими мигрирующими птицами. История о преодолении себя, поиске внутренней силы и настоящей дружбе." },
+    { id: 13, title: "Никто не верил", poster: "nbt.jpg", description: "Спортивная драма, основанная на реальных и невероятных событиях. История тренера-аутсайдера, который собирает команду из проблемных подростков с улиц и, вопреки насмешкам профессиональной лиги, ведет их к победе на национальном чемпионате, меняя их судьбы навсегда." },
+    { id: 14, title: "Не одна дома", poster: "neodnadoma.jpg", description: "Искрометная российская комедия о находчивой пенсионерке, которая остается одна в огромном загородном особняке на праздники. Когда в дом проникают грабители-неудачники, она устраивает им настоящий квест на выживание, используя советскую смекалку и садовый инвентарь." },
+    { id: 15, title: "Закулисье: Новая глава", poster: "new-official-backrooms-poster.jpg", description: "Леденящий кровь хоррор, расширяющий вселенную лиминальных пространств. Группа документалистов спускается на неизведанные нижние уровни 'Закулисья', где законы физики перестают работать, а желтые монотонные коридоры сменяются сюрреалистичными и смертельно опасными лабиринтами." },
+    { id: 16, title: "Обсессия", poster: "obessy.jpg", description: "Пугающий триллер о гениальном композиторе, который в поисках идеального звука для своей новой симфонии постепенно теряет связь с реальностью. Его одержимость творчеством перерастает в паранойю, ставя под угрозу жизни всех, кто находится с ним рядом." },
+    { id: 17, title: "Пропасть", poster: "propast.jpg", description: "Масштабный фильм-катастрофа. Группа профессиональных альпинистов оказывается заперта в глубокой расщелине после схода мощной лавины. У них нет связи, запасы кислорода на исходе, а температура стремительно падает. Начинается безжалостная борьба за выживание." },
+    { id: 18, title: "Чудесный мир", poster: "wondaryworld.jpg", description: "Визуально ошеломляющее приключенческое фэнтези. Трое подростков случайно находят портал в параллельную экосистему, скрытую глубоко под землей. Этот мир населен невиданными существами, но его гармония нарушена, и только герои могут восстановить хрупкий баланс." },
+    { id: 19, title: "Молодые и влюбленные", poster: "young-and-loved.jpg", description: "Трогательная, честная и светлая мелодрама о первой любви, разбитых надеждах и сложном выборе взросления. Двое студентов из совершенно разных миров случайно встречаются в дождливом Петербурге, и эта встреча навсегда меняет траекторию их жизней." }
 ];
 
+// Цены на доп услуги
+const PRICING = {
+    ticket: 650,
+    popcorn: 450,
+    drink: 200,
+    glasses: 150
+};
+
+// Состояние заказа (теперь с доп. услугами)
 let currentOrder = { 
     movieId: null, 
     selectedSeats: [], 
-    ticketPrice: 650 
+    services: { popcorn: 0, drink: 0, glasses: 0 }
 };
 
-// Жестко привязываем функции к window, чтобы HTML их точно видел
 window.goToStep = goToStep;
 window.openBookingModal = openBookingModal;
+window.updateService = updateService; // Для кнопок +/- в HTML
 
 document.addEventListener('DOMContentLoaded', () => {
     try {
         renderCatalog();
         initStaticEventListeners();
     } catch (error) {
-        console.error("Критическая ошибка при загрузке:", error);
+        console.error("Критическая ошибка:", error);
     }
 });
 
 function renderCatalog() {
     const grid = document.getElementById('movies-grid');
-    if (!grid) {
-        console.error("Ошибка: Элемент id='movies-grid' не найден в HTML!");
-        return;
-    }
-    
+    if (!grid) return;
     grid.innerHTML = ''; 
     
     moviesData.forEach(movie => {
@@ -70,7 +62,6 @@ function renderCatalog() {
         card.className = 'movie-card';
         card.onclick = () => openBookingModal(movie.id);
         
-        // Добавил onerror для картинок. Если картинка не загрузится, она хотя бы не сломает дизайн
         card.innerHTML = `
             <img src="${movie.poster}" alt="${movie.title}" onerror="this.src='https://via.placeholder.com/300x450/333/fff?text=Нет+постера'">
             <h3>${movie.title}</h3>
@@ -83,90 +74,93 @@ function openBookingModal(id) {
     const movie = moviesData.find(m => m.id === id);
     if (!movie) return;
 
+    // Сброс заказа
     currentOrder.movieId = movie.id;
     currentOrder.selectedSeats = [];
+    currentOrder.services = { popcorn: 0, drink: 0, glasses: 0 };
     
-    // Безопасное заполнение сайдбара
     const titleEl = document.getElementById('modal-movie-title');
     const posterEl = document.getElementById('modal-movie-poster');
     const descEl = document.getElementById('modal-text-description');
-    const overlayEl = document.getElementById('booking-modal-overlay');
 
     if (titleEl) titleEl.textContent = movie.title;
     if (posterEl) posterEl.src = movie.poster;
     if (descEl) descEl.textContent = movie.description;
     
-    // Скрываем все шаги
+    // Сбрасываем UI доп услуг
+    document.getElementById('qty-popcorn').textContent = '0';
+    document.getElementById('qty-drink').textContent = '0';
+    document.getElementById('qty-glasses').textContent = '0';
+
     document.querySelectorAll('.step-container').forEach(el => el.classList.add('hidden'));
-    
-    // Показываем первый шаг
-    const step1 = document.getElementById('step-sessions-container');
-    if (step1) step1.classList.remove('hidden');
-    
-    // Скрываем чек
-    const receipt = document.getElementById('payment-receipt-block');
-    if (receipt) receipt.classList.add('hidden');
+    document.getElementById('step-sessions-container').classList.remove('hidden');
+    document.getElementById('payment-receipt-block').classList.add('hidden');
     
     renderSeats();
     updateCheckoutSummary();
     
-    if (overlayEl) overlayEl.classList.remove('hidden');
+    document.getElementById('booking-modal-overlay').classList.remove('hidden');
 }
 
 function goToStep(stepId) {
-    if (stepId === 'step-checkout-container') {
+    // Проверка при переходе с мест на услуги
+    if (stepId === 'step-services-container') {
         if (currentOrder.selectedSeats.length === 0) {
-            alert('Пожалуйста, выберите хотя бы одно место в зале для продолжения.');
+            alert('Сначала выберите хотя бы одно место в зале!');
             return;
         }
+    }
+
+    // Блокировка кнопки оплаты при переходе на финальный шаг
+    if (stepId === 'step-checkout-container') {
         const btn = document.getElementById('final-checkout-btn');
         const status = document.getElementById('account-validation-status');
-        const loginF = document.getElementById('client-login-field');
-        const passF = document.getElementById('client-pass-field');
-
         if (btn) btn.disabled = true;
         if (status) {
             status.textContent = 'Пройдите авторизацию для разблокировки бронирования';
             status.style.color = '#ffc107';
         }
-        if (loginF) loginF.value = '';
-        if (passF) passF.value = '';
+        document.getElementById('client-login-field').value = '';
+        document.getElementById('client-pass-field').value = '';
     }
 
     document.querySelectorAll('.step-container').forEach(el => el.classList.add('hidden'));
-    
     const targetStep = document.getElementById(stepId);
-    if (targetStep) {
-        targetStep.classList.remove('hidden');
-    } else {
-        console.error("Не найден шаг:", stepId);
-    }
+    if (targetStep) targetStep.classList.remove('hidden');
 }
 
+// Увеличенный зал (старый визуал) - 7 рядов по 14 мест
 function renderSeats() {
     const container = document.getElementById('dynamic-hall-grid');
     if (!container) return;
     
     container.innerHTML = '';
     let seatNumber = 1;
+    const rows = 7;
+    const cols = 14;
     
-    for (let r = 0; r < 6; r++) {
-        for (let c = 0; c < 10; c++) {
+    for (let r = 0; r < rows; r++) {
+        const rowDiv = document.createElement('div');
+        rowDiv.className = 'seat-row';
+        for (let c = 0; c < cols; c++) {
             const seat = document.createElement('div');
             seat.className = 'seat';
             seat.textContent = seatNumber;
             const currentSeat = seatNumber; 
             
-            if (Math.random() < 0.15) {
+            // Проходы (визуальное разделение по центру)
+            if (c === 7) seat.style.marginLeft = '20px';
+
+            if (Math.random() < 0.18) {
                 seat.classList.add('occupied');
             } else {
                 seat.onclick = () => handleSeatClick(seat, currentSeat);
             }
             
-            container.appendChild(seat);
+            rowDiv.appendChild(seat);
             seatNumber++;
         }
-        container.appendChild(document.createElement('br'));
+        container.appendChild(rowDiv);
     }
 }
 
@@ -185,59 +179,64 @@ function handleSeatClick(seatElement, seatNumber) {
     updateCheckoutSummary();
 }
 
-function updateCheckoutSummary() {
-    const count = currentOrder.selectedSeats.length;
-    const sum = count * currentOrder.ticketPrice;
+// Логика добавления/убавления услуг
+function updateService(type, change) {
+    let newValue = currentOrder.services[type] + change;
+    if (newValue < 0) newValue = 0; // Нельзя меньше нуля
+    if (newValue > 10) newValue = 10; // Ограничение на 10 шт
     
-    const countEl = document.getElementById('summary-seats-count');
-    const sumEl = document.getElementById('summary-total-sum');
-    const listEl = document.getElementById('summary-seats-list');
+    currentOrder.services[type] = newValue;
+    document.getElementById(`qty-${type}`).textContent = newValue;
+    
+    updateCheckoutSummary();
+}
 
-    if (countEl) countEl.textContent = count;
-    if (sumEl) sumEl.textContent = sum;
+// Подсчет полной корзины
+function updateCheckoutSummary() {
+    const ticketsCount = currentOrder.selectedSeats.length;
+    const ticketsSum = ticketsCount * PRICING.ticket;
     
+    const servicesSum = 
+        (currentOrder.services.popcorn * PRICING.popcorn) +
+        (currentOrder.services.drink * PRICING.drink) +
+        (currentOrder.services.glasses * PRICING.glasses);
+
+    const totalSum = ticketsSum + servicesSum;
+    
+    // Обновляем HTML
+    document.getElementById('summary-seats-count').textContent = ticketsCount;
+    document.getElementById('summary-tickets-sum').textContent = ticketsSum;
+    document.getElementById('summary-services-sum').textContent = servicesSum;
+    document.getElementById('summary-total-sum').textContent = totalSum;
+    
+    const listEl = document.getElementById('summary-seats-list');
     if (listEl) {
-        listEl.textContent = count > 0 ? `Выбранные места: ${currentOrder.selectedSeats.join(', ')}` : '';
+        listEl.textContent = ticketsCount > 0 ? `Места: ${currentOrder.selectedSeats.join(', ')}` : '';
     }
 }
 
 function initStaticEventListeners() {
-    const closeBtn = document.getElementById('close-modal-btn');
-    if (closeBtn) {
-        closeBtn.addEventListener('click', () => {
-            const overlay = document.getElementById('booking-modal-overlay');
-            if (overlay) overlay.classList.add('hidden');
-        });
-    }
+    document.getElementById('close-modal-btn')?.addEventListener('click', () => {
+        document.getElementById('booking-modal-overlay').classList.add('hidden');
+    });
 
-    const authBtn = document.getElementById('submit-account-btn');
-    if (authBtn) {
-        authBtn.addEventListener('click', () => {
-            const login = document.getElementById('client-login-field')?.value || '';
-            const pass = document.getElementById('client-pass-field')?.value || '';
-            
-            if (login.length >= 3 && pass.length >= 4) {
-                const statusEl = document.getElementById('account-validation-status');
-                if (statusEl) {
-                    statusEl.textContent = '✅ Авторизация успешна. Доступ к шлюзу открыт.';
-                    statusEl.style.color = '#28a745';
-                }
-                const checkoutBtn = document.getElementById('final-checkout-btn');
-                if (checkoutBtn) checkoutBtn.disabled = false;
-            } else {
-                alert('Ошибка: Логин должен быть от 3 символов, пароль от 4.');
-            }
-        });
-    }
+    document.getElementById('submit-account-btn')?.addEventListener('click', () => {
+        const login = document.getElementById('client-login-field')?.value || '';
+        const pass = document.getElementById('client-pass-field')?.value || '';
+        
+        if (login.length >= 3 && pass.length >= 4) {
+            const statusEl = document.getElementById('account-validation-status');
+            statusEl.textContent = '✅ Авторизация успешна. Доступ открыт.';
+            statusEl.style.color = '#28a745';
+            document.getElementById('final-checkout-btn').disabled = false;
+        } else {
+            alert('Ошибка: Логин должен быть от 3 символов, пароль от 4.');
+        }
+    });
 
-    const finalBtn = document.getElementById('final-checkout-btn');
-    if (finalBtn) {
-        finalBtn.addEventListener('click', () => {
-            const receiptBlock = document.getElementById('payment-receipt-block');
-            if (receiptBlock) {
-                receiptBlock.classList.remove('hidden');
-                receiptBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        });
-    }
+    document.getElementById('final-checkout-btn')?.addEventListener('click', () => {
+        const receiptBlock = document.getElementById('payment-receipt-block');
+        receiptBlock.classList.remove('hidden');
+        receiptBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
 }
