@@ -1,9 +1,9 @@
 /**
- * main.js — Система "КИНОСФЕРА" (Версия с расширенным баром и увеличенным залом)
+ * main.js — Система "КИНОСФЕРА" (Мобильный свайп и автомасштабируемый зал)
  */
 
 const moviesData = [
-    { id: 1, title: "Майкл", poster: "Michael_(2026_film)_poster.jpg", genre: "Музыкальный, Байопик", age: "18+", description: "Грандиозный биографический эпос, погружающий зрителя в невероятную историю восхождения легендарного Короля поп-музыки. Фильм детально и без прикрас показывает не только величайшие триумфы на сцене, но и тяжелейшие личные драмы." },
+    { id: 1, title: "Майкл", poster: "Michael_(2026_film)_poster.jpg", genre: "Музыкальный, Байопик", age: "18+", description: "Грандиозный биографический эпос, погружающий зрителя в невероятную историю восхождения легендарного Короля поп-музыки." },
     { id: 2, title: "День рождения", poster: "birthday.jpg", genre: "Триллер", age: "18+", description: "Напряженный психологический триллер, где рутинное празднование дня рождения оборачивается настоящим кошмаром." },
     { id: 3, title: "Богатыри", poster: "bogatyry.jpg", genre: "Фэнтези, Экшен", age: "16+", description: "Суровый исторический и фэнтезийный экшен 2026 года, кардинально переосмысляющий знакомые с детства былины." },
     { id: 4, title: "Братья Карамазовы", poster: "brothers-karamazovy.jpg", genre: "Драма", age: "16+", description: "Масштабная философская драма по бессмертному роману Федора Достоевского." },
@@ -24,10 +24,8 @@ const moviesData = [
     { id: 19, title: "Молодые и влюбленные", poster: "young-and-loved.jpg", genre: "Мелодрама", age: "16+", description: "Трогательная мелодрама о первой любви и сложном выборе взросления." }
 ];
 
-// Цены актуализированы под суровые реалии
 const TICKET_PRICE = 850;
 
-// Расширенное меню бара
 const BAR_MENU = [
     {
         category: "🔥 Выгодные Комбо",
@@ -64,11 +62,10 @@ const BAR_MENU = [
     }
 ];
 
-// Состояние заказа
 let currentOrder = { 
     movieId: null, 
     selectedSeats: [], 
-    services: {} // id: quantity
+    services: {} 
 };
 
 window.goToStep = goToStep;
@@ -110,7 +107,6 @@ function renderCatalog() {
 }
 
 function initGlobalModals() {
-    // Город
     const cityBtn = document.getElementById('btn-city-select');
     const cityModal = document.getElementById('modal-city');
     cityBtn?.addEventListener('click', () => cityModal.classList.remove('hidden'));
@@ -122,7 +118,6 @@ function initGlobalModals() {
         });
     });
 
-    // Логин
     const loginBtn = document.getElementById('btn-profile-login');
     const loginModal = document.getElementById('modal-login');
     loginBtn?.addEventListener('click', () => loginModal.classList.remove('hidden'));
@@ -137,7 +132,6 @@ function initGlobalModals() {
         }
     });
 
-    // Закрытие мини-модалок
     document.querySelectorAll('.close-mini-modal').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.target.closest('.overlay-modal').classList.add('hidden');
@@ -153,7 +147,6 @@ function openBookingModal(id) {
     currentOrder.selectedSeats = [];
     currentOrder.services = {}; 
     
-    // Сброс UI бара
     document.querySelectorAll('.service-qty').forEach(el => el.textContent = '0');
 
     document.getElementById('modal-movie-title').textContent = movie.title;
@@ -184,7 +177,7 @@ function goToStep(stepId) {
     if (targetStep) targetStep.classList.remove('hidden');
 }
 
-// Увеличенный зал: 10 рядов x 18 мест
+// Зал 10х18 (Flexbox адаптация без жестких отступов)
 function renderSeats() {
     const container = document.getElementById('dynamic-hall-grid');
     if (!container) return;
@@ -208,9 +201,9 @@ function renderSeats() {
             seat.className = 'seat';
             seat.textContent = c + 1;
             const currentSeat = seatNumber; 
-            
-            // Проход по центру
-            if (c === 9) seat.style.marginLeft = '30px';
+
+            // Слегка визуально отделяем проход по центру прозрачным margin
+            if (c === 9) seat.style.marginLeft = '3%';
 
             if (Math.random() < 0.25) {
                 seat.classList.add('occupied');
@@ -255,7 +248,7 @@ function renderBarMenu() {
         catDiv.appendChild(catTitle);
 
         category.items.forEach(item => {
-            currentOrder.services[item.id] = 0; // Инициализируем в стейте
+            currentOrder.services[item.id] = 0;
 
             const itemDiv = document.createElement('div');
             itemDiv.className = 'service-item';
@@ -298,7 +291,6 @@ function updateCheckoutSummary() {
     let servicesSum = 0;
     let servicesDetails = [];
 
-    // Считаем бар
     BAR_MENU.forEach(cat => {
         cat.items.forEach(item => {
             const qty = currentOrder.services[item.id] || 0;
