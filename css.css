@@ -43,7 +43,7 @@ body {
 .movie-card h3 { margin: 0; font-size: 15px; font-weight: 600; line-height: 1.3; }
 .movie-genre { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
 
-/* Модалки и Глобальный UI */
+/* Модалки */
 .hidden { display: none !important; }
 .overlay-modal, .booking-modal-overlay {
     position: fixed; top: 0; left: 0; right: 0; bottom: 0;
@@ -76,7 +76,7 @@ body {
 .modal-workspace-flow { padding: 30px; position: relative; }
 .step-title { margin-top: 0; margin-bottom: 20px; font-size: 20px; border-bottom: 1px solid #333; padding-bottom: 15px; }
 
-/* Счетчик пользователя (Исправлено наложение!) */
+/* Счетчик пользователя */
 .workspace-header { position: absolute; top: 13px; right: 65px; z-index: 50; }
 .total-badge {
     background: #2a2a35; border: 1px solid #444; color: white;
