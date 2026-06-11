@@ -1,85 +1,78 @@
 /**
- * main.js — Система "КИНОСФЕРА" (Мобильный свайп и автомасштабируемый зал)
+ * main.js — Система "КИНОСФЕРА" (Суровые цены и глобальный счетчик)
  */
 
+// Добавлено свойство price для "суровых" цен
 const moviesData = [
-    { id: 1, title: "Майкл", poster: "Michael_(2026_film)_poster.jpg", genre: "Музыкальный, Байопик", age: "18+", description: "Грандиозный биографический эпос, погружающий зрителя в невероятную историю восхождения легендарного Короля поп-музыки." },
-    { id: 2, title: "День рождения", poster: "birthday.jpg", genre: "Триллер", age: "18+", description: "Напряженный психологический триллер, где рутинное празднование дня рождения оборачивается настоящим кошмаром." },
-    { id: 3, title: "Богатыри", poster: "bogatyry.jpg", genre: "Фэнтези, Экшен", age: "16+", description: "Суровый исторический и фэнтезийный экшен 2026 года, кардинально переосмысляющий знакомые с детства былины." },
-    { id: 4, title: "Братья Карамазовы", poster: "brothers-karamazovy.jpg", genre: "Драма", age: "16+", description: "Масштабная философская драма по бессмертному роману Федора Достоевского." },
-    { id: 5, title: "Грязные деньги", poster: "gryznyedengi.jpg", genre: "Боевик", age: "18+", description: "Динамичный и жесткий криминальный боевик о подпольной империи, где одно неверное решение запускает цепную реакцию насилия." },
-    { id: 6, title: "Ветры прошлого", poster: "images.jpg", genre: "Драма, Детектив", age: "16+", description: "Проникновенная драма о фотографе, который, проявляя старые семейные пленки, случайно обнаруживает ключ к разгадке исчезновения своего брата." },
-    { id: 7, title: "Убить Билла", poster: "killbill.jpg", genre: "Боевик, Триллер", age: "18+", description: "Перевыпуск культового шедевра Квентина Тарантино на больших экранах." },
-    { id: 8, title: "Коммерсант", poster: "komers.jpg", genre: "Бизнес-драма", age: "16+", description: "Холодная и расчетливая бизнес-драма о циничном мире высоких корпоративных ставок." },
-    { id: 9, title: "Кощей", poster: "koshey.jpg", genre: "Темное фэнтези", age: "16+", description: "Мрачное фэнтези, рассказывающее историю становления самого известного злодея русских сказок." },
-    { id: 10, title: "Лео и Тиг", poster: "leoandtig.jpg", genre: "Анимация, Семейный", age: "6+", description: "Яркая анимационная история для всей семьи." },
-    { id: 11, title: "Момо", poster: "momo.jpg", genre: "Сказка, Фэнтези", age: "12+", description: "Экранизация всемирно известной сказки Михаэля Энде." },
-    { id: 12, title: "Шевели перьями", poster: "moveyourwings.jpg", genre: "Анимация", age: "6+", description: "Вдохновляющий анимационный фильм о маленьком, но очень гордом воробье." },
-    { id: 13, title: "Никто не верил", poster: "nbt.jpg", genre: "Спорт, Драма", age: "12+", description: "Спортивная драма, основанная на реальных и невероятных событиях." },
-    { id: 14, title: "Не одна дома", poster: "neodnadoma.jpg", genre: "Комедия", age: "12+", description: "Искрометная российская комедия о находчивой пенсионерке." },
-    { id: 15, title: "Закулисье: Новая глава", poster: "new-official-backrooms-poster.jpg", genre: "Хоррор", age: "18+", description: "Леденящий кровь хоррор, расширяющий вселенную лиминальных пространств." },
-    { id: 16, title: "Обсессия", poster: "obessy.jpg", genre: "Триллер", age: "18+", description: "Пугающий триллер о гениальном композиторе, который в поисках идеального звука постепенно теряет связь с реальностью." },
-    { id: 17, title: "Пропасть", poster: "propast.jpg", genre: "Катастрофа", age: "16+", description: "Масштабный фильм-катастрофа о выживании альпинистов." },
-    { id: 18, title: "Чудесный мир", poster: "wondaryworld.jpg", genre: "Приключения", age: "12+", description: "Визуально ошеломляющее приключенческое фэнтези о портале в параллельную экосистему." },
-    { id: 19, title: "Молодые и влюбленные", poster: "young-and-loved.jpg", genre: "Мелодрама", age: "16+", description: "Трогательная мелодрама о первой любви и сложном выборе взросления." }
+    { id: 1, title: "Майкл", poster: "Michael_(2026_film)_poster.jpg", genre: "Музыкальный, Байопик", age: "18+", price: 1200 },
+    { id: 2, title: "День рождения", poster: "birthday.jpg", genre: "Триллер", age: "18+", price: 850 },
+    { id: 3, title: "Богатыри", poster: "bogatyry.jpg", genre: "Фэнтези, Экшен", age: "16+", price: 950 },
+    { id: 4, title: "Братья Карамазовы", poster: "brothers-karamazovy.jpg", genre: "Драма", age: "16+", price: 800 },
+    { id: 5, title: "Грязные деньги", poster: "gryznyedengi.jpg", genre: "Боевик", age: "18+", price: 900 },
+    { id: 6, title: "Ветры прошлого", poster: "images.jpg", genre: "Драма, Детектив", age: "16+", price: 850 },
+    { id: 7, title: "Убить Билла", poster: "killbill.jpg", genre: "Боевик, Триллер", age: "18+", price: 1500 },
+    { id: 8, title: "Коммерсант", poster: "komers.jpg", genre: "Бизнес-драма", age: "16+", price: 1000 },
+    { id: 9, title: "Кощей", poster: "koshey.jpg", genre: "Темное фэнтези", age: "16+", price: 950 },
+    { id: 10, title: "Лео и Тиг", poster: "leoandtig.jpg", genre: "Анимация, Семейный", age: "6+", price: 650 },
+    { id: 11, title: "Момо", poster: "momo.jpg", genre: "Сказка, Фэнтези", age: "12+", price: 750 },
+    { id: 12, title: "Шевели перьями", poster: "moveyourwings.jpg", genre: "Анимация", age: "6+", price: 600 },
+    { id: 13, title: "Никто не верил", poster: "nbt.jpg", genre: "Спорт, Драма", age: "12+", price: 850 },
+    { id: 14, title: "Не одна дома", poster: "neodnadoma.jpg", genre: "Комедия", age: "12+", price: 800 },
+    { id: 15, title: "Закулисье", poster: "new-official-backrooms-poster.jpg", genre: "Хоррор", age: "18+", price: 1100 },
+    { id: 16, title: "Обсессия", poster: "obessy.jpg", genre: "Триллер", age: "18+", price: 1000 },
+    { id: 17, title: "Пропасть", poster: "propast.jpg", genre: "Катастрофа", age: "16+", price: 950 },
+    { id: 18, title: "Чудесный мир", poster: "wondaryworld.jpg", genre: "Приключения", age: "12+", price: 900 },
+    { id: 19, title: "Молодые и влюбленные", poster: "young-and-loved.jpg", genre: "Мелодрама", age: "16+", price: 850 }
 ];
 
-const TICKET_PRICE = 850;
-
+// Цены бара адаптированы под суровые реалии
 const BAR_MENU = [
     {
-        category: "🔥 Выгодные Комбо",
+        id: "cat_combo", name: "🔥 Комбо",
         items: [
-            { id: "combo_max", name: "Комбо «Киносфера MAX»", desc: "Ведро попкорна (L) + 2 Напитка (0.8л) + Начос", price: 2150 },
-            { id: "combo_duo", name: "Комбо на двоих", desc: "Попкорн (M) + 2 Напитка (0.5л)", price: 1450 },
-            { id: "combo_solo", name: "Комбо Эгоист", desc: "Попкорн (S) + 1 Напиток (0.5л)", price: 890 }
+            { id: "combo_max", name: "Комбо «MAX»", desc: "Ведро попкорна (L) + 2 Напитка + Начос", price: 2950 },
+            { id: "combo_duo", name: "Комбо на двоих", desc: "Попкорн (M) + 2 Напитка", price: 1850 },
+            { id: "combo_solo", name: "Комбо Эгоист", desc: "Попкорн (S) + 1 Напиток", price: 1100 }
         ]
     },
     {
-        category: "🍿 Попкорн",
+        id: "cat_popcorn", name: "🍿 Попкорн",
         items: [
-            { id: "pop_l", name: "Попкорн Гигант (L)", desc: "Соленый / Сладкий / Сырный / Карамель", price: 850 },
-            { id: "pop_m", name: "Попкорн Стандарт (M)", desc: "Соленый / Сладкий", price: 650 },
-            { id: "pop_s", name: "Попкорн Малый (S)", desc: "Соленый / Сладкий", price: 450 }
+            { id: "pop_l", name: "Гигант (L)", desc: "Соленый / Сладкий / Сырный", price: 1100 },
+            { id: "pop_m", name: "Стандарт (M)", desc: "Соленый / Сладкий", price: 850 },
+            { id: "pop_s", name: "Малый (S)", desc: "Соленый / Сладкий", price: 650 }
         ]
     },
     {
-        category: "🥤 Напитки",
+        id: "cat_drinks", name: "🥤 Напитки",
         items: [
-            { id: "drink_cola_l", name: "Кола Разливная (0.8л)", desc: "Со льдом", price: 350 },
-            { id: "drink_cola_m", name: "Кола Разливная (0.5л)", desc: "Со льдом", price: 250 },
-            { id: "drink_water", name: "Вода минеральная (0.5л)", desc: "Газ / Без газа", price: 200 },
-            { id: "drink_juice", name: "Сок Rich (0.33л)", desc: "Яблоко / Апельсин / Вишня", price: 300 }
+            { id: "drink_cola_l", name: "Кола (0.8л)", desc: "Со льдом", price: 450 },
+            { id: "drink_cola_m", name: "Кола (0.5л)", desc: "Со льдом", price: 300 },
+            { id: "drink_water", name: "Вода (0.5л)", desc: "Газ / Без газа", price: 250 }
         ]
     },
     {
-        category: "🍫 Снеки и Закуски",
+        id: "cat_snacks", name: "🍫 Снеки",
         items: [
-            { id: "snack_nachos", name: "Начос с сырным соусом", desc: "Большая порция", price: 550 },
-            { id: "snack_nuts", name: "Арахис жареный", desc: "Соленый", price: 300 },
-            { id: "snack_mms", name: "Драже M&M's", desc: "С арахисом / Шоколадные", price: 280 }
+            { id: "snack_nachos", name: "Начос", desc: "С сырным соусом", price: 650 },
+            { id: "snack_nuts", name: "Арахис", desc: "Соленый", price: 400 }
         ]
     }
 ];
 
-let currentOrder = { 
-    movieId: null, 
-    selectedSeats: [], 
-    services: {} 
-};
+let currentOrder = { movieId: null, ticketPrice: 0, selectedSeats: [], services: {} };
+let currentHallZoom = 1;
+let activeBarTab = "cat_combo";
 
 window.goToStep = goToStep;
 window.updateService = updateService;
+window.zoomHall = zoomHall;
+window.switchBarTab = switchBarTab;
 
 document.addEventListener('DOMContentLoaded', () => {
-    try {
-        renderCatalog();
-        initGlobalModals();
-        initStaticEventListeners();
-        renderBarMenu();
-    } catch (error) {
-        console.error("Критическая ошибка инициализации:", error);
-    }
+    renderCatalog();
+    initGlobalModals();
+    initStaticEventListeners();
 });
 
 function renderCatalog() {
@@ -92,11 +85,13 @@ function renderCatalog() {
         card.className = 'movie-card';
         card.onclick = () => openBookingModal(movie.id);
         
+        // Добавлена плашка с ценой на постер
         card.innerHTML = `
             <div class="movie-card-poster">
                 <img src="${movie.poster}" alt="${movie.title}" onerror="this.src='https://via.placeholder.com/300x450/2a2a35/fff?text=Нет+постера'">
                 <div class="movie-badges-overlay">
                     <span class="badge">${movie.age}</span>
+                    <span class="badge badge-price">${movie.price} ₽</span>
                 </div>
             </div>
             <h3>${movie.title}</h3>
@@ -110,7 +105,6 @@ function initGlobalModals() {
     const cityBtn = document.getElementById('btn-city-select');
     const cityModal = document.getElementById('modal-city');
     cityBtn?.addEventListener('click', () => cityModal.classList.remove('hidden'));
-    
     document.querySelectorAll('.city-option').forEach(btn => {
         btn.addEventListener('click', (e) => {
             if(cityBtn) cityBtn.textContent = `г. ${e.target.dataset.city} ▼`;
@@ -121,21 +115,15 @@ function initGlobalModals() {
     const loginBtn = document.getElementById('btn-profile-login');
     const loginModal = document.getElementById('modal-login');
     loginBtn?.addEventListener('click', () => loginModal.classList.remove('hidden'));
-    
     document.getElementById('global-submit-login')?.addEventListener('click', () => {
         const field = document.getElementById('global-login-field');
         if(field && field.value.length > 2) {
             if(loginBtn) loginBtn.textContent = "Профиль";
             loginModal.classList.add('hidden');
-        } else {
-            alert('Введите корректные данные');
-        }
+        } else { alert('Введите корректные данные'); }
     });
-
     document.querySelectorAll('.close-mini-modal').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.target.closest('.overlay-modal').classList.add('hidden');
-        });
+        btn.addEventListener('click', (e) => e.target.closest('.overlay-modal').classList.add('hidden'));
     });
 }
 
@@ -143,24 +131,22 @@ function openBookingModal(id) {
     const movie = moviesData.find(m => m.id === id);
     if (!movie) return;
 
-    currentOrder.movieId = movie.id;
-    currentOrder.selectedSeats = [];
-    currentOrder.services = {}; 
+    currentOrder = { movieId: movie.id, ticketPrice: movie.price, selectedSeats: [], services: {} };
     
-    document.querySelectorAll('.service-qty').forEach(el => el.textContent = '0');
-
     document.getElementById('modal-movie-title').textContent = movie.title;
     document.getElementById('modal-movie-poster').src = movie.poster;
-    document.getElementById('modal-text-description').textContent = movie.description;
-    
     document.querySelector('.badge-age').textContent = movie.age;
-    document.querySelector('.modal-meta-row').textContent = `Жанр: ${movie.genre}`;
+    document.getElementById('modal-movie-genre').textContent = `Жанр: ${movie.genre}`;
+    document.getElementById('modal-movie-price').textContent = `Билет: ${movie.price} ₽`;
 
     document.querySelectorAll('.step-container').forEach(el => el.classList.add('hidden'));
     document.getElementById('step-sessions-container').classList.remove('hidden');
     document.getElementById('payment-receipt-block').classList.add('hidden');
+    document.getElementById('global-total-badge').classList.add('hidden'); // Скрыт на этапе сеансов
     
     renderSeats();
+    renderBarTabs();
+    switchBarTab('cat_combo'); 
     updateCheckoutSummary();
     
     document.getElementById('booking-modal-overlay').classList.remove('hidden');
@@ -175,118 +161,144 @@ function goToStep(stepId) {
     document.querySelectorAll('.step-container').forEach(el => el.classList.add('hidden'));
     const targetStep = document.getElementById(stepId);
     if (targetStep) targetStep.classList.remove('hidden');
+
+    // Показываем глобальный счетчик на шагах после сеансов
+    const badge = document.getElementById('global-total-badge');
+    if (stepId === 'step-sessions-container') {
+        badge.classList.add('hidden');
+    } else {
+        badge.classList.remove('hidden');
+    }
+
+    // Сброс зума при заходе в зал
+    if (stepId === 'step-hall-container') {
+        currentHallZoom = window.innerWidth < 600 ? 0.6 : 1; 
+        applyZoom();
+        const vp = document.getElementById('hall-viewport');
+        const wr = document.getElementById('hall-wrapper');
+        if(vp && wr) vp.scrollLeft = (wr.offsetWidth * currentHallZoom - vp.offsetWidth) / 2;
+    }
 }
 
-// Зал 10х18 (Flexbox адаптация без жестких отступов)
+// Зал
 function renderSeats() {
     const container = document.getElementById('dynamic-hall-grid');
     if (!container) return;
     container.innerHTML = '';
     
     let seatNumber = 1;
-    const rows = 10;
-    const cols = 18;
-    
-    for (let r = 0; r < rows; r++) {
+    for (let r = 0; r < 10; r++) {
         const rowDiv = document.createElement('div');
         rowDiv.className = 'seat-row';
-        
-        const rowNum = document.createElement('div');
-        rowNum.className = 'row-number';
-        rowNum.textContent = r + 1;
-        rowDiv.appendChild(rowNum);
+        rowDiv.innerHTML = `<div class="row-number">${r + 1}</div>`;
 
-        for (let c = 0; c < cols; c++) {
+        for (let c = 0; c < 18; c++) {
             const seat = document.createElement('div');
             seat.className = 'seat';
             seat.textContent = c + 1;
-            const currentSeat = seatNumber; 
+            const currentSeatId = seatNumber++; 
 
-            // Слегка визуально отделяем проход по центру прозрачным margin
-            if (c === 9) seat.style.marginLeft = '3%';
-
-            if (Math.random() < 0.25) {
+            if (c === 9) seat.style.marginLeft = '20px'; 
+            
+            if (Math.random() < 0.20) {
                 seat.classList.add('occupied');
             } else {
-                seat.onclick = () => handleSeatClick(seat, currentSeat, r+1, c+1);
+                seat.onclick = () => handleSeatClick(seat, currentSeatId, r+1, c+1);
             }
-            
             rowDiv.appendChild(seat);
-            seatNumber++;
         }
         container.appendChild(rowDiv);
     }
 }
 
-function handleSeatClick(seatElement, globalId, row, col) {
-    if (seatElement.classList.contains('occupied')) return;
+function handleSeatClick(el, id, row, col) {
+    if (el.classList.contains('occupied')) return;
+    el.classList.toggle('selected');
     
-    seatElement.classList.toggle('selected');
-    const seatObj = { id: globalId, row, col };
-    
-    if (seatElement.classList.contains('selected')) {
-        currentOrder.selectedSeats.push(seatObj);
+    if (el.classList.contains('selected')) {
+        currentOrder.selectedSeats.push({ id, row, col });
     } else {
-        currentOrder.selectedSeats = currentOrder.selectedSeats.filter(s => s.id !== globalId);
+        currentOrder.selectedSeats = currentOrder.selectedSeats.filter(s => s.id !== id);
     }
-    
     updateCheckoutSummary();
 }
 
-function renderBarMenu() {
-    const container = document.getElementById('dynamic-services-list');
-    if (!container) return;
-    container.innerHTML = '';
+function zoomHall(delta) {
+    currentHallZoom += delta;
+    if (currentHallZoom < 0.4) currentHallZoom = 0.4;
+    if (currentHallZoom > 1.5) currentHallZoom = 1.5;
+    applyZoom();
+}
 
-    BAR_MENU.forEach(category => {
-        const catDiv = document.createElement('div');
-        catDiv.className = 'service-category';
-        
-        const catTitle = document.createElement('h3');
-        catTitle.className = 'category-title';
-        catTitle.textContent = category.category;
-        catDiv.appendChild(catTitle);
+function applyZoom() {
+    const wrapper = document.getElementById('hall-wrapper');
+    if (wrapper) wrapper.style.transform = `scale(${currentHallZoom})`;
+}
 
-        category.items.forEach(item => {
-            currentOrder.services[item.id] = 0;
+// Бар
+function renderBarTabs() {
+    const tabsContainer = document.getElementById('bar-category-tabs');
+    if (!tabsContainer) return;
+    tabsContainer.innerHTML = '';
 
-            const itemDiv = document.createElement('div');
-            itemDiv.className = 'service-item';
-            itemDiv.innerHTML = `
-                <div class="service-info">
-                    <h4>${item.name}</h4>
-                    <p>${item.desc}</p>
-                    <div class="service-price">${item.price} ₽</div>
-                </div>
-                <div class="service-controls">
-                    <button class="control-btn" onclick="updateService('${item.id}', -1)">-</button>
-                    <span id="qty-${item.id}" class="service-qty">0</span>
-                    <button class="control-btn" onclick="updateService('${item.id}', 1)">+</button>
-                </div>
-            `;
-            catDiv.appendChild(itemDiv);
-        });
-        
-        container.appendChild(catDiv);
+    BAR_MENU.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.className = `bar-tab ${activeBarTab === cat.id ? 'active' : ''}`;
+        btn.textContent = cat.name;
+        btn.onclick = () => switchBarTab(cat.id);
+        tabsContainer.appendChild(btn);
+    });
+}
+
+function switchBarTab(catId) {
+    activeBarTab = catId;
+    renderBarTabs(); 
+    
+    const listContainer = document.getElementById('dynamic-services-list');
+    if (!listContainer) return;
+    listContainer.innerHTML = '';
+
+    const category = BAR_MENU.find(c => c.id === catId);
+    if(!category) return;
+
+    category.items.forEach(item => {
+        if (currentOrder.services[item.id] === undefined) currentOrder.services[item.id] = 0;
+        const currentQty = currentOrder.services[item.id];
+
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'service-item';
+        itemDiv.innerHTML = `
+            <div class="service-info">
+                <h4>${item.name}</h4>
+                <p>${item.desc}</p>
+                <div class="service-price">${item.price} ₽</div>
+            </div>
+            <div class="service-controls">
+                <button class="control-btn" onclick="updateService('${item.id}', -1)">-</button>
+                <span id="qty-${item.id}" class="service-qty">${currentQty}</span>
+                <button class="control-btn" onclick="updateService('${item.id}', 1)">+</button>
+            </div>
+        `;
+        listContainer.appendChild(itemDiv);
     });
 }
 
 function updateService(id, change) {
-    let currentQty = currentOrder.services[id] || 0;
-    let newQty = currentQty + change;
-    
+    let newQty = (currentOrder.services[id] || 0) + change;
     if (newQty < 0) newQty = 0;
     if (newQty > 10) newQty = 10;
     
     currentOrder.services[id] = newQty;
-    document.getElementById(`qty-${id}`).textContent = newQty;
+    const qtyEl = document.getElementById(`qty-${id}`);
+    if(qtyEl) qtyEl.textContent = newQty;
     
     updateCheckoutSummary();
 }
 
+// Глобальный пересчет корзины
 function updateCheckoutSummary() {
     const ticketsCount = currentOrder.selectedSeats.length;
-    const ticketsSum = ticketsCount * TICKET_PRICE;
+    const ticketsSum = ticketsCount * currentOrder.ticketPrice; // Цена берется из фильма
     
     let servicesSum = 0;
     let servicesDetails = [];
@@ -303,10 +315,12 @@ function updateCheckoutSummary() {
 
     const totalSum = ticketsSum + servicesSum;
     
+    // Обновление глобального бейджа
+    document.getElementById('global-badge-sum').textContent = totalSum;
+
+    // Обновление деталей оформления
     document.getElementById('summary-seats-count').textContent = ticketsCount;
-    document.getElementById('summary-tickets-sum').textContent = ticketsSum;
-    document.getElementById('summary-services-sum').textContent = servicesSum;
-    document.getElementById('summary-total-sum').textContent = totalSum;
+    document.getElementById('summary-total-sum').textContent = `${totalSum} ₽`;
     
     const seatsListEl = document.getElementById('summary-seats-list');
     if (seatsListEl) {
@@ -317,7 +331,7 @@ function updateCheckoutSummary() {
 
     const servicesListEl = document.getElementById('summary-services-list');
     if (servicesListEl) {
-        servicesListEl.textContent = servicesDetails.length > 0 ? servicesDetails.join(', ') : '';
+        servicesListEl.textContent = servicesDetails.length > 0 ? servicesDetails.join(', ') : 'Не выбрана';
     }
 }
 
@@ -330,7 +344,7 @@ function initStaticEventListeners() {
         const receiptBlock = document.getElementById('payment-receipt-block');
         if(receiptBlock) {
             receiptBlock.classList.remove('hidden');
-            receiptBlock.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            receiptBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
     });
 }
