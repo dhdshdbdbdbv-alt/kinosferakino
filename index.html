@@ -2,110 +2,112 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>КИНОСФЕРА — Премиальная Сеть Кинотеатров</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сеть кинотеатров «КИНОСФЕРА»</title>
     <link rel="stylesheet" href="css.css">
 </head>
 <body>
 
     <header class="cinema-top-bar">
-        <div class="top-bar-left">
-            <div class="city-selector-container" id="city-dropdown-wrapper">
-                <button class="city-selector-btn" id="active-city-btn">
-                    <span class="geo-icon">📍</span> 
-                    <span id="current-city-name">Москва</span>
-                    <span class="arrow-icon">▼</span>
-                </button>
-                <div class="city-dropdown-menu">
-                    <div class="city-option" data-city="Москва">Москва</div>
-                    <div class="city-option" data-city="Санкт-Петербург">Санкт-Петербург</div>
-                    <div class="city-option" data-city="Новосибирск">Новосибирск</div>
-                    <div class="city-option" data-city="Екатеринбург">Екатеринбург</div>
-                    <div class="city-option" data-city="Казань">Казань</div>
-                </div>
-            </div>
-        </div>
         <div class="logo">КИНО<span>СФЕРА</span></div>
-        <div class="top-bar-right">
-            <button class="mobile-login-link" id="top-bar-auth-btn">Войти</button>
+        <div style="display: flex; gap: 15px;">
+            <button class="city-selector-btn">г. Москва ▼</button>
+            <button class="mobile-login-link">Войти</button>
         </div>
     </header>
 
-    <main class="main-layout">
-        <section class="catalog-section">
-            <h2 class="section-title">Сейчас в прокате</h2>
-            <div id="movies-grid" class="movies-ultimate-grid">
-                </div>
-        </section>
+    <main class="catalog-section">
+        <h1 class="section-title">Сейчас в прокате</h1>
+        <div id="movies-grid" class="movies-ultimate-grid">
+            </div>
     </main>
 
     <div id="booking-modal-overlay" class="booking-modal-overlay hidden">
         <div class="modal-content-wrapper">
-            <button id="close-modal-btn" class="close-modal-btn">✕ Закрыть</button>
-            
+            <button id="close-modal-btn" class="close-modal-btn">Закрыть ✕</button>
+
             <div class="modal-grid-layout">
-                <div class="modal-sidebar-info">
+                
+                <aside class="modal-sidebar-info">
                     <div class="modal-poster-box">
                         <img id="modal-movie-poster" src="" alt="Постер">
                     </div>
-                    <h2 id="modal-movie-title"></h2>
                     <div class="modal-badges">
-                        <span id="modal-badge-age" class="badge-age"></span>
-                        <span id="modal-badge-rating" class="badge-rating"></span>
+                        <span class="badge-age">16+</span>
+                        <span class="badge-rating">IMDb 8.1</span>
                     </div>
-                    <p class="modal-meta-row"><strong>Жанр:</strong> <span id="modal-text-genre"></span></p>
-                    <p class="modal-meta-row"><strong>Хронометраж:</strong> <span id="modal-text-duration"></span></p>
-                    <p class="modal-description">Погрузитесь в просмотр в залах повышенной комфортности Киносферы. Премиальные лазерные проекторы, динамический многоканальный звук Dolby Atmos и полностью раскладывающиеся кресла-реклайнеры.</p>
-                </div>
+                    <h2 id="modal-movie-title" style="margin: 0 0 10px 0; font-size: 22px;"></h2>
+                    <div class="modal-meta-row">Жанр: Драма, Триллер</div>
+                    <div class="modal-meta-row">Продолжительность: 120 мин.</div>
+                    <div id="modal-text-description" class="modal-description">
+                        </div>
+                </aside>
 
-                <div class="modal-workspace-flow">
-                    <div class="step-container">
-                        <h3 class="step-title">1. Выберите время сеанса</h3>
-                        <div id="modal-sessions-grid" class="modal-sessions-grid"></div>
+                <section class="modal-workspace-flow">
+                    
+                    <div id="step-sessions-container" class="step-container hidden">
+                        <h2 class="step-title">Шаг 1: Выберите сеанс</h2>
+                        <p>Доступные сеансы на сегодня:</p>
+                        <div>
+                            <button class="session-btn" onclick="goToStep('step-hall-container')">10:00 (2D)</button>
+                            <button class="session-btn" onclick="goToStep('step-hall-container')">12:30 (3D)</button>
+                            <button class="session-btn" onclick="goToStep('step-hall-container')">15:15 (2D)</button>
+                            <button class="session-btn" onclick="goToStep('step-hall-container')">18:00 (VIP)</button>
+                            <button class="session-btn" onclick="goToStep('step-hall-container')">21:40 (3D)</button>
+                        </div>
                     </div>
 
                     <div id="step-hall-container" class="step-container hidden">
-                        <h3 class="step-title">2. Выберите места в зале</h3>
-                        <div class="mobile-zoom-hint">💡 На смартфонах сетка оптимизирована. Разворачивайте экран для лучшего обзора.</div>
-                        <div class="interactive-hall-viewport" id="hall-viewport">
-                            <div class="interactive-hall-wrapper" id="hall-wrapper">
+                        <h2 class="step-title">Шаг 2: Выберите места в зале</h2>
+                        <div class="mobile-zoom-hint">💡 Можно прокручивать зал влево-вправо на мобильных устройствах</div>
+                        
+                        <div class="interactive-hall-viewport">
+                            <div class="interactive-hall-wrapper">
                                 <div class="cinema-glowing-screen">ЭКРАН</div>
-                                <div id="dynamic-hall-grid" class="dynamic-hall-grid"></div>
+                                <div id="dynamic-hall-grid" class="dynamic-hall-grid">
+                                    </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div id="step-bar-container" class="step-container hidden">
-                        <h3 class="step-title">3. Премиальный Кинобар & Комбо</h3>
-                        <div id="dynamic-bar-menu" class="bar-matrix-grid"></div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                            <button class="session-btn" onclick="goToStep('step-sessions-container')">← Назад к сеансам</button>
+                            <button class="action-accent-btn" onclick="goToStep('step-checkout-container')">Продолжить →</button>
+                        </div>
                     </div>
 
                     <div id="step-checkout-container" class="step-container hidden">
-                        <h3 class="step-title">4. Идентификация и подтверждение заказа</h3>
+                        <h2 class="step-title">Шаг 3: Оформление заказа</h2>
+                        
                         <div class="auth-box-fields">
-                            <input type="text" id="client-login-field" placeholder="Логин (минимум 3 символа)">
-                            <input type="password" id="client-pass-field" placeholder="Пароль (минимум 4 символа)">
-                            <button id="submit-account-btn" class="action-accent-btn">Проверить данные</button>
-                            <p id="account-validation-status" class="status-warning">Пройдите авторизацию для разблокировки бронирования</p>
+                            <h3 style="margin-top: 0;">Авторизация в системе лояльности</h3>
+                            <input type="text" id="client-login-field" placeholder="Логин или номер телефона" autocomplete="off">
+                            <input type="password" id="client-pass-field" placeholder="Пароль" autocomplete="off">
+                            <button id="submit-account-btn" class="session-btn" style="margin-left: 0;">Проверить данные</button>
+                            <div id="account-validation-status" class="status-warning">Пройдите авторизацию для разблокировки бронирования</div>
                         </div>
 
                         <div class="checkout-summary-card">
-                            <div class="summary-text-block">
-                                <p>Выбрано билетов: <span id="summary-seats-count" class="highlight-count">0</span> шт.</p>
-                                <p>Товаров из бара: <span id="summary-bar-count" class="highlight-count">0</span> шт.</p>
-                                <p class="summary-total">Итого к оплате: <span id="summary-total-sum">0</span> ₽</p>
-                            </div>
-                            <button id="final-checkout-btn" class="main-order-submit" disabled>Оформить заказ</button>
+                            <div style="font-size: 18px;">Билетов выбрано: <span id="summary-seats-count" class="highlight-count">0</span></div>
+                            <div id="summary-seats-list" class="highlight-list"></div>
+                            <div class="summary-total">Итого к оплате: <span id="summary-total-sum" class="highlight-count">0</span> руб.</div>
+                            
+                            <button id="final-checkout-btn" class="main-order-submit" disabled>Оплатить заказ</button>
                         </div>
 
-                        <div id="payment-receipt-block" class="payment-receipt-block hidden">
-                            <pre id="receipt-text-container"></pre>
-                            <div class="secure-error-banner">
-                                ❌ КРИТИЧЕСКАЯ ОШИБКА ШЛЮЗА: Транзакция отклонена банком-эквайером. Код ошибки: [ERR_BANK_9902]. Запрос заблокирован по соображениям безопасности.
-                            </div>
+                        <div id="payment-receipt-block" class="secure-error-banner hidden">
+                            <strong>СИСТЕМНОЕ СООБЩЕНИЕ:</strong><br><br>
+                            Ошибка транзакции #ERR-8902-SEC.<br>
+                            Сбой на стороне платежного шлюза. Сервер базы данных (LocalHost/CinemaDB) отклонил запрос на запись.<br>
+                            Возможная причина: Нарушение структуры файла .accounts или повреждение ключа шифрования (AES-256).<br><br>
+                            <em>Пожалуйста, обратитесь к системному администратору для восстановления структуры хранения данных.</em>
+                        </div>
+
+                        <div class="mt-10">
+                            <button class="session-btn" style="margin-left: 0;" onclick="goToStep('step-hall-container')">← Назад к выбору мест</button>
                         </div>
                     </div>
-                </div>
+
+                </section>
             </div>
         </div>
     </div>
