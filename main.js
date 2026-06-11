@@ -1,5 +1,5 @@
 /**
- * main.js — Логика кинотеатра "КИНОСФЕРА"
+ * main.js — Исправленная, защищенная от сбоев версия
  */
 
 const moviesData = [
@@ -37,97 +37,207 @@ const moviesData = [
     { id: 32, title: "Молодые и влюбленные", poster: "young-and-loved.jpg", description: "Романтическая трогательная мелодрама о первой искренней любви, больших надеждах юности и взрослом жизненном выборе." }
 ];
 
-let currentOrder = { movie: null, selectedSeats: [], ticketPrice: 500 };
+let currentOrder = { 
+    movieId: null, 
+    selectedSeats: [], 
+    ticketPrice: 650 
+};
+
+// Жестко привязываем функции к window, чтобы HTML их точно видел
+window.goToStep = goToStep;
+window.openBookingModal = openBookingModal;
 
 document.addEventListener('DOMContentLoaded', () => {
-    renderCatalog();
-    initEventListeners();
+    try {
+        renderCatalog();
+        initStaticEventListeners();
+    } catch (error) {
+        console.error("Критическая ошибка при загрузке:", error);
+    }
 });
 
-// 1. Отрисовка каталога
 function renderCatalog() {
     const grid = document.getElementById('movies-grid');
-    grid.innerHTML = '';
+    if (!grid) {
+        console.error("Ошибка: Элемент id='movies-grid' не найден в HTML!");
+        return;
+    }
+    
+    grid.innerHTML = ''; 
+    
     moviesData.forEach(movie => {
         const card = document.createElement('div');
         card.className = 'movie-card';
-        card.innerHTML = `<img src="${movie.poster}" alt="${movie.title}"><h3>${movie.title}</h3>`;
-        card.onclick = () => openModal(movie);
+        card.onclick = () => openBookingModal(movie.id);
+        
+        // Добавил onerror для картинок. Если картинка не загрузится, она хотя бы не сломает дизайн
+        card.innerHTML = `
+            <img src="${movie.poster}" alt="${movie.title}" onerror="this.src='https://via.placeholder.com/300x450/333/fff?text=Нет+постера'">
+            <h3>${movie.title}</h3>
+        `;
         grid.appendChild(card);
     });
 }
 
-// 2. Открытие модального окна
-function openModal(movie) {
-    currentOrder.movie = movie;
+function openBookingModal(id) {
+    const movie = moviesData.find(m => m.id === id);
+    if (!movie) return;
+
+    currentOrder.movieId = movie.id;
     currentOrder.selectedSeats = [];
     
-    document.getElementById('modal-movie-title').textContent = movie.title;
-    document.getElementById('modal-movie-poster').src = movie.poster;
-    document.getElementById('modal-text-description').textContent = movie.description;
+    // Безопасное заполнение сайдбара
+    const titleEl = document.getElementById('modal-movie-title');
+    const posterEl = document.getElementById('modal-movie-poster');
+    const descEl = document.getElementById('modal-text-description');
+    const overlayEl = document.getElementById('booking-modal-overlay');
+
+    if (titleEl) titleEl.textContent = movie.title;
+    if (posterEl) posterEl.src = movie.poster;
+    if (descEl) descEl.textContent = movie.description;
     
-    document.getElementById('booking-modal-overlay').classList.remove('hidden');
-    goToStep('step-sessions-container');
+    // Скрываем все шаги
+    document.querySelectorAll('.step-container').forEach(el => el.classList.add('hidden'));
+    
+    // Показываем первый шаг
+    const step1 = document.getElementById('step-sessions-container');
+    if (step1) step1.classList.remove('hidden');
+    
+    // Скрываем чек
+    const receipt = document.getElementById('payment-receipt-block');
+    if (receipt) receipt.classList.add('hidden');
+    
     renderSeats();
-    updateSummary();
+    updateCheckoutSummary();
+    
+    if (overlayEl) overlayEl.classList.remove('hidden');
 }
 
-// 3. Управление шагами
-window.goToStep = function(stepId) {
-    document.querySelectorAll('.step-container').forEach(el => el.classList.add('hidden'));
-    document.getElementById(stepId).classList.remove('hidden');
-};
+function goToStep(stepId) {
+    if (stepId === 'step-checkout-container') {
+        if (currentOrder.selectedSeats.length === 0) {
+            alert('Пожалуйста, выберите хотя бы одно место в зале для продолжения.');
+            return;
+        }
+        const btn = document.getElementById('final-checkout-btn');
+        const status = document.getElementById('account-validation-status');
+        const loginF = document.getElementById('client-login-field');
+        const passF = document.getElementById('client-pass-field');
 
-// 4. Логика кресел
+        if (btn) btn.disabled = true;
+        if (status) {
+            status.textContent = 'Пройдите авторизацию для разблокировки бронирования';
+            status.style.color = '#ffc107';
+        }
+        if (loginF) loginF.value = '';
+        if (passF) passF.value = '';
+    }
+
+    document.querySelectorAll('.step-container').forEach(el => el.classList.add('hidden'));
+    
+    const targetStep = document.getElementById(stepId);
+    if (targetStep) {
+        targetStep.classList.remove('hidden');
+    } else {
+        console.error("Не найден шаг:", stepId);
+    }
+}
+
 function renderSeats() {
     const container = document.getElementById('dynamic-hall-grid');
+    if (!container) return;
+    
     container.innerHTML = '';
-    let seatCount = 1;
-    for (let r = 0; r < 5; r++) {
+    let seatNumber = 1;
+    
+    for (let r = 0; r < 6; r++) {
         for (let c = 0; c < 10; c++) {
             const seat = document.createElement('div');
             seat.className = 'seat';
-            seat.textContent = seatCount;
-            if (Math.random() < 0.2) seat.classList.add('occupied');
-            seat.onclick = () => toggleSeat(seat, parseInt(seat.textContent));
+            seat.textContent = seatNumber;
+            const currentSeat = seatNumber; 
+            
+            if (Math.random() < 0.15) {
+                seat.classList.add('occupied');
+            } else {
+                seat.onclick = () => handleSeatClick(seat, currentSeat);
+            }
+            
             container.appendChild(seat);
-            seatCount++;
+            seatNumber++;
         }
         container.appendChild(document.createElement('br'));
     }
 }
 
-function toggleSeat(el, number) {
-    if (el.classList.contains('occupied')) return;
-    el.classList.toggle('selected');
-    if (el.classList.contains('selected')) {
-        currentOrder.selectedSeats.push(number);
-    } else {
-        currentOrder.selectedSeats = currentOrder.selectedSeats.filter(s => s !== number);
-    }
-    updateSummary();
-}
-
-// 5. Итоги и оплата
-function updateSummary() {
-    const count = currentOrder.selectedSeats.length;
-    document.getElementById('summary-seats-count').textContent = count;
-    document.getElementById('summary-total-sum').textContent = count * currentOrder.ticketPrice;
-    document.getElementById('final-checkout-btn').disabled = count === 0;
-}
-
-function initEventListeners() {
-    document.getElementById('close-modal-btn').onclick = () => document.getElementById('booking-modal-overlay').classList.add('hidden');
+function handleSeatClick(seatElement, seatNumber) {
+    if (seatElement.classList.contains('occupied')) return;
     
-    document.getElementById('submit-account-btn').onclick = () => {
-        const login = document.getElementById('client-login-field').value;
-        if (login.length >= 3) {
-            document.getElementById('account-validation-status').textContent = '✅ Данные подтверждены';
-            document.getElementById('account-validation-status').style.color = '#28a745';
-        }
-    };
+    seatElement.classList.toggle('selected');
+    
+    if (seatElement.classList.contains('selected')) {
+        currentOrder.selectedSeats.push(seatNumber);
+    } else {
+        currentOrder.selectedSeats = currentOrder.selectedSeats.filter(num => num !== seatNumber);
+    }
+    
+    currentOrder.selectedSeats.sort((a, b) => a - b);
+    updateCheckoutSummary();
+}
 
-    document.getElementById('final-checkout-btn').onclick = () => {
-        document.getElementById('payment-receipt-block').classList.remove('hidden');
-    };
+function updateCheckoutSummary() {
+    const count = currentOrder.selectedSeats.length;
+    const sum = count * currentOrder.ticketPrice;
+    
+    const countEl = document.getElementById('summary-seats-count');
+    const sumEl = document.getElementById('summary-total-sum');
+    const listEl = document.getElementById('summary-seats-list');
+
+    if (countEl) countEl.textContent = count;
+    if (sumEl) sumEl.textContent = sum;
+    
+    if (listEl) {
+        listEl.textContent = count > 0 ? `Выбранные места: ${currentOrder.selectedSeats.join(', ')}` : '';
+    }
+}
+
+function initStaticEventListeners() {
+    const closeBtn = document.getElementById('close-modal-btn');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            const overlay = document.getElementById('booking-modal-overlay');
+            if (overlay) overlay.classList.add('hidden');
+        });
+    }
+
+    const authBtn = document.getElementById('submit-account-btn');
+    if (authBtn) {
+        authBtn.addEventListener('click', () => {
+            const login = document.getElementById('client-login-field')?.value || '';
+            const pass = document.getElementById('client-pass-field')?.value || '';
+            
+            if (login.length >= 3 && pass.length >= 4) {
+                const statusEl = document.getElementById('account-validation-status');
+                if (statusEl) {
+                    statusEl.textContent = '✅ Авторизация успешна. Доступ к шлюзу открыт.';
+                    statusEl.style.color = '#28a745';
+                }
+                const checkoutBtn = document.getElementById('final-checkout-btn');
+                if (checkoutBtn) checkoutBtn.disabled = false;
+            } else {
+                alert('Ошибка: Логин должен быть от 3 символов, пароль от 4.');
+            }
+        });
+    }
+
+    const finalBtn = document.getElementById('final-checkout-btn');
+    if (finalBtn) {
+        finalBtn.addEventListener('click', () => {
+            const receiptBlock = document.getElementById('payment-receipt-block');
+            if (receiptBlock) {
+                receiptBlock.classList.remove('hidden');
+                receiptBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
+    }
 }
