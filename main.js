@@ -1,5 +1,5 @@
 /**
- * main.js — Система "КИНОСФЕРА" (Динамическое расписание и сниженные цены)
+ * main.js — Система "КИНОСФЕРА"
  */
 
 const moviesData = [
@@ -24,7 +24,6 @@ const moviesData = [
     { id: 19, title: "Молодые и влюбленные", poster: "young-and-loved.jpg", genre: "Мелодрама", age: "16+", price: 550, sessions: ["14:15", "17:00", "19:45"] }
 ];
 
-// Цены бара снижены для реализма
 const BAR_MENU = [
     {
         id: "cat_combo", name: "🔥 Комбо",
@@ -124,6 +123,7 @@ function initGlobalModals() {
         btn.addEventListener('click', (e) => e.target.closest('.overlay-modal').classList.add('hidden'));
     });
 }
+
 function openBookingModal(id) {
     const movie = moviesData.find(m => m.id === id);
     if (!movie) return;
@@ -136,12 +136,11 @@ function openBookingModal(id) {
     document.getElementById('modal-movie-genre').textContent = `Жанр: ${movie.genre}`;
     document.getElementById('modal-movie-price').textContent = `Билет: ${movie.price} ₽`;
 
-    // ГЕНЕРАЦИЯ ДИНАМИЧЕСКИХ СЕАНСОВ (С защитой от сбоев)
+    // Генерация сеансов (С ЗАЩИТОЙ)
     const sessionsGrid = document.getElementById('dynamic-sessions-grid');
     if (sessionsGrid) {
         sessionsGrid.innerHTML = '';
-        // Если вдруг массив сеансов пуст или не прогрузился, ставим дефолтные
-        const sessionsToRender = movie.sessions || ["12:00", "16:00", "20:00"]; 
+        const sessionsToRender = movie.sessions || ["12:00", "16:00", "20:00"];
         
         sessionsToRender.forEach(time => {
             const btn = document.createElement('button');
@@ -151,19 +150,6 @@ function openBookingModal(id) {
             sessionsGrid.appendChild(btn);
         });
     }
-
-    document.querySelectorAll('.step-container').forEach(el => el.classList.add('hidden'));
-    document.getElementById('step-sessions-container').classList.remove('hidden');
-    document.getElementById('payment-receipt-block').classList.add('hidden');
-    document.getElementById('global-total-badge').classList.add('hidden');
-    
-    renderSeats();
-    renderBarTabs();
-    switchBarTab('cat_combo'); 
-    updateCheckoutSummary();
-    
-    document.getElementById('booking-modal-overlay').classList.remove('hidden');
-}
 
     document.querySelectorAll('.step-container').forEach(el => el.classList.add('hidden'));
     document.getElementById('step-sessions-container').classList.remove('hidden');
