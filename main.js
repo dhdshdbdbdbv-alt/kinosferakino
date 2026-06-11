@@ -1,5 +1,5 @@
 /**
- * main.js — Система "КИНОСФЕРА" (Фикс кликов с защитой от сбоев)
+ * main.js — Система "КИНОСФЕРА" (Бар как на kinoteatr.ru, без начос)
  */
 
 const moviesData = [
@@ -26,29 +26,40 @@ const moviesData = [
     { id: 19, title: "Молодые и влюбленные", poster: "young-and-loved.jpg", genre: "Мелодрама", age: "16+", price: 550, sessions: ["14:15", "17:00", "19:45"], country: "Франция", director: "Селин Сьямма", cast: "Адель Энель", desc: "Трогательная мелодрама о первой любви, разбитых надеждах и сложном выборе взросления." }
 ];
 
+// Меню в стиле kinoteatr.ru
 const BAR_MENU = [
     {
         id: "cat_combo", name: "🔥 Комбо",
         items: [
-            { id: "combo_max", name: "Комбо «MAX»", desc: "Ведро попкорна (L) + 2 Напитка + Начос", price: 2150 },
-            { id: "combo_duo", name: "Комбо на двоих", desc: "Попкорн (M) + 2 Напитка", price: 1350 },
-            { id: "combo_solo", name: "Комбо Эгоист", desc: "Попкорн (S) + 1 Напиток", price: 850 }
+            { id: "combo_l", name: "Комбо L (Для двоих)", desc: "Попкорн (L) + 2 Напитка (0.5л)", price: 1450 },
+            { id: "combo_m", name: "Комбо M (Соло)", desc: "Попкорн (M) + 1 Напиток (0.5л)", price: 950 },
+            { id: "combo_kids", name: "Детский Комбо", desc: "Попкорн (S) + Сок (0.2л) + Мармелад Haribo", price: 650 }
         ]
     },
     {
         id: "cat_popcorn", name: "🍿 Попкорн",
         items: [
-            { id: "pop_l", name: "Гигант (L)", desc: "Соленый / Сладкий", price: 800 },
-            { id: "pop_m", name: "Стандарт (M)", desc: "Соленый / Сладкий", price: 600 },
-            { id: "pop_s", name: "Малый (S)", desc: "Соленый / Сладкий", price: 450 }
+            { id: "pop_caramel_l", name: "Карамельный попкорн (L)", desc: "Сладкая хрустящая карамель, большое ведро", price: 850 },
+            { id: "pop_cheese_m", name: "Сырный попкорн (M)", desc: "Насыщенный сырный вкус, стандартное ведро", price: 650 },
+            { id: "pop_salt_m", name: "Соленый попкорн (M)", desc: "Классический соленый вкус", price: 550 },
+            { id: "pop_mix_l", name: "Попкорн Микс (L)", desc: "Карамель + Соленый в одном ведре", price: 800 }
         ]
     },
     {
         id: "cat_drinks", name: "🥤 Напитки",
         items: [
-            { id: "drink_cola_l", name: "Кола (0.8л)", desc: "Со льдом", price: 350 },
-            { id: "drink_cola_m", name: "Кола (0.5л)", desc: "Со льдом", price: 250 },
-            { id: "drink_water", name: "Вода (0.5л)", desc: "Газ / Без газа", price: 150 }
+            { id: "drink_cola_05", name: "Добрый Cola (0.5л)", desc: "Разливной напиток со льдом", price: 250 },
+            { id: "drink_orange_05", name: "Добрый Апельсин (0.5л)", desc: "Разливной напиток со льдом", price: 250 },
+            { id: "drink_water", name: "Вода Rich (0.5л)", desc: "Негазированная питьевая вода", price: 180 },
+            { id: "drink_juice_02", name: "Сок Добрый (0.2л)", desc: "Яблоко / Мультифрукт", price: 150 }
+        ]
+    },
+    {
+        id: "cat_sweets", name: "🍫 Сладости",
+        items: [
+            { id: "sweet_mms", name: "Драже M&M's (130г)", desc: "С арахисом в шоколаде", price: 350 },
+            { id: "sweet_haribo", name: "Мармелад Haribo (100г)", desc: "Золотые мишки, фруктовый вкус", price: 250 },
+            { id: "sweet_skittles", name: "Драже Skittles (100г)", desc: "Фруктовый микс", price: 250 }
         ]
     }
 ];
@@ -68,6 +79,8 @@ document.addEventListener('DOMContentLoaded', () => {
         initGlobalModals();
         initStaticEventListeners();
     } catch (error) {
+        const grid = document.getElementById('movies-grid');
+        if (grid) grid.innerHTML = `<div style="color:red; font-size:20px; padding:20px;">Системная ошибка JS: ${error.message}</div>`;
         console.error(error);
     }
 });
@@ -79,7 +92,6 @@ function renderCatalog() {
     moviesData.forEach(movie => {
         const card = document.createElement('div');
         card.className = 'movie-card';
-        // ИСПОЛЬЗУЕМ НАДЕЖНЫЙ ОБРАБОТЧИК КЛИКОВ (вместо onclick)
         card.addEventListener('click', () => openBookingModal(movie.id));
         
         card.innerHTML = `
@@ -128,7 +140,6 @@ function openBookingModal(id) {
 
     currentOrder = { movieId: movie.id, movieTitle: movie.title, ticketPrice: movie.price, selectedSeats: [], services: {} };
     
-    // ЗАЩИТА ОТ ПАДЕНИЙ (Fallback)
     document.getElementById('detail-title').textContent = movie.title || 'Неизвестно';
     document.getElementById('detail-poster').src = movie.poster;
     document.getElementById('detail-age').textContent = movie.age || '16+';
