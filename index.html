@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Сеть кинотеатров «КИНОСФЕРА»</title>
-    <link rel="stylesheet" href="css.css">
+    <link rel="stylesheet" href="css.css?v=1.1">
 </head>
 <body>
 
@@ -57,13 +57,12 @@
                         <img id="modal-movie-poster" src="" alt="Постер">
                     </div>
                     <div class="modal-badges">
-                        <span class="badge-age">18+</span>
-                        <span class="badge-rating">Премьера</span>
+                        <span class="badge-age badge-outline">18+</span>
+                        <span class="badge-rating" style="background:#e50914; border:none; padding: 2px 6px; border-radius: 4px; color:white; font-size:11px;">Премьера</span>
                     </div>
                     <h2 id="modal-movie-title" class="modal-title-text"></h2>
                     <div class="modal-meta-row" id="modal-movie-genre">Жанр: Кино</div>
                     <div class="modal-meta-row" style="color: var(--accent); font-weight: bold;" id="modal-movie-price">Билет: 0 ₽</div>
-                    <div id="modal-text-description" class="modal-description"></div>
                 </aside>
 
                 <section class="modal-workspace-flow">
@@ -76,8 +75,7 @@
                     
                     <div id="step-sessions-container" class="step-container hidden">
                         <h2 class="step-title">Расписание сеансов</h2>
-                        <div id="dynamic-sessions-grid" class="sessions-grid">
-                            </div>
+                        <div id="dynamic-sessions-grid" class="sessions-grid"></div>
                     </div>
 
                     <div id="step-hall-container" class="step-container hidden">
@@ -91,8 +89,7 @@
                             <div class="interactive-hall-viewport" id="hall-viewport">
                                 <div class="interactive-hall-wrapper" id="hall-wrapper">
                                     <div class="cinema-glowing-screen">ЭКРАН</div>
-                                    <div id="dynamic-hall-grid" class="dynamic-hall-grid">
-                                        </div>
+                                    <div id="dynamic-hall-grid" class="dynamic-hall-grid"></div>
                                 </div>
                             </div>
                         </div>
@@ -105,10 +102,8 @@
 
                     <div id="step-services-container" class="step-container hidden">
                         <h2 class="step-title">Кинобар</h2>
-                        
                         <div id="bar-category-tabs" class="bar-tabs-container"></div>
                         <div id="dynamic-services-list" class="services-list-container"></div>
-
                         <div class="step-navigation-buttons">
                             <button class="nav-btn-back" onclick="goToStep('step-hall-container')">← В зал</button>
                             <button class="action-accent-btn" onclick="goToStep('step-checkout-container')">Оформить →</button>
@@ -117,7 +112,6 @@
 
                     <div id="step-checkout-container" class="step-container hidden">
                         <h2 class="step-title">Ваш заказ</h2>
-                        
                         <div class="checkout-details-scroll">
                             <div class="summary-row">Билеты (<span id="summary-seats-count">0</span> шт.)</div>
                             <div id="summary-seats-list" class="highlight-list"></div>
@@ -145,6 +139,6 @@
         </div>
     </div>
 
-    <script src="main.js"></script>
+    <script src="main.js?v=1.1"></script>
 </body>
 </html>
