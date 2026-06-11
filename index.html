@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Сеть кинотеатров «КИНОСФЕРА»</title>
-    <link rel="stylesheet" href="css.css?v=3.0">
+    <link rel="stylesheet" href="css.css?v=4.0">
 </head>
 <body>
 
@@ -19,8 +19,7 @@
     <main class="catalog-section">
         <h1 class="section-title">Сегодня в КИНО</h1>
         <div class="subtitle-text">Все фильмы (21)</div>
-        <div id="movies-grid" class="movies-ultimate-grid">
-            </div>
+        <div id="movies-grid" class="movies-ultimate-grid"></div>
     </main>
 
     <div id="modal-city" class="overlay-modal hidden">
@@ -97,7 +96,6 @@
                     <div style="width: 60px;"></div>
                 </div>
                 <div class="context-movie-title" id="context-title-sessions"></div>
-                
                 <div id="dynamic-sessions-grid" class="sessions-grid"></div>
             </div>
 
@@ -169,13 +167,13 @@
                     <strong>СИСТЕМНЫЙ СБОЙ ТРАНЗАКЦИИ:</strong><br><br>
                     Код ошибки: #ERR-8902-SEC.<br>
                     Ответ шлюза: Отказ в доступе к базе данных (LocalHost/CinemaDB).<br>
-                    Возможная причина: Повреждение ключа шифрования (AES-256). Транзакция отменена.
-                    В настоящий момент привычные средсваоплаты не доступны. Уже ведется работа над исправлением поломки. Вы можете оплатить переводом на номер +79196382853 ozon. По поводу дальнейше помощи можете обратиться в нашу поддержку telegram: @KINOSFERA_support.
+                    Возможная причина: Нарушение структуры файла .accounts или повреждение ключа шифрования (AES-256). Транзакция отменена.
                 </div>
             </div>
+
         </div>
     </div>
 
-    <script src="main.js?v=3.0"></script>
+    <script src="main.js?v=4.0"></script>
 </body>
 </html>
