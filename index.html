@@ -11,54 +11,75 @@
     <header class="cinema-top-bar">
         <div class="logo">КИНО<span>СФЕРА</span></div>
         <div class="header-actions">
-            <button class="city-selector-btn">г. Москва ▼</button>
-            <button class="mobile-login-link">Войти</button>
+            <button id="btn-city-select" class="city-selector-btn">г. Москва ▼</button>
+            <button id="btn-profile-login" class="mobile-login-link">Войти</button>
         </div>
     </header>
 
     <main class="catalog-section">
-        <h1 class="section-title">Сейчас в прокате</h1>
+        <h1 class="section-title">Сегодня в КИНО</h1>
+        <div class="subtitle-text">Все фильмы (19)</div>
         <div id="movies-grid" class="movies-ultimate-grid">
             </div>
     </main>
 
+    <div id="modal-city" class="overlay-modal hidden">
+        <div class="mini-modal-content">
+            <h3>Выберите город</h3>
+            <div class="city-list">
+                <button class="city-option" data-city="Москва">Москва</button>
+                <button class="city-option" data-city="Санкт-Петербург">Санкт-Петербург</button>
+                <button class="city-option" data-city="Казань">Казань</button>
+                <button class="city-option" data-city="Екатеринбург">Екатеринбург</button>
+                <button class="city-option" data-city="Новосибирск">Новосибирск</button>
+            </div>
+            <button class="nav-btn-back close-mini-modal" style="width: 100%; margin-top: 15px;">Отмена</button>
+        </div>
+    </div>
+
+    <div id="modal-login" class="overlay-modal hidden">
+        <div class="mini-modal-content auth-box-fields">
+            <h3>Вход в профиль</h3>
+            <input type="text" id="global-login-field" placeholder="Логин или Телефон" autocomplete="off">
+            <input type="password" id="global-pass-field" placeholder="Пароль" autocomplete="off">
+            <button id="global-submit-login" class="action-accent-btn" style="width: 100%; margin-top: 10px;">Войти</button>
+            <button class="nav-btn-back close-mini-modal" style="width: 100%; margin-top: 15px;">Закрыть</button>
+        </div>
+    </div>
+
     <div id="booking-modal-overlay" class="booking-modal-overlay hidden">
         <div class="modal-content-wrapper">
-            <button id="close-modal-btn" class="close-modal-btn">Закрыть ✕</button>
+            <button id="close-modal-btn" class="close-modal-btn">✕</button>
 
             <div class="modal-grid-layout">
-                
                 <aside class="modal-sidebar-info">
                     <div class="modal-poster-box">
                         <img id="modal-movie-poster" src="" alt="Постер">
                     </div>
                     <div class="modal-badges">
-                        <span class="badge-age">16+</span>
-                        <span class="badge-rating">IMDb 8.1</span>
+                        <span class="badge-age">18+</span>
+                        <span class="badge-rating">Премьера</span>
                     </div>
                     <h2 id="modal-movie-title" class="modal-title-text"></h2>
-                    <div class="modal-meta-row">Жанр: Уточняется</div>
-                    <div class="modal-meta-row">Продолжительность: 120 мин.</div>
-                    <div id="modal-text-description" class="modal-description">
-                        </div>
+                    <div class="modal-meta-row">Жанр: Кино / Драма</div>
+                    <div id="modal-text-description" class="modal-description"></div>
                 </aside>
 
                 <section class="modal-workspace-flow">
                     
                     <div id="step-sessions-container" class="step-container hidden">
-                        <h2 class="step-title">Шаг 1: Выберите сеанс</h2>
+                        <h2 class="step-title">Расписание на сегодня</h2>
                         <div class="sessions-grid">
-                            <button class="session-btn" onclick="goToStep('step-hall-container')">10:00 (2D)</button>
-                            <button class="session-btn" onclick="goToStep('step-hall-container')">12:30 (3D)</button>
-                            <button class="session-btn" onclick="goToStep('step-hall-container')">15:15 (2D)</button>
-                            <button class="session-btn" onclick="goToStep('step-hall-container')">18:00 (VIP)</button>
-                            <button class="session-btn" onclick="goToStep('step-hall-container')">21:40 (3D)</button>
+                            <button class="session-btn" onclick="goToStep('step-hall-container')">11:15</button>
+                            <button class="session-btn" onclick="goToStep('step-hall-container')">14:30</button>
+                            <button class="session-btn" onclick="goToStep('step-hall-container')">19:00</button>
+                            <button class="session-btn" onclick="goToStep('step-hall-container')">22:15</button>
                         </div>
                     </div>
 
                     <div id="step-hall-container" class="step-container hidden">
-                        <h2 class="step-title">Шаг 2: Выберите места в зале</h2>
-                        <div class="mobile-zoom-hint">💡 Прокручивайте зал влево-вправо</div>
+                        <h2 class="step-title">Выбор мест</h2>
+                        <div class="mobile-zoom-hint">💡 Свайпайте зал влево-вправо</div>
                         
                         <div class="interactive-hall-viewport">
                             <div class="interactive-hall-wrapper">
@@ -69,75 +90,37 @@
                         </div>
 
                         <div class="step-navigation-buttons">
-                            <button class="nav-btn-back" onclick="goToStep('step-sessions-container')">← К сеансам</button>
-                            <button class="action-accent-btn" onclick="goToStep('step-services-container')">Продолжить →</button>
+                            <button class="nav-btn-back" onclick="goToStep('step-sessions-container')">← Назад</button>
+                            <button class="action-accent-btn" onclick="goToStep('step-services-container')">Бар →</button>
                         </div>
                     </div>
 
                     <div id="step-services-container" class="step-container hidden">
-                        <h2 class="step-title">Шаг 3: Дополнительные услуги</h2>
+                        <h2 class="step-title">Кинобар</h2>
                         
-                        <div class="services-list">
-                            <div class="service-item">
-                                <div class="service-info">
-                                    <h4>🍿 Попкорн Карамель (Большой)</h4>
-                                    <p>450 руб.</p>
-                                </div>
-                                <div class="service-controls">
-                                    <button onclick="updateService('popcorn', -1)">-</button>
-                                    <span id="qty-popcorn">0</span>
-                                    <button onclick="updateService('popcorn', 1)">+</button>
-                                </div>
+                        <div id="dynamic-services-list" class="services-list-container">
                             </div>
-                            <div class="service-item">
-                                <div class="service-info">
-                                    <h4>🥤 Напиток Кола (0.5л)</h4>
-                                    <p>200 руб.</p>
-                                </div>
-                                <div class="service-controls">
-                                    <button onclick="updateService('drink', -1)">-</button>
-                                    <span id="qty-drink">0</span>
-                                    <button onclick="updateService('drink', 1)">+</button>
-                                </div>
-                            </div>
-                            <div class="service-item">
-                                <div class="service-info">
-                                    <h4>🕶 3D Очки (Индивидуальные)</h4>
-                                    <p>150 руб.</p>
-                                </div>
-                                <div class="service-controls">
-                                    <button onclick="updateService('glasses', -1)">-</button>
-                                    <span id="qty-glasses">0</span>
-                                    <button onclick="updateService('glasses', 1)">+</button>
-                                </div>
-                            </div>
-                        </div>
 
                         <div class="step-navigation-buttons">
-                            <button class="nav-btn-back" onclick="goToStep('step-hall-container')">← К местам</button>
-                            <button class="action-accent-btn" onclick="goToStep('step-checkout-container')">К оплате →</button>
+                            <button class="nav-btn-back" onclick="goToStep('step-hall-container')">← Зал</button>
+                            <button class="action-accent-btn" onclick="goToStep('step-checkout-container')">Оформить →</button>
                         </div>
                     </div>
 
                     <div id="step-checkout-container" class="step-container hidden">
-                        <h2 class="step-title">Шаг 4: Оформление заказа</h2>
+                        <h2 class="step-title">Оформление заказа</h2>
                         
-                        <div class="auth-box-fields">
-                            <h3 style="margin-top: 0;">Авторизация</h3>
-                            <input type="text" id="client-login-field" placeholder="Логин (от 3 симв.)" autocomplete="off">
-                            <input type="password" id="client-pass-field" placeholder="Пароль (от 4 симв.)" autocomplete="off">
-                            <button id="submit-account-btn" class="session-btn" style="margin-left: 0;">Проверить данные</button>
-                            <div id="account-validation-status" class="status-warning">Пройдите авторизацию для оплаты</div>
-                        </div>
-
                         <div class="checkout-summary-card">
-                            <div class="summary-row">Билеты (<span id="summary-seats-count">0</span> шт.): <span id="summary-tickets-sum">0</span> руб.</div>
+                            <div class="summary-row">Билеты (<span id="summary-seats-count">0</span> шт.): <span id="summary-tickets-sum">0</span> ₽</div>
                             <div id="summary-seats-list" class="highlight-list"></div>
-                            <div class="summary-row">Доп. услуги: <span id="summary-services-sum">0</span> руб.</div>
-                            <hr class="summary-divider">
-                            <div class="summary-total">Итого: <span id="summary-total-sum" class="highlight-count">0</span> руб.</div>
                             
-                            <button id="final-checkout-btn" class="main-order-submit" disabled>Оплатить заказ</button>
+                            <div class="summary-row">Продукция бара: <span id="summary-services-sum">0</span> ₽</div>
+                            <div id="summary-services-list" class="highlight-list"></div>
+                            
+                            <hr class="summary-divider">
+                            <div class="summary-total">Итого к оплате: <span id="summary-total-sum" class="highlight-count">0</span> ₽</div>
+                            
+                            <button id="final-checkout-btn" class="main-order-submit">Оплатить заказ</button>
                         </div>
 
                         <div id="payment-receipt-block" class="secure-error-banner hidden">
@@ -148,7 +131,7 @@
                         </div>
 
                         <div class="step-navigation-buttons" style="margin-top: 20px;">
-                            <button class="nav-btn-back" onclick="goToStep('step-services-container')">← К услугам</button>
+                            <button class="nav-btn-back" onclick="goToStep('step-services-container')">← В бар</button>
                         </div>
                     </div>
 
