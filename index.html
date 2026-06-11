@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Сеть кинотеатров «КИНОСФЕРА»</title>
-    <link rel="stylesheet" href="css.css?v=4.0">
+    <link rel="stylesheet" href="css.css?v=5.0">
 </head>
 <body>
 
@@ -18,8 +18,16 @@
 
     <main class="catalog-section">
         <h1 class="section-title">Сегодня в КИНО</h1>
-        <div class="subtitle-text">Все фильмы (21)</div>
+        <div class="subtitle-text">Фильмы в прокате</div>
         <div id="movies-grid" class="movies-ultimate-grid"></div>
+
+        <div class="promo-section-title">Специальные показы</div>
+        <div id="promo-banner-slider" class="promo-banner-slider">
+            </div>
+
+        <h1 class="section-title" style="margin-top: 40px;">Скоро в кино</h1>
+        <div class="subtitle-text">Предпродажа билетов</div>
+        <div id="upcoming-movies-grid" class="movies-ultimate-grid"></div>
     </main>
 
     <div id="modal-city" class="overlay-modal hidden">
@@ -31,17 +39,7 @@
                 <button class="city-option" data-city="Новосибирск">Новосибирск</button>
                 <button class="city-option" data-city="Екатеринбург">Екатеринбург</button>
                 <button class="city-option" data-city="Казань">Казань</button>
-                <button class="city-option" data-city="Нижний Новгород">Нижний Новгород</button>
-                <button class="city-option" data-city="Красноярск">Красноярск</button>
-                <button class="city-option" data-city="Челябинск">Челябинск</button>
-                <button class="city-option" data-city="Самара">Самара</button>
-                <button class="city-option" data-city="Уфа">Уфа</button>
-                <button class="city-option" data-city="Ростов-на-Дону">Ростов-на-Дону</button>
-                <button class="city-option" data-city="Омск">Омск</button>
                 <button class="city-option" data-city="Краснодар">Краснодар</button>
-                <button class="city-option" data-city="Воронеж">Воронеж</button>
-                <button class="city-option" data-city="Пермь">Пермь</button>
-                <button class="city-option" data-city="Волгоград">Волгоград</button>
             </div>
             <button class="nav-btn-back close-mini-modal" style="width: 100%; margin-top: 15px;">Отмена</button>
         </div>
@@ -71,6 +69,7 @@
                         <div class="detail-badges">
                             <span id="detail-age" class="badge-outline"></span>
                             <span id="detail-genre" class="detail-genre-text"></span>
+                            <span id="detail-release" class="detail-release-text"></span>
                         </div>
                         <div class="detail-meta-grid">
                             <div class="meta-item"><span>Страна:</span> <span id="detail-country"></span></div>
@@ -83,7 +82,7 @@
                         </div>
                         <div class="detail-action-footer">
                             <div class="detail-price-hint" id="detail-price">Билет: 0 ₽</div>
-                            <button class="action-accent-btn full-width-btn" onclick="goToStep('step-sessions-container')">Выбрать сеанс →</button>
+                            <button class="action-accent-btn full-width-btn" onclick="goToStep('step-sessions-container')">Расписание и билеты →</button>
                         </div>
                     </div>
                 </div>
@@ -92,10 +91,13 @@
             <div id="step-sessions-container" class="step-container hidden">
                 <div class="flow-header">
                     <button class="nav-btn-back" onclick="goToStep('step-details-container')">← Назад</button>
-                    <h2 class="step-title-center">Расписание</h2>
+                    <h2 class="step-title-center">Выберите дату и сеанс</h2>
                     <div style="width: 60px;"></div>
                 </div>
                 <div class="context-movie-title" id="context-title-sessions"></div>
+                
+                <div id="date-tabs-container" class="bar-tabs-container" style="margin-bottom: 25px;"></div>
+                
                 <div id="dynamic-sessions-grid" class="sessions-grid"></div>
             </div>
 
@@ -152,6 +154,9 @@
                     <div class="receipt-divider"></div>
                     
                     <div class="receipt-row"><strong>Фильм:</strong> <span id="receipt-movie"></span></div>
+                    <div class="receipt-row"><strong>Дата и Сеанс:</strong> <span id="receipt-datetime" style="color:var(--accent-red); font-weight:bold;"></span></div>
+                    
+                    <div class="receipt-divider"></div>
                     <div class="receipt-row"><strong>Билеты (<span id="receipt-seats-count">0</span>):</strong></div>
                     <div class="receipt-sub-row" id="receipt-seats-list"></div>
                     
@@ -174,6 +179,6 @@
         </div>
     </div>
 
-    <script src="main.js?v=4.0"></script>
+    <script src="main.js?v=5.0"></script>
 </body>
 </html>
