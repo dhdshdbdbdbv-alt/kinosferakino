@@ -1,8 +1,12 @@
 /**
- * main.js — Система "КИНОСФЕРА" (С защитой от сбоев рендера)
+ * main.js — Система "КИНОСФЕРА" (С новыми фильмами: Звероэволюция и Холоп 3)
  */
 
 const moviesData = [
+    // --- НОВЫЕ ФИЛЬМЫ ---
+    { id: 20, title: "Звероэволюция", poster: "zveroevolution.jpg", genre: "Боевик, Фантастика", age: "18+", price: 850, sessions: ["16:40", "19:20", "22:15"] },
+    { id: 21, title: "Холоп 3", poster: "holop3.jpg", genre: "Комедия, Семейный", age: "12+", price: 700, sessions: ["11:30", "14:15", "17:00"] },
+    // --- СУЩЕСТВУЮЩИЕ ФИЛЬМЫ (С защитой от сбоев рендера) ---
     { id: 1, title: "Майкл", poster: "Michael_(2026_film)_poster.jpg", genre: "Музыкальный, Байопик", age: "18+", price: 850, sessions: ["16:40", "19:20", "22:15"] },
     { id: 2, title: "День рождения", poster: "birthday.jpg", genre: "Триллер", age: "18+", price: 650, sessions: ["20:00", "22:30", "00:15"] },
     { id: 3, title: "Богатыри", poster: "bogatyry.jpg", genre: "Фэнтези, Экшен", age: "16+", price: 700, sessions: ["12:15", "15:30", "18:45", "21:00"] },
@@ -143,7 +147,7 @@ function openBookingModal(id) {
     document.getElementById('modal-movie-genre').textContent = `Жанр: ${movie.genre}`;
     document.getElementById('modal-movie-price').textContent = `Билет: ${movie.price} ₽`;
 
-    // Генерация сеансов
+    // Генерация сеансов (С защитой)
     const sessionsGrid = document.getElementById('dynamic-sessions-grid');
     if (sessionsGrid) {
         sessionsGrid.innerHTML = '';
@@ -197,6 +201,7 @@ function goToStep(stepId) {
     }
 }
 
+// Зал
 function renderSeats() {
     const container = document.getElementById('dynamic-hall-grid');
     if (!container) return;
@@ -251,6 +256,7 @@ function applyZoom() {
     if (wrapper) wrapper.style.transform = `scale(${currentHallZoom})`;
 }
 
+// Бар
 function renderBarTabs() {
     const tabsContainer = document.getElementById('bar-category-tabs');
     if (!tabsContainer) return;
