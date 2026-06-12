@@ -1,13 +1,11 @@
 /**
- * main.js — Система "КИНОСФЕРА" (Динамическая дата и СБП Оплата)
+ * main.js — Система "КИНОСФЕРА" (С Имитацией автоматического эквайринга)
  */
 
-// Берем РЕАЛЬНУЮ текущую дату с устройства пользователя
 const SYSTEM_TODAY = new Date();
 SYSTEM_TODAY.setHours(0, 0, 0, 0);
 
 const moviesData = [
-    // --- ТЕКУЩИЙ ПРОКАТ (21 фильм) ---
     { id: 20, title: "Звероэволюция", poster: "zveroevolution.jpg", genre: "Боевик", age: "18+", price: 650, isUpcoming: false, country: "Франция", director: "Жан-Люк Мартель", cast: "Венсан Кассель", desc: "Секретная лаборатория создает новый вид хищников. Элитный отряд наемников отправляется в закрытую зону." },
     { id: 21, title: "Холоп 3", poster: "holop3.jpg", genre: "Комедия", age: "12+", price: 550, isUpcoming: false, country: "Россия", director: "Клим Шипенко", cast: "Милош Бикович", desc: "Новые герои, совершенно неожиданная историческая эпоха и старые добрые методы исправления характера." },
     { id: 1, title: "Майкл", poster: "Michael_(2026_film)_poster.jpg", genre: "Байопик", age: "18+", price: 700, isUpcoming: false, country: "США", director: "Антуан Фукуа", cast: "Джаафар Джексон", desc: "История восхождения легендарного Короля поп-музыки." },
@@ -30,18 +28,17 @@ const moviesData = [
     { id: 18, title: "Чудесный мир", poster: "wondaryworld.jpg", genre: "Приключения", age: "12+", price: 500, isUpcoming: false, country: "США", director: "Стивен Спилберг", cast: "Том Холланд", desc: "Подростки находят портал в параллельную экосистему." },
     { id: 19, title: "Молодые и влюбленные", poster: "young-and-loved.jpg", genre: "Мелодрама", age: "16+", price: 450, isUpcoming: false, country: "Франция", director: "Селин Сьямма", cast: "Адель Энель", desc: "Трогательная мелодрама о первой любви и взрослении." },
 
-    // --- СКОРО В КИНО ---
-    { id: 101, title: "Бизнес ночью", poster: "buisnesatnight.jpg", genre: "Триллер", age: "18+", price: 600, isUpcoming: true, releaseDate: "2026-06-25", country: "США", director: "Дэвид Финчер", cast: "Кристиан Бэйл", desc: "Когда закон засыпает, просыпаются настоящие деньги. Но за них придется заплатить высокую цену." },
-    { id: 102, title: "Цыпленок: Пух и прах", poster: "chickenpuhandprah.jpg", genre: "Анимация", age: "6+", price: 450, isUpcoming: true, releaseDate: "2026-06-18", country: "Великобритания", director: "Питер Лорд", cast: "Саймон Пегг", desc: "Пернатые герои снова в деле! Самое дерзкое ограбление курятника века." },
-    { id: 103, title: "Колония", poster: "colony(2026).jpg", genre: "Фантастика", age: "16+", price: 700, isUpcoming: true, releaseDate: "2026-07-02", country: "США", director: "Дени Вильнев", cast: "Оскар Айзек", desc: "Экспедиция на Марс находит то, что человечеству лучше было бы никогда не тревожить." },
+    { id: 101, title: "Бизнес ночью", poster: "buisnesatnight.jpg", genre: "Триллер", age: "18+", price: 600, isUpcoming: true, releaseDate: "2026-06-25", country: "США", director: "Дэвид Финчер", cast: "Кристиан Бэйл", desc: "Когда закон засыпает, просыпаются настоящие деньги." },
+    { id: 102, title: "Цыпленок: Пух и прах", poster: "chickenpuhandprah.jpg", genre: "Анимация", age: "6+", price: 450, isUpcoming: true, releaseDate: "2026-06-18", country: "Великобритания", director: "Питер Лорд", cast: "Саймон Пегг", desc: "Самое дерзкое ограбление курятника века." },
+    { id: 103, title: "Колония", poster: "colony(2026).jpg", genre: "Фантастика", age: "16+", price: 700, isUpcoming: true, releaseDate: "2026-07-02", country: "США", director: "Дени Вильнев", cast: "Оскар Айзек", desc: "Экспедиция на Марс находит то, что лучше было не тревожить." },
     { id: 104, title: "Хранитель камфорного дерева", poster: "hranytelkamfornogodereva.jpg", genre: "Фэнтези", age: "12+", price: 500, isUpcoming: true, releaseDate: "2026-07-15", country: "Япония", director: "Макото Синкай", cast: "Аниме", desc: "Визуально потрясающая сказка о связи миров." },
-    { id: 105, title: "Оно приходит снизу", poster: "itcomesfromdown.jpg", genre: "Хоррор", age: "18+", price: 550, isUpcoming: true, releaseDate: "2026-06-20", country: "Испания", director: "Андре Овредал", cast: "Хавьер Бардем", desc: "Глубоко под землей спит древнее зло. И бурильщики случайно его разбудили." },
-    { id: 106, title: "Убийственная иллюзия", poster: "killingilussion.jpg", genre: "Детектив", age: "16+", price: 600, isUpcoming: true, releaseDate: "2026-06-30", country: "США", director: "Райан Джонсон", cast: "Дэниел Крэйг", desc: "Знаменитый фокусник погибает во время собственного трюка. Но был ли это несчастный случай?" },
+    { id: 105, title: "Оно приходит снизу", poster: "itcomesfromdown.jpg", genre: "Хоррор", age: "18+", price: 550, isUpcoming: true, releaseDate: "2026-06-20", country: "Испания", director: "Андре Овредал", cast: "Хавьер Бардем", desc: "Глубоко под землей спит древнее зло." },
+    { id: 106, title: "Убийственная иллюзия", poster: "killingilussion.jpg", genre: "Детектив", age: "16+", price: 600, isUpcoming: true, releaseDate: "2026-06-30", country: "США", director: "Райан Джонсон", cast: "Дэниел Крэйг", desc: "Знаменитый фокусник погибает во время собственного трюка." },
     { id: 107, title: "Алфавит Манджаротти", poster: "manjarottysalphabet.jpg", genre: "Драма", age: "16+", price: 500, isUpcoming: true, releaseDate: "2026-07-10", country: "Италия", director: "Паоло Соррентино", cast: "Тони Сервилло", desc: "Тонкая итальянская история о любви, искусстве и потере." },
-    { id: 108, title: "Давление", poster: "preassure.jpg", genre: "Триллер", age: "16+", price: 650, isUpcoming: true, releaseDate: "2026-07-05", country: "США", director: "Джон Красински", cast: "Том Харди", desc: "Подводная лодка теряет управление на рекордной глубине. Кислорода остается на 4 часа." },
-    { id: 109, title: "Робоняня", poster: "robonyanya.jpg", genre: "Комедия", age: "6+", price: 400, isUpcoming: true, releaseDate: "2026-06-28", country: "Россия", director: "Илья Куликов", cast: "Сергей Гармаш", desc: "Ультрасовременный робот попадает в многодетную российскую семью." },
+    { id: 108, title: "Давление", poster: "preassure.jpg", genre: "Триллер", age: "16+", price: 650, isUpcoming: true, releaseDate: "2026-07-05", country: "США", director: "Джон Красински", cast: "Том Харди", desc: "Подводная лодка теряет управление на рекордной глубине." },
+    { id: 109, title: "Робоняня", poster: "robonyanya.jpg", genre: "Комедия", age: "6+", price: 400, isUpcoming: true, releaseDate: "2026-06-28", country: "Россия", director: "Илья Куликов", cast: "Сергей Гармаш", desc: "Ультрасовременный робот попадает в многодетную семью." },
     { id: 110, title: "Мастер Карате", poster: "theboywhoknowskarate.jpg", genre: "Спорт", age: "12+", price: 500, isUpcoming: true, releaseDate: "2026-07-12", country: "США", director: "Джастин Лин", cast: "Ральф Маччио", desc: "Классическая история становления чемпиона в новом прочтении." },
-    { id: 111, title: "Три богатыря 3", poster: "trybogatyryanidnyabezbodviga3.jpg", genre: "Анимация", age: "6+", price: 450, isUpcoming: true, releaseDate: "2026-06-15", country: "Россия", director: "Константин Феоктистов", cast: "Олег Куликович", desc: "Любимые герои возвращаются, чтобы спасти Киев от новой напасти." }
+    { id: 111, title: "Три богатыря 3", poster: "trybogatyryanidnyabezbodviga3.jpg", genre: "Анимация", age: "6+", price: 450, isUpcoming: true, releaseDate: "2026-06-15", country: "Россия", director: "Константин Феоктистов", cast: "Олег Куликович", desc: "Любимые герои возвращаются, чтобы спасти Киев." }
 ];
 
 const BAR_MENU = [
@@ -49,57 +46,30 @@ const BAR_MENU = [
         id: "cat_combo", name: "🔥 Комбо",
         items: [
             {
-                id: "combo", name: "Кино Комбо", hasFlavor: true,
-                flavors: ["Карамель", "Сырный", "Соленый", "Микс"],
-                options: [
-                    { id: "combo_l", name: "Размер L (Для двоих)", price: 1100, img: "comboLfortwins.jpg" },
-                    { id: "combo_m", name: "Размер M (Соло)", price: 800, img: "cjmboforalone.jpg" },
-                    { id: "combo_s", name: "Детский Набор", price: 550, img: "comboforkids.jpg" }
-                ]
-            }
+                id: "combo", name: "Кино Комбо", hasFlavor: true, flavors: ["Карамель", "Сырный", "Соленый", "Микс"], options: [
+                { id: "combo_l", name: "Размер L (Для двоих)", price: 1100, img: "comboLfortwins.jpg" },
+                { id: "combo_m", name: "Размер M (Соло)", price: 800, img: "cjmboforalone.jpg" },
+                { id: "combo_s", name: "Детский Набор", price: 550, img: "comboforkids.jpg" }
+            ]}
         ]
     },
     {
         id: "cat_popcorn", name: "🍿 Попкорн",
         items: [
             {
-                id: "popcorn", name: "Попкорн", hasFlavor: true,
-                flavors: [
-                    { name: "Карамель", img: "caramelpop.jpg" },
-                    { name: "Сырный", img: "chesypop.jpg" },
-                    { name: "Соленый", img: "saltypop.jpg" }
-                ],
-                options: [
-                    { id: "pop_l", name: "Ведро L", price: 500 },
-                    { id: "pop_m", name: "Ведро M", price: 350 },
-                    { id: "pop_s", name: "Ведро S", price: 200 }
-                ]
-            }
+                id: "popcorn", name: "Попкорн", hasFlavor: true, flavors: [ { name: "Карамель", img: "caramelpop.jpg" }, { name: "Сырный", img: "chesypop.jpg" }, { name: "Соленый", img: "saltypop.jpg" } ], options: [
+                { id: "pop_l", name: "Ведро L", price: 500 },
+                { id: "pop_m", name: "Ведро M", price: 350 },
+                { id: "pop_s", name: "Ведро S", price: 200 }
+            ]}
         ]
     },
     {
         id: "cat_drinks", name: "🥤 Напитки",
         items: [
-            {
-                id: "cola", name: "Добрый Cola", hasFlavor: false,
-                options: [
-                    { id: "cola_08", name: "Стакан 0.8л", price: 200, img: "dobrycola.jpg" },
-                    { id: "cola_05", name: "Стакан 0.5л", price: 150, img: "dobrycola.jpg" }
-                ]
-            },
-            {
-                id: "orange", name: "Добрый Апельсин", hasFlavor: false,
-                options: [
-                    { id: "orange_08", name: "Стакан 0.8л", price: 200, img: "orangedobry.jpg" },
-                    { id: "orange_05", name: "Стакан 0.5л", price: 150, img: "orangedobry.jpg" }
-                ]
-            },
-            {
-                id: "water", name: "Вода", hasFlavor: false,
-                options: [
-                    { id: "water_05", name: "Бутылка 0.5л", price: 100, img: "bonaquawater.jpg" }
-                ]
-            }
+            { id: "cola", name: "Добрый Cola", hasFlavor: false, options: [ { id: "cola_08", name: "Стакан 0.8л", price: 200, img: "dobrycola.jpg" }, { id: "cola_05", name: "Стакан 0.5л", price: 150, img: "dobrycola.jpg" } ] },
+            { id: "orange", name: "Добрый Апельсин", hasFlavor: false, options: [ { id: "orange_08", name: "Стакан 0.8л", price: 200, img: "orangedobry.jpg" }, { id: "orange_05", name: "Стакан 0.5л", price: 150, img: "orangedobry.jpg" } ] },
+            { id: "water", name: "Вода", hasFlavor: false, options: [ { id: "water_05", name: "Бутылка 0.5л", price: 100, img: "bonaquawater.jpg" } ] }
         ]
     }
 ];
@@ -116,8 +86,11 @@ window.updateServiceUI = updateServiceUI;
 window.updateServiceFromSelect = updateServiceFromSelect;
 window.selectDate = selectDate;
 window.selectTime = selectTime;
-window.copyPhone = copyPhone;
-window.finishOrder = finishOrder;
+
+// Новые функции для Эмулятора Эквайринга
+window.openAcquiring = openAcquiring;
+window.closeAcquiring = closeAcquiring;
+window.startFakeProcessing = startFakeProcessing;
 
 document.addEventListener('DOMContentLoaded', () => {
     try {
@@ -144,12 +117,11 @@ function renderCatalog() {
         
         let badgeHTML = '';
         if (movie.isUpcoming) {
-            // Если дата релиза наступила, не показываем бейдж "С ..."
             let releaseDateObj = new Date(movie.releaseDate);
             if (releaseDateObj > SYSTEM_TODAY) {
                 badgeHTML = `<span class="badge-coming-soon">С ${formatDateShort(releaseDateObj)}</span>`;
             } else {
-                movie.isUpcoming = false; // Автоматически переносим в текущий прокат
+                movie.isUpcoming = false; 
             }
         }
 
@@ -203,10 +175,7 @@ function formatDateShort(d) {
 
 function getNextDates(startDate, count) {
     let dates = [];
-    // Если дата старта меньше чем сегодня, начинаем отсчет от сегодня
-    if (startDate < SYSTEM_TODAY) {
-        startDate = SYSTEM_TODAY;
-    }
+    if (startDate < SYSTEM_TODAY) { startDate = SYSTEM_TODAY; }
     
     for (let i = 0; i < count; i++) {
         let d = new Date(startDate);
@@ -292,10 +261,9 @@ function openBookingModal(id) {
 
     renderSessions(movie);
 
-    // Сброс финальных экранов
+    // Сброс финальных экранов и эквайринга
     document.getElementById('checkout-main-content').classList.remove('hidden');
     document.getElementById('final-success-block').classList.add('hidden');
-    document.getElementById('payment-instruction-block').classList.add('hidden');
     document.getElementById('initial-pay-btn-container').classList.remove('hidden');
 
     document.querySelectorAll('.step-container').forEach(el => el.classList.add('hidden'));
@@ -506,7 +474,9 @@ function updateCheckoutSummary() {
 
     document.getElementById('receipt-seats-count').textContent = ticketsCount;
     document.getElementById('receipt-total-sum').textContent = `${totalSum} ₽`;
-    document.getElementById('sbp-total-sum').textContent = totalSum;
+    
+    // Обновляем сумму в модалке эквайринга
+    document.getElementById('acq-sum').textContent = totalSum;
     
     const seatsListEl = document.getElementById('receipt-seats-list');
     if (seatsListEl) {
@@ -521,16 +491,50 @@ function updateCheckoutSummary() {
     }
 }
 
-function copyPhone() {
-    const phone = "+79196382853";
-    navigator.clipboard.writeText(phone).then(() => {
-        const btn = document.getElementById('copy-btn-icon');
-        btn.textContent = "✅";
-        setTimeout(() => btn.textContent = "📋", 2000);
-    });
+// ==========================================
+// ЛОГИКА ИМИТАЦИИ БАНКОВСКОГО ЭКВАЙРИНГА
+// ==========================================
+
+function openAcquiring() {
+    // Открываем модалку эквайринга поверх чека
+    document.getElementById('acquiring-overlay').classList.remove('hidden');
+    document.getElementById('acq-step-1').classList.remove('hidden');
+    document.getElementById('acq-step-2').classList.add('hidden');
+}
+
+function closeAcquiring() {
+    document.getElementById('acquiring-overlay').classList.add('hidden');
+}
+
+function startFakeProcessing() {
+    // Скрываем выбор метода, показываем лоадер
+    document.getElementById('acq-step-1').classList.add('hidden');
+    document.getElementById('acq-step-2').classList.remove('hidden');
+    
+    const statusText = document.getElementById('acq-status-text');
+    statusText.textContent = "Связь с банком...";
+
+    // Имитируем этапы транзакции таймерами
+    setTimeout(() => {
+        statusText.textContent = "Обработка транзакции...";
+    }, 1500);
+
+    setTimeout(() => {
+        statusText.textContent = "Подтверждение...";
+    }, 3000);
+
+    setTimeout(() => {
+        // Успех! Закрываем эквайринг и показываем финальный экран
+        closeAcquiring();
+        finishOrder();
+    }, 4500);
 }
 
 function finishOrder() {
+    generatedOrderNumber = Math.floor(1000 + Math.random() * 9000);
+    document.getElementById('final-order-number').textContent = `#${generatedOrderNumber}`;
+
+    // Прячем чек, показываем зеленый экран успеха
     document.getElementById('checkout-main-content').classList.add('hidden');
     document.getElementById('final-success-block').classList.remove('hidden');
 }
@@ -538,15 +542,5 @@ function finishOrder() {
 function initStaticEventListeners() {
     document.getElementById('close-modal-btn')?.addEventListener('click', () => {
         document.getElementById('booking-modal-overlay').classList.add('hidden');
-    });
-
-    document.getElementById('show-sbp-instruction-btn')?.addEventListener('click', () => {
-        generatedOrderNumber = Math.floor(1000 + Math.random() * 9000);
-        document.getElementById('order-number-display').textContent = `#${generatedOrderNumber}`;
-        document.getElementById('order-number-comment').textContent = generatedOrderNumber;
-        
-        document.getElementById('initial-pay-btn-container').classList.add('hidden');
-        document.getElementById('payment-instruction-block').classList.remove('hidden');
-        document.getElementById('payment-instruction-block').scrollIntoView({ behavior: 'smooth', block: 'end' });
     });
 }
