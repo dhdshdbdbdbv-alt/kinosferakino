@@ -1,8 +1,10 @@
 /**
- * main.js — Система "КИНОСФЕРА" (Без раздела спецпоказов)
+ * main.js — Система "КИНОСФЕРА" (Динамическая дата и СБП Оплата)
  */
 
-const SYSTEM_TODAY = new Date("2026-06-11T00:00:00");
+// Берем РЕАЛЬНУЮ текущую дату с устройства пользователя
+const SYSTEM_TODAY = new Date();
+SYSTEM_TODAY.setHours(0, 0, 0, 0);
 
 const moviesData = [
     // --- ТЕКУЩИЙ ПРОКАТ (21 фильм) ---
@@ -28,7 +30,7 @@ const moviesData = [
     { id: 18, title: "Чудесный мир", poster: "wondaryworld.jpg", genre: "Приключения", age: "12+", price: 500, isUpcoming: false, country: "США", director: "Стивен Спилберг", cast: "Том Холланд", desc: "Подростки находят портал в параллельную экосистему." },
     { id: 19, title: "Молодые и влюбленные", poster: "young-and-loved.jpg", genre: "Мелодрама", age: "16+", price: 450, isUpcoming: false, country: "Франция", director: "Селин Сьямма", cast: "Адель Энель", desc: "Трогательная мелодрама о первой любви и взрослении." },
 
-    // --- СКОРО В КИНО (11 фильмов) ---
+    // --- СКОРО В КИНО ---
     { id: 101, title: "Бизнес ночью", poster: "buisnesatnight.jpg", genre: "Триллер", age: "18+", price: 600, isUpcoming: true, releaseDate: "2026-06-25", country: "США", director: "Дэвид Финчер", cast: "Кристиан Бэйл", desc: "Когда закон засыпает, просыпаются настоящие деньги. Но за них придется заплатить высокую цену." },
     { id: 102, title: "Цыпленок: Пух и прах", poster: "chickenpuhandprah.jpg", genre: "Анимация", age: "6+", price: 450, isUpcoming: true, releaseDate: "2026-06-18", country: "Великобритания", director: "Питер Лорд", cast: "Саймон Пегг", desc: "Пернатые герои снова в деле! Самое дерзкое ограбление курятника века." },
     { id: 103, title: "Колония", poster: "colony(2026).jpg", genre: "Фантастика", age: "16+", price: 700, isUpcoming: true, releaseDate: "2026-07-02", country: "США", director: "Дени Вильнев", cast: "Оскар Айзек", desc: "Экспедиция на Марс находит то, что человечеству лучше было бы никогда не тревожить." },
@@ -105,6 +107,7 @@ const BAR_MENU = [
 let currentOrder = { movieId: null, movieTitle: "", ticketPrice: 0, selectedDate: null, selectedTime: null, selectedSeats: [], services: {} };
 let currentHallZoom = 1;
 let activeBarTab = "cat_combo";
+let generatedOrderNumber = "0000";
 
 window.goToStep = goToStep;
 window.zoomHall = zoomHall;
@@ -113,6 +116,8 @@ window.updateServiceUI = updateServiceUI;
 window.updateServiceFromSelect = updateServiceFromSelect;
 window.selectDate = selectDate;
 window.selectTime = selectTime;
+window.copyPhone = copyPhone;
+window.finishOrder = finishOrder;
 
 document.addEventListener('DOMContentLoaded', () => {
     try {
@@ -128,20 +133,25 @@ document.addEventListener('DOMContentLoaded', () => {
 function renderCatalog() {
     const todayGrid = document.getElementById('movies-grid');
     const upcomingGrid = document.getElementById('upcoming-movies-grid');
-    
     if (!todayGrid || !upcomingGrid) return;
     
-    todayGrid.innerHTML = ''; 
-    upcomingGrid.innerHTML = '';
+    todayGrid.innerHTML = ''; upcomingGrid.innerHTML = '';
 
     moviesData.forEach(movie => {
         const card = document.createElement('div');
         card.className = 'movie-card';
         card.addEventListener('click', () => openBookingModal(movie.id));
         
-        const badgeHTML = movie.isUpcoming 
-            ? `<span class="badge-coming-soon">С ${formatDateShort(new Date(movie.releaseDate))}</span>`
-            : '';
+        let badgeHTML = '';
+        if (movie.isUpcoming) {
+            // Если дата релиза наступила, не показываем бейдж "С ..."
+            let releaseDateObj = new Date(movie.releaseDate);
+            if (releaseDateObj > SYSTEM_TODAY) {
+                badgeHTML = `<span class="badge-coming-soon">С ${formatDateShort(releaseDateObj)}</span>`;
+            } else {
+                movie.isUpcoming = false; // Автоматически переносим в текущий прокат
+            }
+        }
 
         card.innerHTML = `
             <div class="movie-card-poster">
@@ -155,11 +165,8 @@ function renderCatalog() {
             <h3 class="movie-title-bottom">${movie.title}</h3>
         `;
 
-        if (movie.isUpcoming) {
-            upcomingGrid.appendChild(card);
-        } else {
-            todayGrid.appendChild(card);
-        }
+        if (movie.isUpcoming) { upcomingGrid.appendChild(card); } 
+        else { todayGrid.appendChild(card); }
     });
 }
 
@@ -167,16 +174,13 @@ function renderPromoBanners() {
     const slider = document.getElementById('promo-banner-slider');
     if(!slider) return;
     slider.innerHTML = '';
-    
-    // Для промо берем случайные фильмы из существующей базы
     const shuffled = [...moviesData].sort(() => 0.5 - Math.random());
-    const promos = shuffled.slice(0, 10);
+    const promos = shuffled.slice(0, 5);
 
     promos.forEach(movie => {
         const banner = document.createElement('div');
         banner.className = 'promo-banner';
         banner.onclick = () => openBookingModal(movie.id);
-        
         banner.innerHTML = `
             <div class="promo-bg" style="background-image: url('${movie.poster}')"></div>
             <div class="promo-content">
@@ -199,14 +203,18 @@ function formatDateShort(d) {
 
 function getNextDates(startDate, count) {
     let dates = [];
+    // Если дата старта меньше чем сегодня, начинаем отсчет от сегодня
+    if (startDate < SYSTEM_TODAY) {
+        startDate = SYSTEM_TODAY;
+    }
+    
     for (let i = 0; i < count; i++) {
         let d = new Date(startDate);
         d.setDate(d.getDate() + i);
         const days = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
-        dates.push({
-            fullDate: d,
-            formattedText: `${d.getDate()} ${['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'][d.getMonth()]}`,
-            dayName: days[d.getDay()]
+        dates.push({ 
+            formattedText: `${d.getDate()} ${['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'][d.getMonth()]}`, 
+            dayName: days[d.getDay()] 
         });
     }
     return dates;
@@ -272,7 +280,6 @@ function openBookingModal(id) {
         dateContainer.innerHTML = '';
         let startDate = movie.isUpcoming ? new Date(movie.releaseDate) : SYSTEM_TODAY;
         let dates = getNextDates(startDate, 7);
-        
         dates.forEach((dEl, i) => {
             const btn = document.createElement('button');
             btn.className = `bar-tab date-tab ${i === 0 ? 'active' : ''}`;
@@ -285,14 +292,16 @@ function openBookingModal(id) {
 
     renderSessions(movie);
 
+    // Сброс финальных экранов
+    document.getElementById('checkout-main-content').classList.remove('hidden');
+    document.getElementById('final-success-block').classList.add('hidden');
+    document.getElementById('payment-instruction-block').classList.add('hidden');
+    document.getElementById('initial-pay-btn-container').classList.remove('hidden');
+
     document.querySelectorAll('.step-container').forEach(el => el.classList.add('hidden'));
     document.getElementById('step-details-container').classList.remove('hidden');
-    document.getElementById('payment-receipt-block').classList.add('hidden');
     
-    renderSeats();
-    renderBarTabs();
-    switchBarTab('cat_combo'); 
-    updateCheckoutSummary();
+    renderSeats(); renderBarTabs(); switchBarTab('cat_combo'); updateCheckoutSummary();
     
     document.getElementById('booking-modal-overlay').classList.remove('hidden');
 }
@@ -301,9 +310,7 @@ function selectDate(dateStr, btnElement) {
     currentOrder.selectedDate = dateStr;
     document.querySelectorAll('.date-tab').forEach(b => b.classList.remove('active'));
     btnElement.classList.add('active');
-    
-    const movie = moviesData.find(m => m.id === currentOrder.movieId);
-    renderSessions(movie); 
+    renderSessions(moviesData.find(m => m.id === currentOrder.movieId)); 
 }
 
 function renderSessions(movie) {
@@ -321,19 +328,13 @@ function renderSessions(movie) {
 }
 
 function selectTime(timeStr) {
-    if (!currentOrder.selectedDate) {
-        alert("Пожалуйста, сначала выберите дату!");
-        return;
-    }
+    if (!currentOrder.selectedDate) { alert("Пожалуйста, сначала выберите дату!"); return; }
     currentOrder.selectedTime = timeStr;
     goToStep('step-hall-container');
 }
 
 function goToStep(stepId) {
-    if (stepId === 'step-services-container' && currentOrder.selectedSeats.length === 0) {
-        alert('Сначала выберите хотя бы одно место в зале!');
-        return;
-    }
+    if (stepId === 'step-services-container' && currentOrder.selectedSeats.length === 0) { alert('Сначала выберите хотя бы одно место в зале!'); return; }
 
     document.querySelectorAll('.step-container').forEach(el => el.classList.add('hidden'));
     const targetStep = document.getElementById(stepId);
@@ -349,7 +350,6 @@ function goToStep(stepId) {
 
     if (stepId === 'step-checkout-container') {
         document.getElementById('receipt-datetime').textContent = `${currentOrder.selectedDate} / ${currentOrder.selectedTime}`;
-        document.getElementById('payment-receipt-block').classList.remove('hidden');
     }
 }
 
@@ -357,25 +357,19 @@ function renderSeats() {
     const container = document.getElementById('dynamic-hall-grid');
     if (!container) return;
     container.innerHTML = '';
-    
     let seatNumber = 1;
     for (let r = 0; r < 10; r++) {
         const rowDiv = document.createElement('div');
         rowDiv.className = 'seat-row';
         rowDiv.innerHTML = `<div class="row-number">${r + 1}</div>`;
-
         for (let c = 0; c < 18; c++) {
             const seat = document.createElement('div');
             seat.className = 'seat';
             seat.textContent = c + 1;
             const currentSeatId = seatNumber++; 
             if (c === 9) seat.style.marginLeft = '20px'; 
-            
-            if (Math.random() < 0.20) {
-                seat.classList.add('occupied');
-            } else {
-                seat.onclick = () => handleSeatClick(seat, currentSeatId, r+1, c+1);
-            }
+            if (Math.random() < 0.20) { seat.classList.add('occupied'); } 
+            else { seat.onclick = () => handleSeatClick(seat, currentSeatId, r+1, c+1); }
             rowDiv.appendChild(seat);
         }
         container.appendChild(rowDiv);
@@ -385,12 +379,8 @@ function renderSeats() {
 function handleSeatClick(el, id, row, col) {
     if (el.classList.contains('occupied')) return;
     el.classList.toggle('selected');
-    
-    if (el.classList.contains('selected')) {
-        currentOrder.selectedSeats.push({ id, row, col });
-    } else {
-        currentOrder.selectedSeats = currentOrder.selectedSeats.filter(s => s.id !== id);
-    }
+    if (el.classList.contains('selected')) { currentOrder.selectedSeats.push({ id, row, col }); } 
+    else { currentOrder.selectedSeats = currentOrder.selectedSeats.filter(s => s.id !== id); }
     updateCheckoutSummary();
 }
 
@@ -400,7 +390,6 @@ function zoomHall(delta) {
     if (currentHallZoom > 1.5) currentHallZoom = 1.5;
     applyZoom();
 }
-
 function applyZoom() {
     const wrapper = document.getElementById('hall-wrapper');
     if (wrapper) wrapper.style.transform = `scale(${currentHallZoom})`;
@@ -410,7 +399,6 @@ function renderBarTabs() {
     const tabsContainer = document.getElementById('bar-category-tabs');
     if (!tabsContainer) return;
     tabsContainer.innerHTML = '';
-
     BAR_MENU.forEach(cat => {
         const btn = document.createElement('button');
         btn.className = `bar-tab ${activeBarTab === cat.id ? 'active' : ''}`;
@@ -423,48 +411,31 @@ function renderBarTabs() {
 function switchBarTab(catId) {
     activeBarTab = catId;
     renderBarTabs(); 
-    
     const listContainer = document.getElementById('dynamic-services-list');
     if (!listContainer) return;
     listContainer.innerHTML = '';
-
     const category = BAR_MENU.find(c => c.id === catId);
     if(!category) return;
 
     category.items.forEach(item => {
         const itemDiv = document.createElement('div');
         itemDiv.className = 'service-item';
-        
         let selectSizeHtml = `<select id="select-size-${item.id}" class="service-select" onchange="updateServiceUI('${item.id}')">`;
-        item.options.forEach((opt, i) => {
-            selectSizeHtml += `<option value="${opt.id}" data-price="${opt.price}" data-img="${opt.img || ''}" ${i===0?'selected':''}>${opt.name} - ${opt.price} ₽</option>`;
-        });
+        item.options.forEach((opt, i) => { selectSizeHtml += `<option value="${opt.id}" data-price="${opt.price}" data-img="${opt.img || ''}" ${i===0?'selected':''}>${opt.name} - ${opt.price} ₽</option>`; });
         selectSizeHtml += `</select>`;
 
         let selectFlavorHtml = "";
         if (item.hasFlavor) {
             selectFlavorHtml = `<select id="select-flavor-${item.id}" class="service-select" onchange="updateServiceUI('${item.id}')">`;
-            item.flavors.forEach((fl, i) => {
-                let name = typeof fl === 'object' ? fl.name : fl;
-                let img = typeof fl === 'object' ? fl.img : '';
-                selectFlavorHtml += `<option value="${name}" data-img="${img}">${name}</option>`;
-            });
+            item.flavors.forEach(fl => { selectFlavorHtml += `<option value="${typeof fl === 'object' ? fl.name : fl}" data-img="${typeof fl === 'object' ? fl.img : ''}">${typeof fl === 'object' ? fl.name : fl}</option>`; });
             selectFlavorHtml += `</select>`;
         }
 
         let defaultImg = item.options[0].img || (item.flavors && typeof item.flavors[0] === 'object' ? item.flavors[0].img : '');
 
         itemDiv.innerHTML = `
-            <div class="service-img-box">
-                <img id="img-${item.id}" src="${defaultImg}" alt="${item.name}">
-            </div>
-            <div class="service-info">
-                <h4>${item.name}</h4>
-                <div class="service-selects">
-                    ${selectSizeHtml}
-                    ${selectFlavorHtml}
-                </div>
-            </div>
+            <div class="service-img-box"><img id="img-${item.id}" src="${defaultImg}" alt="${item.name}"></div>
+            <div class="service-info"><h4>${item.name}</h4><div class="service-selects">${selectSizeHtml}${selectFlavorHtml}</div></div>
             <div class="service-controls">
                 <button class="control-btn" onclick="updateServiceFromSelect('${item.id}', -1)">-</button>
                 <span id="qty-${item.id}" class="service-qty">0</span>
@@ -479,18 +450,14 @@ function switchBarTab(catId) {
 function updateServiceUI(itemId) {
     const sizeSelect = document.getElementById(`select-size-${itemId}`);
     if (!sizeSelect) return;
-    
     const sizeOption = sizeSelect.options[sizeSelect.selectedIndex];
     let imgUrl = sizeOption.getAttribute('data-img');
-
     const flavorSelect = document.getElementById(`select-flavor-${itemId}`);
     let flavorVal = "";
     if (flavorSelect) {
-        const flavorOption = flavorSelect.options[flavorSelect.selectedIndex];
-        flavorVal = flavorOption.value;
-        if (!imgUrl) imgUrl = flavorOption.getAttribute('data-img'); 
+        flavorVal = flavorSelect.options[flavorSelect.selectedIndex].value;
+        if (!imgUrl) imgUrl = flavorSelect.options[flavorSelect.selectedIndex].getAttribute('data-img'); 
     }
-
     const imgEl = document.getElementById(`img-${itemId}`);
     if (imgEl && imgUrl) imgEl.src = imgUrl;
 
@@ -503,33 +470,18 @@ function updateServiceFromSelect(itemId, change) {
     const sizeSelect = document.getElementById(`select-size-${itemId}`);
     const sizeOption = sizeSelect.options[sizeSelect.selectedIndex];
     const sizeId = sizeOption.value;
-    const sizeName = sizeOption.text.split(' - ')[0];
     const price = parseInt(sizeOption.getAttribute('data-price'));
-
     const flavorSelect = document.getElementById(`select-flavor-${itemId}`);
-    let flavorName = "";
-    if (flavorSelect) flavorName = flavorSelect.value;
+    let flavorName = flavorSelect ? flavorSelect.value : "";
 
     const fullId = `${sizeId}${flavorName ? '_' + flavorName : ''}`;
-
-    let baseName = "";
-    BAR_MENU.forEach(cat => cat.items.forEach(i => {
-        if(i.id === itemId) baseName = i.name;
-    }));
+    let baseName = ""; BAR_MENU.forEach(cat => cat.items.forEach(i => { if(i.id === itemId) baseName = i.name; }));
 
     let newQty = (currentOrder.services[fullId]?.qty || 0) + change;
-    if (newQty < 0) newQty = 0;
-    if (newQty > 10) newQty = 10; 
+    if (newQty < 0) newQty = 0; if (newQty > 10) newQty = 10; 
 
-    if (newQty === 0) {
-        delete currentOrder.services[fullId];
-    } else {
-        currentOrder.services[fullId] = {
-            qty: newQty,
-            price: price,
-            name: `${baseName} ${sizeName} ${flavorName ? '('+flavorName+')' : ''}`.trim()
-        };
-    }
+    if (newQty === 0) { delete currentOrder.services[fullId]; } 
+    else { currentOrder.services[fullId] = { qty: newQty, price: price, name: `${baseName} ${sizeOption.text.split(' - ')[0]} ${flavorName ? '('+flavorName+')' : ''}`.trim() }; }
 
     document.getElementById(`qty-${itemId}`).textContent = newQty;
     updateCheckoutSummary();
@@ -538,9 +490,7 @@ function updateServiceFromSelect(itemId, change) {
 function updateCheckoutSummary() {
     const ticketsCount = currentOrder.selectedSeats.length;
     const ticketsSum = ticketsCount * currentOrder.ticketPrice;
-    
-    let servicesSum = 0;
-    let servicesDetails = [];
+    let servicesSum = 0; let servicesDetails = [];
 
     Object.values(currentOrder.services).forEach(srv => {
         if(srv.qty > 0) {
@@ -551,15 +501,12 @@ function updateCheckoutSummary() {
 
     const totalSum = ticketsSum + servicesSum;
     
-    const hBadge = document.getElementById('hall-badge-sum');
-    if (hBadge) hBadge.textContent = totalSum;
-    const bBadge = document.getElementById('bar-badge-sum');
-    if (bBadge) bBadge.textContent = totalSum;
+    const hBadge = document.getElementById('hall-badge-sum'); if (hBadge) hBadge.textContent = totalSum;
+    const bBadge = document.getElementById('bar-badge-sum'); if (bBadge) bBadge.textContent = totalSum;
 
-    const cSeats = document.getElementById('receipt-seats-count');
-    if (cSeats) cSeats.textContent = ticketsCount;
-    const cTotal = document.getElementById('receipt-total-sum');
-    if (cTotal) cTotal.textContent = `${totalSum} ₽`;
+    document.getElementById('receipt-seats-count').textContent = ticketsCount;
+    document.getElementById('receipt-total-sum').textContent = `${totalSum} ₽`;
+    document.getElementById('sbp-total-sum').textContent = totalSum;
     
     const seatsListEl = document.getElementById('receipt-seats-list');
     if (seatsListEl) {
@@ -570,14 +517,36 @@ function updateCheckoutSummary() {
 
     const servicesListEl = document.getElementById('receipt-services-list');
     if (servicesListEl) {
-        servicesListEl.innerHTML = servicesDetails.length > 0 
-            ? servicesDetails.join('') 
-            : '<div>Не выбрана</div>';
+        servicesListEl.innerHTML = servicesDetails.length > 0 ? servicesDetails.join('') : '<div>Не выбрана</div>';
     }
+}
+
+function copyPhone() {
+    const phone = "+79196382853";
+    navigator.clipboard.writeText(phone).then(() => {
+        const btn = document.getElementById('copy-btn-icon');
+        btn.textContent = "✅";
+        setTimeout(() => btn.textContent = "📋", 2000);
+    });
+}
+
+function finishOrder() {
+    document.getElementById('checkout-main-content').classList.add('hidden');
+    document.getElementById('final-success-block').classList.remove('hidden');
 }
 
 function initStaticEventListeners() {
     document.getElementById('close-modal-btn')?.addEventListener('click', () => {
         document.getElementById('booking-modal-overlay').classList.add('hidden');
+    });
+
+    document.getElementById('show-sbp-instruction-btn')?.addEventListener('click', () => {
+        generatedOrderNumber = Math.floor(1000 + Math.random() * 9000);
+        document.getElementById('order-number-display').textContent = `#${generatedOrderNumber}`;
+        document.getElementById('order-number-comment').textContent = generatedOrderNumber;
+        
+        document.getElementById('initial-pay-btn-container').classList.add('hidden');
+        document.getElementById('payment-instruction-block').classList.remove('hidden');
+        document.getElementById('payment-instruction-block').scrollIntoView({ behavior: 'smooth', block: 'end' });
     });
 }
