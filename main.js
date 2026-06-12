@@ -1,5 +1,5 @@
 /**
- * main.js — Система "КИНОСФЕРА" (С Имитацией автоматического эквайринга)
+ * main.js — Система "КИНОСФЕРА" (Динамическая дата и перевод по СБП)
  */
 
 const SYSTEM_TODAY = new Date();
@@ -86,11 +86,8 @@ window.updateServiceUI = updateServiceUI;
 window.updateServiceFromSelect = updateServiceFromSelect;
 window.selectDate = selectDate;
 window.selectTime = selectTime;
-
-// Новые функции для Эмулятора Эквайринга
-window.openAcquiring = openAcquiring;
-window.closeAcquiring = closeAcquiring;
-window.startFakeProcessing = startFakeProcessing;
+window.copyPhone = copyPhone;
+window.finishOrder = finishOrder;
 
 document.addEventListener('DOMContentLoaded', () => {
     try {
@@ -261,9 +258,10 @@ function openBookingModal(id) {
 
     renderSessions(movie);
 
-    // Сброс финальных экранов и эквайринга
+    // Сброс финальных экранов
     document.getElementById('checkout-main-content').classList.remove('hidden');
     document.getElementById('final-success-block').classList.add('hidden');
+    document.getElementById('payment-instruction-block').classList.add('hidden');
     document.getElementById('initial-pay-btn-container').classList.remove('hidden');
 
     document.querySelectorAll('.step-container').forEach(el => el.classList.add('hidden'));
@@ -474,9 +472,7 @@ function updateCheckoutSummary() {
 
     document.getElementById('receipt-seats-count').textContent = ticketsCount;
     document.getElementById('receipt-total-sum').textContent = `${totalSum} ₽`;
-    
-    // Обновляем сумму в модалке эквайринга
-    document.getElementById('acq-sum').textContent = totalSum;
+    document.getElementById('sbp-total-sum').textContent = totalSum; 
     
     const seatsListEl = document.getElementById('receipt-seats-list');
     if (seatsListEl) {
@@ -491,50 +487,16 @@ function updateCheckoutSummary() {
     }
 }
 
-// ==========================================
-// ЛОГИКА ИМИТАЦИИ БАНКОВСКОГО ЭКВАЙРИНГА
-// ==========================================
-
-function openAcquiring() {
-    // Открываем модалку эквайринга поверх чека
-    document.getElementById('acquiring-overlay').classList.remove('hidden');
-    document.getElementById('acq-step-1').classList.remove('hidden');
-    document.getElementById('acq-step-2').classList.add('hidden');
-}
-
-function closeAcquiring() {
-    document.getElementById('acquiring-overlay').classList.add('hidden');
-}
-
-function startFakeProcessing() {
-    // Скрываем выбор метода, показываем лоадер
-    document.getElementById('acq-step-1').classList.add('hidden');
-    document.getElementById('acq-step-2').classList.remove('hidden');
-    
-    const statusText = document.getElementById('acq-status-text');
-    statusText.textContent = "Связь с банком...";
-
-    // Имитируем этапы транзакции таймерами
-    setTimeout(() => {
-        statusText.textContent = "Обработка транзакции...";
-    }, 1500);
-
-    setTimeout(() => {
-        statusText.textContent = "Подтверждение...";
-    }, 3000);
-
-    setTimeout(() => {
-        // Успех! Закрываем эквайринг и показываем финальный экран
-        closeAcquiring();
-        finishOrder();
-    }, 4500);
+function copyPhone() {
+    const phone = "+79196382853";
+    navigator.clipboard.writeText(phone).then(() => {
+        const btn = document.getElementById('copy-btn-icon');
+        btn.textContent = "✅";
+        setTimeout(() => btn.textContent = "📋", 2000);
+    });
 }
 
 function finishOrder() {
-    generatedOrderNumber = Math.floor(1000 + Math.random() * 9000);
-    document.getElementById('final-order-number').textContent = `#${generatedOrderNumber}`;
-
-    // Прячем чек, показываем зеленый экран успеха
     document.getElementById('checkout-main-content').classList.add('hidden');
     document.getElementById('final-success-block').classList.remove('hidden');
 }
@@ -542,5 +504,16 @@ function finishOrder() {
 function initStaticEventListeners() {
     document.getElementById('close-modal-btn')?.addEventListener('click', () => {
         document.getElementById('booking-modal-overlay').classList.add('hidden');
+    });
+
+    document.getElementById('show-sbp-instruction-btn')?.addEventListener('click', () => {
+        generatedOrderNumber = Math.floor(1000 + Math.random() * 9000);
+        document.getElementById('order-number-display').textContent = `#${generatedOrderNumber}`;
+        document.getElementById('order-number-comment').textContent = generatedOrderNumber;
+        document.getElementById('final-order-number').textContent = `#${generatedOrderNumber}`;
+        
+        document.getElementById('initial-pay-btn-container').classList.add('hidden');
+        document.getElementById('payment-instruction-block').classList.remove('hidden');
+        document.getElementById('payment-instruction-block').scrollIntoView({ behavior: 'smooth', block: 'end' });
     });
 }
