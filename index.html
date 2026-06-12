@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Сеть кинотеатров «КИНОСФЕРА»</title>
-    <link rel="stylesheet" href="css.css?v=7.0">
+    <link rel="stylesheet" href="css.css?v=9.0">
 </head>
 <body>
 
@@ -35,20 +35,8 @@
             <div class="city-list">
                 <button class="city-option" data-city="Москва">Москва</button>
                 <button class="city-option" data-city="Санкт-Петербург">Санкт-Петербург</button>
-                <button class="city-option" data-city="Новосибирск">Новосибирск</button>
                 <button class="city-option" data-city="Екатеринбург">Екатеринбург</button>
                 <button class="city-option" data-city="Казань">Казань</button>
-                <button class="city-option" data-city="Нижний Новгород">Нижний Новгород</button>
-                <button class="city-option" data-city="Красноярск">Красноярск</button>
-                <button class="city-option" data-city="Челябинск">Челябинск</button>
-                <button class="city-option" data-city="Самара">Самара</button>
-                <button class="city-option" data-city="Уфа">Уфа</button>
-                <button class="city-option" data-city="Ростов-на-Дону">Ростов-на-Дону</button>
-                <button class="city-option" data-city="Омск">Омск</button>
-                <button class="city-option" data-city="Краснодар">Краснодар</button>
-                <button class="city-option" data-city="Воронеж">Воронеж</button>
-                <button class="city-option" data-city="Пермь">Пермь</button>
-                <button class="city-option" data-city="Волгоград">Волгоград</button>
             </div>
             <button class="nav-btn-back close-mini-modal" style="width: 100%; margin-top: 15px;">Отмена</button>
         </div>
@@ -151,42 +139,78 @@
             </div>
 
             <div id="step-checkout-container" class="step-container hidden">
-                <div class="flow-header">
-                    <button class="nav-btn-back" onclick="goToStep('step-services-container')">← В бар</button>
-                    <h2 class="step-title-center">Электронный чек</h2>
-                    <div style="width: 60px;"></div>
+                <div id="checkout-main-content">
+                    <div class="flow-header">
+                        <button class="nav-btn-back" onclick="goToStep('step-services-container')">← В бар</button>
+                        <h2 class="step-title-center">Электронный чек</h2>
+                        <div style="width: 60px;"></div>
+                    </div>
+
+                    <div class="receipt-paper">
+                        <h3 class="receipt-title">Сеть кинотеатров «КИНОСФЕРА»</h3>
+                        <div class="receipt-divider"></div>
+                        
+                        <div class="receipt-row"><strong>Фильм:</strong> <span id="receipt-movie"></span></div>
+                        <div class="receipt-row"><strong>Дата и Сеанс:</strong> <span id="receipt-datetime" style="color:var(--accent-red); font-weight:bold;"></span></div>
+                        
+                        <div class="receipt-divider"></div>
+                        <div class="receipt-row"><strong>Билеты (<span id="receipt-seats-count">0</span>):</strong></div>
+                        <div class="receipt-sub-row" id="receipt-seats-list"></div>
+                        
+                        <div class="receipt-divider"></div>
+                        <div class="receipt-row"><strong>Продукция бара:</strong></div>
+                        <div class="receipt-sub-row" id="receipt-services-list"></div>
+
+                        <div class="receipt-divider-thick"></div>
+                        <div class="receipt-total">ИТОГО К ОПЛАТЕ: <span id="receipt-total-sum">0 ₽</span></div>
+                    </div>
+
+                    <div class="step-navigation-buttons" id="initial-pay-btn-container" style="margin-top: 20px;">
+                        <button class="nav-btn-back" onclick="goToStep('step-services-container')">← Изменить заказ</button>
+                        <button id="show-sbp-instruction-btn" class="action-accent-btn">Перейти к оплате</button>
+                    </div>
+
+                    <div id="payment-instruction-block" class="payment-instruction-banner hidden">
+                        <div class="payment-header">
+                            <h3>Оплата заказа <span id="order-number-display" style="color:var(--accent);">#0000</span></h3>
+                            <p>Для моментального получения билетов переведите итоговую сумму по Системе быстрых платежей (СБП).</p>
+                        </div>
+                        <div class="payment-details-box">
+                            <div class="payment-row">
+                                <span>Сумма к переводу:</span>
+                                <strong class="payment-sum"><span id="sbp-total-sum">0</span> ₽</strong>
+                            </div>
+                            <div class="payment-row">
+                                <span>Банк получателя:</span>
+                                <strong>Озон Банк (Ozon)</strong>
+                            </div>
+                            <div class="payment-row">
+                                <span>Номер телефона:</span>
+                                <div class="copy-box">
+                                    <strong id="phone-to-copy">+7 (919) 638-28-53</strong>
+                                    <button class="copy-btn" onclick="copyPhone()" id="copy-btn-icon">📋</button>
+                                </div>
+                            </div>
+                            <div class="payment-warning">
+                                ⚠️ В комментарии к переводу ОБЯЗАТЕЛЬНО укажите номер: <b id="order-number-comment">0000</b>
+                            </div>
+                        </div>
+                        <button class="action-accent-btn full-width-btn" style="background: #28a745;" onclick="finishOrder()">Я перевел деньги ✅</button>
+                    </div>
                 </div>
 
-                <div class="receipt-paper">
-                    <h3 class="receipt-title">Сеть кинотеатров «КИНОСФЕРА»</h3>
-                    <div class="receipt-divider"></div>
-                    
-                    <div class="receipt-row"><strong>Фильм:</strong> <span id="receipt-movie"></span></div>
-                    <div class="receipt-row"><strong>Дата и Сеанс:</strong> <span id="receipt-datetime" style="color:var(--accent-red); font-weight:bold;"></span></div>
-                    
-                    <div class="receipt-divider"></div>
-                    <div class="receipt-row"><strong>Билеты (<span id="receipt-seats-count">0</span>):</strong></div>
-                    <div class="receipt-sub-row" id="receipt-seats-list"></div>
-                    
-                    <div class="receipt-divider"></div>
-                    <div class="receipt-row"><strong>Продукция бара:</strong></div>
-                    <div class="receipt-sub-row" id="receipt-services-list"></div>
-
-                    <div class="receipt-divider-thick"></div>
-                    <div class="receipt-total">ИТОГО К ОПЛАТЕ: <span id="receipt-total-sum">0 ₽</span></div>
+                <div id="final-success-block" class="final-success-banner hidden">
+                    <div class="success-icon">🎫</div>
+                    <h2>Заказ успешно оформлен!</h2>
+                    <p>Мы проверяем поступление средств. Электронные билеты и чек придут в ваш профиль и по SMS в течение 2-5 минут.</p>
+                    <button class="nav-btn-back" style="margin-top:20px; border: 1px solid #444; padding: 10px 20px; border-radius: 8px;" onclick="location.reload()">Вернуться на главную</button>
                 </div>
 
-                <div id="payment-receipt-block" class="secure-error-banner">
-                    <strong>СИСТЕМНЫЙ СБОЙ ТРАНЗАКЦИИ:</strong><br><br>
-                    Код ошибки: #ERR-8902-SEC.<br>
-                    Ответ шлюза: Отказ в доступе к базе данных (LocalHost/CinemaDB).<br>
-                    В настоящий момент привычные средсваоплаты не доступны. Уже ведется работа над исправлением поломки. Вы можете оплатить переводом на номер +79196382853 ozon. По поводу дальнейше помощи можете обратиться в нашу поддержку telegram:@KINOSFERA_support
-                </div>
             </div>
 
         </div>
     </div>
 
-    <script src="main.js?v=7.0"></script>
+    <script src="main.js?v=9.0"></script>
 </body>
 </html>
