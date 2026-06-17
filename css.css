@@ -18,7 +18,12 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ro
 .cinema-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: rgba(17, 14, 21, 0.95); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #222; }
 .logo { font-size: 22px; font-weight: 900; letter-spacing: 1px; }
 .logo span { color: var(--accent-red); }
-.header-actions { display: flex; gap: 15px; }
+.header-actions { display: flex; gap: 15px; align-items: center; }
+
+/* НОВЫЙ КЛАСС ДЛЯ ПОДДЕРЖКИ */
+.support-link { text-decoration: none; color: var(--accent); font-size: 14px; display: flex; align-items: center; font-weight: 500; transition: color 0.2s; }
+.support-link:hover { color: white; }
+
 .city-selector-btn, .mobile-login-link { background: transparent; border: none; color: var(--text-muted); font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: color 0.2s; }
 .city-selector-btn:hover, .mobile-login-link:hover { color: white; }
 .catalog-section { padding: 20px; max-width: 1400px; margin: 0 auto; }
@@ -51,7 +56,7 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ro
 .promo-info p { color: #ddd; font-size: 14px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 20px; }
 .promo-btn { background: var(--accent-red); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; font-size: 14px; width: max-content; }
 
-/* Модалки и Глобальный UI */
+/* Модалки */
 .hidden { display: none !important; }
 .overlay-modal, .booking-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); display: flex; justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
 .mini-modal-content { background: var(--bg-card); width: 100%; max-width: 350px; padding: 25px; border-radius: 16px; border: 1px solid #2a2535; }
@@ -180,6 +185,8 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ro
 }
 
 @media (max-width: 768px) {
+    .header-actions { flex-wrap: wrap; justify-content: flex-end; }
+    
     .movies-ultimate-grid { display: flex; flex-wrap: nowrap; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; gap: 15px; padding-bottom: 20px; }
     .movies-ultimate-grid::-webkit-scrollbar { display: none; }
     .movie-card { flex: 0 0 150px; scroll-snap-align: start; }
