@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Сеть кинотеатров «КИНОСФЕРА»</title>
-    <link rel="stylesheet" href="css.css?v=12.0">
+    <!-- Сброс кэша -->
+    <link rel="stylesheet" href="css.css?v=13.0">
 </head>
 <body>
 
@@ -30,6 +31,7 @@
         <div id="upcoming-movies-grid" class="movies-ultimate-grid"></div>
     </main>
 
+    <!-- Модалки Города и Логина -->
     <div id="modal-city" class="overlay-modal hidden">
         <div class="mini-modal-content">
             <h3>Выберите город</h3>
@@ -54,10 +56,12 @@
         </div>
     </div>
 
+    <!-- ФЛОУ БРОНИРОВАНИЯ -->
     <div id="booking-modal-overlay" class="booking-modal-overlay hidden">
         <div class="modal-content-wrapper flow-wrapper">
             <button id="close-modal-btn" class="close-modal-btn">✕</button>
 
+            <!-- ШАГ 0: ДЕТАЛИ -->
             <div id="step-details-container" class="step-container hidden">
                 <div class="movie-details-layout">
                     <div class="details-poster-col">
@@ -81,24 +85,33 @@
                         </div>
                         <div class="detail-action-footer">
                             <div class="detail-price-hint" id="detail-price">Билет: 0 ₽</div>
-                            <button class="action-accent-btn full-width-btn" onclick="goToStep('step-sessions-container')">Расписание и билеты →</button>
+                            <button class="action-accent-btn full-width-btn" onclick="goToStep('step-sessions-container')">Выбрать сеанс →</button>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- ШАГ 1: КИНОТЕАТРЫ И СЕАНСЫ -->
             <div id="step-sessions-container" class="step-container hidden">
                 <div class="flow-header">
                     <button class="nav-btn-back" onclick="goToStep('step-details-container')">← Назад</button>
-                    <h2 class="step-title-center">Выберите дату и сеанс</h2>
+                    <h2 class="step-title-center">Кинотеатр и сеанс</h2>
                     <div style="width: 60px;"></div>
                 </div>
                 <div class="context-movie-title" id="context-title-sessions"></div>
                 
                 <div id="date-tabs-container" class="bar-tabs-container" style="margin-bottom: 25px;"></div>
-                <div id="dynamic-sessions-grid" class="sessions-grid"></div>
+                
+                <h3 style="font-size: 16px; color: #fff; margin-bottom: 12px;">Выберите кинотеатр (<span id="current-city-display">Москва</span>):</h3>
+                <div id="cinemas-list-container" class="cinemas-vertical-list"></div>
+
+                <div id="sessions-block" class="hidden" style="margin-top: 25px;">
+                    <h3 style="font-size: 16px; color: #fff; margin-bottom: 12px;">Доступные сеансы:</h3>
+                    <div id="dynamic-sessions-grid" class="sessions-grid"></div>
+                </div>
             </div>
 
+            <!-- ШАГ 2: ЗАЛ -->
             <div id="step-hall-container" class="step-container hidden">
                 <div class="flow-header">
                     <button class="nav-btn-back" onclick="goToStep('step-sessions-container')">← Назад</button>
@@ -125,6 +138,7 @@
                 </div>
             </div>
 
+            <!-- ШАГ 3: БАР -->
             <div id="step-services-container" class="step-container hidden">
                 <div class="flow-header">
                     <button class="nav-btn-back" onclick="goToStep('step-hall-container')">← Зал</button>
@@ -140,6 +154,7 @@
                 </div>
             </div>
 
+            <!-- ШАГ 4: ЧЕК И ИНСТРУКЦИЯ СБП -->
             <div id="step-checkout-container" class="step-container hidden">
                 <div id="checkout-main-content">
                     <div class="flow-header">
@@ -153,6 +168,7 @@
                         <div class="receipt-divider"></div>
                         
                         <div class="receipt-row"><strong>Фильм:</strong> <span id="receipt-movie"></span></div>
+                        <div class="receipt-row"><strong>Кинотеатр:</strong> <span id="receipt-cinema"></span></div>
                         <div class="receipt-row"><strong>Дата и Сеанс:</strong> <span id="receipt-datetime" style="color:var(--accent-red); font-weight:bold;"></span></div>
                         
                         <div class="receipt-divider"></div>
@@ -169,48 +185,50 @@
 
                     <div class="step-navigation-buttons" id="initial-pay-btn-container" style="margin-top: 20px;">
                         <button class="nav-btn-back" onclick="goToStep('step-services-container')">← Изменить заказ</button>
-                        <button id="show-sbp-instruction-btn" class="action-accent-btn">Перейти к оплате</button>
-                    </div>
-
-                    <div id="payment-instruction-block" class="payment-instruction-banner hidden">
-                        <div class="payment-header">
-                            <h3>Оплата заказа <span id="order-number-display" style="color:var(--accent);">#0000</span></h3>
-                            <p>Для моментального получения билетов переведите итоговую сумму по Системе быстрых платежей (СБП).</p>
-                        </div>
-                        <div class="payment-details-box">
-                            <div class="payment-row">
-                                <span>Сумма к переводу:</span>
-                                <strong class="payment-sum"><span id="sbp-total-sum">0</span> ₽</strong>
-                            </div>
-                            <div class="payment-row">
-                                <span>Банк получателя:</span>
-                                <strong>Озон Банк (Ozon)</strong>
-                            </div>
-                            <div class="payment-row">
-                                <span>Номер телефона:</span>
-                                <div class="copy-box">
-                                    <strong id="phone-to-copy">+7 (919) 638-28-53</strong>
-                                    <button class="copy-btn" onclick="copyPhone()" id="copy-btn-icon">📋</button>
-                                </div>
-                            </div>
-                            <div class="payment-warning">
-                                ⚠️ В комментарии к переводу ОБЯЗАТЕЛЬНО укажите номер: <b id="order-number-comment">0000</b>
-                            </div>
-                        </div>
-                        <button class="action-accent-btn full-width-btn" style="background: #28a745;" onclick="finishOrder()">Я перевел деньги ✅</button>
+                        <button class="action-accent-btn" onclick="openAcquiring()">Перейти к оплате</button>
                     </div>
                 </div>
 
+                <!-- Экран успеха -->
                 <div id="final-success-block" class="final-success-banner hidden">
                     <div class="success-icon">🎫</div>
-                    <h2>Заказ <span id="final-order-number" style="color:var(--accent);">#0000</span> успешно оформлен!</h2>
-                    <p>Мы проверяем поступление средств. Электронные билеты и чек придут в ваш профиль и по SMS в течение 2-5 минут.</p>
+                    <h2>Заказ <span id="final-order-number" style="color:var(--accent);">#0000</span> успешно оплачен!</h2>
+                    <p>Билеты и чек отправлены вам по SMS и доступны в личном кабинете. Приятного просмотра!</p>
                     <button class="nav-btn-back" style="margin-top:20px; border: 1px solid #444; padding: 10px 20px; border-radius: 8px;" onclick="location.reload()">Вернуться на главную</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="main.js?v=11.0"></script>
+    <!-- ИМИТАЦИЯ ПЛАТЕЖНОГО ШЛЮЗА (ЭКВАЙРИНГ) -->
+    <div id="acquiring-overlay" class="overlay-modal hidden" style="z-index: 3000;">
+        <div class="acquiring-modal">
+            <div id="acq-step-1">
+                <div class="acq-header">
+                    <div>Оплата заказа</div>
+                    <div style="font-size:24px; font-weight:bold;"><span id="acq-sum">0</span> ₽</div>
+                </div>
+                <div class="acq-body">
+                    <p style="color:#888; font-size:14px; text-align:center; margin-bottom: 20px;">Выберите способ оплаты</p>
+                    <button class="acq-method-btn sbp-btn" onclick="startFakeProcessing()">
+                        <span style="font-size:20px;">⚡</span> Оплатить по СБП
+                    </button>
+                    <button class="acq-method-btn card-btn" onclick="startFakeProcessing()">
+                        Оплатить картой
+                    </button>
+                </div>
+                <button class="acq-cancel" onclick="closeAcquiring()">Отмена</button>
+            </div>
+            <div id="acq-step-2" class="hidden">
+                <div class="acq-loader-container">
+                    <div class="spinner"></div>
+                    <h3 id="acq-status-text">Связь с банком...</h3>
+                    <p style="color:#777; font-size:13px; margin-top:10px;">Пожалуйста, не закрывайте окно</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js?v=13.0"></script>
 </body>
 </html>
