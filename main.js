@@ -1,22 +1,65 @@
 /**
- * main.js — Система "КИНОСФЕРА" (Динамическая дата и перевод по СБП)
+ * main.js — Система "КИНОСФЕРА" (Выбор города, адреса и генерация сеансов)
  */
 
 const SYSTEM_TODAY = new Date();
 SYSTEM_TODAY.setHours(0, 0, 0, 0);
 
+// Глобальное состояние города
+let currentCity = "Москва";
+
+// База кинотеатров по городам
+const CINEMAS_BY_CITY = {
+    "Москва": [
+        "«Пионер» (Новоданиловская наб., 6, корп. 1)",
+        "«Иллюзион» (Котельническая наб., 1/15)",
+        "«Художественный» (Арбатская площадь, 14, стр. 1)",
+        "«Киномакс» (Каширское шоссе, 61Г)",
+        "«КАРО 10 София» (Сиреневый бульвар, 31)"
+    ],
+    "Санкт-Петербург": [
+        "Невский проспект, 60",
+        "набережная Обводного канала, 80",
+        "улица Чайковского, 24",
+        "Малый проспект В.О., 88, корп. 2"
+    ],
+    "Новосибирск": [
+        "площадь Карла Маркса, 7",
+        "Троллейная улица, 130А",
+        "Военная улица, 5",
+        "Красный проспект, 101",
+        "проспект Дзержинского, 2/2"
+    ],
+    "Екатеринбург": [
+        "улица 8 Марта, 46",
+        "улица Луначарского, 137",
+        "улица Репина, 94",
+        "улица Щербакова, 2К",
+        "улица 8 Марта, 149",
+        "улица Халтурина, 55",
+        "улица Малышева, 5"
+    ],
+    "Казань": [
+        "улица Николая Ершова, 1А",
+        "проспект Победы, 91",
+        "проспект Ямашева, 46",
+        "улица Достоевского, 30",
+        "улица Хусаина Мавлютова, 45"
+    ]
+};
+
 const moviesData = [
-    { id: 20, title: "Звероэволюция", poster: "zveroevolution.jpg", genre: "Боевик", age: "18+", price: 650, isUpcoming: false, country: "Франция", director: "Жан-Люк Мартель", cast: "Венсан Кассель", desc: "Секретная лаборатория создает новый вид хищников. Элитный отряд наемников отправляется в закрытую зону." },
-    { id: 21, title: "Холоп 3", poster: "holop3.jpg", genre: "Комедия", age: "12+", price: 550, isUpcoming: false, country: "Россия", director: "Клим Шипенко", cast: "Милош Бикович", desc: "Новые герои, совершенно неожиданная историческая эпоха и старые добрые методы исправления характера." },
+    { id: 20, title: "Звероэволюция", poster: "zveroevolution.jpg", genre: "Боевик", age: "18+", price: 650, isUpcoming: false, country: "Франция", director: "Жан-Люк Мартель", cast: "Венсан Кассель", desc: "Секретная лаборатория создает новый вид хищников." },
+    { id: 21, title: "Холоп 3", poster: "holop3.jpg", genre: "Комедия", age: "12+", price: 550, isUpcoming: false, country: "Россия", director: "Клим Шипенко", cast: "Милош Бикович", desc: "Новые герои, совершенно неожиданная историческая эпоха." },
     { id: 1, title: "Майкл", poster: "Michael_(2026_film)_poster.jpg", genre: "Байопик", age: "18+", price: 700, isUpcoming: false, country: "США", director: "Антуан Фукуа", cast: "Джаафар Джексон", desc: "История восхождения легендарного Короля поп-музыки." },
-    { id: 2, title: "День рождения", poster: "birthday.jpg", genre: "Триллер", age: "18+", price: 450, isUpcoming: false, country: "Россия", director: "Алексей Смирнов", cast: "Юра Борисов", desc: "Празднование дня рождения оборачивается настоящим кошмаром." },
-    { id: 3, title: "Богатыри", poster: "bogatyry.jpg", genre: "Фэнтези", age: "16+", price: 500, isUpcoming: false, country: "Россия", director: "Рустам Мосафир", cast: "Александр Паль", desc: "Суровый исторический экшен, кардинально переосмысляющий былины." },
+    { id: 2, title: "День рождения", poster: "birthday.jpg", genre: "Триллер", age: "18+", price: 450, isUpcoming: false, country: "Россия", director: "Алексей Смирнов", cast: "Юра Борисов", desc: "Празднование дня рождения оборачивается кошмаром." },
+    { id: 3, title: "Богатыри", poster: "bogatyry.jpg", genre: "Фэнтези", age: "16+", price: 500, isUpcoming: false, country: "Россия", director: "Рустам Мосафир", cast: "Александр Паль", desc: "Суровый исторический экшен, переосмысляющий былины." },
     { id: 4, title: "Братья Карамазовы", poster: "brothers-karamazovy.jpg", genre: "Драма", age: "16+", price: 400, isUpcoming: false, country: "Россия", director: "Юрий Быков", cast: "Константин Хабенский", desc: "Философская драма по бессмертному роману." },
     { id: 5, title: "Грязные деньги", poster: "gryznyedengi.jpg", genre: "Боевик", age: "18+", price: 600, isUpcoming: false, country: "США", director: "Майкл Бэй", cast: "Джейк Джилленхол", desc: "Криминальный боевик о подпольной империи." },
     { id: 6, title: "Ветры прошлого", poster: "images.jpg", genre: "Детектив", age: "16+", price: 450, isUpcoming: false, country: "Франция", director: "Франсуа Озон", cast: "Марион Котийяр", desc: "Фотограф случайно обнаруживает ключ к разгадке старой тайны." },
     { id: 7, title: "Убить Билла", poster: "killbill.jpg", genre: "Боевик", age: "18+", price: 650, isUpcoming: false, country: "США", director: "Квентин Тарантино", cast: "Ума Турман", desc: "Культовый шедевр Квентина Тарантино на больших экранах." },
     { id: 8, title: "Коммерсант", poster: "komers.jpg", genre: "Бизнес-драма", age: "16+", price: 500, isUpcoming: false, country: "Великобритания", director: "Гай Ричи", cast: "Чарли Ханнэм", desc: "Холодная и расчетливая бизнес-драма о циничном мире." },
-    { id: 9, title: "Кощей", poster: "koshey.jpg", genre: "Фэнтези", age: "16+", price: 450, isUpcoming: false, country: "Россия", director: "Олег Трофим", cast: "Тихон Жизневский", desc: "История становления самого известного злодея русских сказок." },
+    { id: 9, title: "Кощей", poster: "koshey.jpg", genre: "Фэнтези", age: "16+", price: 450, isUpcoming: false, country: "Россия", director: "Олег Трофим", cast: "Тихон Жизневский", desc: "История становления злодея русских сказок." },
     { id: 10, title: "Лео и Тиг", poster: "leoandtig.jpg", genre: "Анимация", age: "6+", price: 400, isUpcoming: false, country: "Россия", director: "Александр Люткевич", cast: "Озвучка: Дмитрий Назаров", desc: "Анимационная история для всей семьи." },
     { id: 11, title: "Момо", poster: "momo.jpg", genre: "Сказка, Фэнтези", age: "12+", price: 400, isUpcoming: false, country: "Германия", director: "Кристиан Диттер", cast: "Мартина Гдек", desc: "Экранизация всемирно известной сказки." },
     { id: 12, title: "Шевели перьями", poster: "moveyourwings.jpg", genre: "Анимация", age: "6+", price: 400, isUpcoming: false, country: "США", director: "Крис Рено", cast: "Озвучка: Стив Карелл", desc: "Вдохновляющий анимационный фильм о воробье." },
@@ -26,7 +69,7 @@ const moviesData = [
     { id: 16, title: "Обсессия", poster: "obessy.jpg", genre: "Триллер", age: "18+", price: 600, isUpcoming: false, country: "Великобритания", director: "Кристофер Нолан", cast: "Киллиан Мерфи", desc: "Пугающий триллер о гениальном композиторе." },
     { id: 17, title: "Пропасть", poster: "propast.jpg", genre: "Катастрофа", age: "16+", price: 550, isUpcoming: false, country: "Норвегия", director: "Роар Утхауг", cast: "Кристоффер Йонер", desc: "Альпинисты оказываются заперты в расщелине после лавины." },
     { id: 18, title: "Чудесный мир", poster: "wondaryworld.jpg", genre: "Приключения", age: "12+", price: 500, isUpcoming: false, country: "США", director: "Стивен Спилберг", cast: "Том Холланд", desc: "Подростки находят портал в параллельную экосистему." },
-    { id: 19, title: "Молодые и влюбленные", poster: "young-and-loved.jpg", genre: "Мелодрама", age: "16+", price: 450, isUpcoming: false, country: "Франция", director: "Селин Сьямма", cast: "Адель Энель", desc: "Трогательная мелодрама о первой любви и взрослении." },
+    { id: 19, title: "Молодые и влюбленные", poster: "young-and-loved.jpg", genre: "Мелодрама", age: "16+", price: 450, isUpcoming: false, country: "Франция", director: "Селин Сьямма", cast: "Адель Энель", desc: "Трогательная мелодрама о первой любви." },
 
     { id: 101, title: "Бизнес ночью", poster: "buisnesatnight.jpg", genre: "Триллер", age: "18+", price: 600, isUpcoming: true, releaseDate: "2026-06-25", country: "США", director: "Дэвид Финчер", cast: "Кристиан Бэйл", desc: "Когда закон засыпает, просыпаются настоящие деньги." },
     { id: 102, title: "Цыпленок: Пух и прах", poster: "chickenpuhandprah.jpg", genre: "Анимация", age: "6+", price: 450, isUpcoming: true, releaseDate: "2026-06-18", country: "Великобритания", director: "Питер Лорд", cast: "Саймон Пегг", desc: "Самое дерзкое ограбление курятника века." },
@@ -74,7 +117,7 @@ const BAR_MENU = [
     }
 ];
 
-let currentOrder = { movieId: null, movieTitle: "", ticketPrice: 0, selectedDate: null, selectedTime: null, selectedSeats: [], services: {} };
+let currentOrder = { movieId: null, movieTitle: "", ticketPrice: 0, selectedDate: null, selectedCinema: null, selectedTime: null, selectedSeats: [], services: {} };
 let currentHallZoom = 1;
 let activeBarTab = "cat_combo";
 let generatedOrderNumber = "0000";
@@ -85,9 +128,11 @@ window.switchBarTab = switchBarTab;
 window.updateServiceUI = updateServiceUI;
 window.updateServiceFromSelect = updateServiceFromSelect;
 window.selectDate = selectDate;
+window.selectCinema = selectCinema;
 window.selectTime = selectTime;
-window.copyPhone = copyPhone;
-window.finishOrder = finishOrder;
+window.openAcquiring = openAcquiring;
+window.closeAcquiring = closeAcquiring;
+window.startFakeProcessing = startFakeProcessing;
 
 document.addEventListener('DOMContentLoaded', () => {
     try {
@@ -192,8 +237,14 @@ function initGlobalModals() {
     cityBtn?.addEventListener('click', () => cityModal.classList.remove('hidden'));
     document.querySelectorAll('.city-option').forEach(btn => {
         btn.addEventListener('click', (e) => {
-            if(cityBtn) cityBtn.textContent = `г. ${e.target.dataset.city} ▼`;
+            currentCity = e.target.dataset.city;
+            if(cityBtn) cityBtn.textContent = `г. ${currentCity} ▼`;
             cityModal.classList.add('hidden');
+            
+            // Если мы находимся в модалке бронирования, обновляем список кинотеатров
+            if (!document.getElementById('booking-modal-overlay').classList.contains('hidden')) {
+                renderCinemas();
+            }
         });
     });
 
@@ -216,7 +267,7 @@ function openBookingModal(id) {
     const movie = moviesData.find(m => m.id === id);
     if (!movie) return;
 
-    currentOrder = { movieId: movie.id, movieTitle: movie.title, ticketPrice: movie.price, selectedDate: null, selectedTime: null, selectedSeats: [], services: {} };
+    currentOrder = { movieId: movie.id, movieTitle: movie.title, ticketPrice: movie.price, selectedDate: null, selectedCinema: null, selectedTime: null, selectedSeats: [], services: {} };
     
     document.getElementById('detail-title').textContent = movie.title || 'Неизвестно';
     document.getElementById('detail-poster').src = movie.poster;
@@ -256,12 +307,10 @@ function openBookingModal(id) {
         currentOrder.selectedDate = dates[0].formattedText;
     }
 
-    renderSessions(movie);
+    renderCinemas();
 
-    // Сброс финальных экранов
     document.getElementById('checkout-main-content').classList.remove('hidden');
     document.getElementById('final-success-block').classList.add('hidden');
-    document.getElementById('payment-instruction-block').classList.add('hidden');
     document.getElementById('initial-pay-btn-container').classList.remove('hidden');
 
     document.querySelectorAll('.step-container').forEach(el => el.classList.add('hidden'));
@@ -276,25 +325,70 @@ function selectDate(dateStr, btnElement) {
     currentOrder.selectedDate = dateStr;
     document.querySelectorAll('.date-tab').forEach(b => b.classList.remove('active'));
     btnElement.classList.add('active');
-    renderSessions(moviesData.find(m => m.id === currentOrder.movieId)); 
+    
+    // Если кинотеатр уже выбран, генерируем для него новые сеансы на новую дату
+    if (currentOrder.selectedCinema) {
+        generateRealisticSessions();
+    }
 }
 
-function renderSessions(movie) {
+function renderCinemas() {
+    const container = document.getElementById('cinemas-list-container');
+    if(!container) return;
+    container.innerHTML = '';
+    document.getElementById('current-city-display').textContent = currentCity;
+    
+    const cinemas = CINEMAS_BY_CITY[currentCity] || CINEMAS_BY_CITY["Москва"];
+    
+    cinemas.forEach(address => {
+        const btn = document.createElement('button');
+        btn.className = 'cinema-select-btn';
+        btn.textContent = address;
+        btn.onclick = () => selectCinema(address, btn);
+        container.appendChild(btn);
+    });
+    
+    document.getElementById('sessions-block').classList.add('hidden');
+    currentOrder.selectedCinema = null;
+    currentOrder.selectedTime = null;
+}
+
+function selectCinema(address, btn) {
+    currentOrder.selectedCinema = address;
+    document.querySelectorAll('.cinema-select-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    generateRealisticSessions();
+    document.getElementById('sessions-block').classList.remove('hidden');
+    document.getElementById('sessions-block').scrollIntoView({ behavior: 'smooth', block: 'end' });
+}
+
+function generateRealisticSessions() {
     const sessionsGrid = document.getElementById('dynamic-sessions-grid');
     if (!sessionsGrid) return;
     sessionsGrid.innerHTML = '';
-    const times = movie.sessions || ["12:00", "15:30", "19:00", "22:15"];
-    times.forEach(time => {
+    
+    // Генерируем случайное правдоподобное количество сеансов (от 3 до 6)
+    const count = Math.floor(Math.random() * 4) + 3;
+    let startHour = 9; 
+    
+    for(let i = 0; i < count; i++) {
+        startHour += Math.floor(Math.random() * 2) + 1; // шаг в 1-2 часа
+        if (startHour > 23) break;
+        
+        let mins = Math.random() > 0.5 ? "00" : (Math.random() > 0.5 ? "15" : "45");
+        const timeStr = `${startHour}:${mins}`;
+        
         const btn = document.createElement('button');
         btn.className = 'session-btn';
-        btn.textContent = time;
-        btn.onclick = () => selectTime(time);
+        btn.textContent = timeStr;
+        btn.onclick = () => selectTime(timeStr);
         sessionsGrid.appendChild(btn);
-    });
+    }
 }
 
 function selectTime(timeStr) {
-    if (!currentOrder.selectedDate) { alert("Пожалуйста, сначала выберите дату!"); return; }
+    if (!currentOrder.selectedDate || !currentOrder.selectedCinema) { alert("Пожалуйста, сначала выберите дату и кинотеатр!"); return; }
     currentOrder.selectedTime = timeStr;
     goToStep('step-hall-container');
 }
@@ -316,6 +410,7 @@ function goToStep(stepId) {
 
     if (stepId === 'step-checkout-container') {
         document.getElementById('receipt-datetime').textContent = `${currentOrder.selectedDate} / ${currentOrder.selectedTime}`;
+        document.getElementById('receipt-cinema').textContent = currentOrder.selectedCinema;
     }
 }
 
@@ -472,7 +567,7 @@ function updateCheckoutSummary() {
 
     document.getElementById('receipt-seats-count').textContent = ticketsCount;
     document.getElementById('receipt-total-sum').textContent = `${totalSum} ₽`;
-    document.getElementById('sbp-total-sum').textContent = totalSum; 
+    document.getElementById('acq-sum').textContent = totalSum;
     
     const seatsListEl = document.getElementById('receipt-seats-list');
     if (seatsListEl) {
@@ -487,33 +582,37 @@ function updateCheckoutSummary() {
     }
 }
 
-function copyPhone() {
-    const phone = "+79196382853";
-    navigator.clipboard.writeText(phone).then(() => {
-        const btn = document.getElementById('copy-btn-icon');
-        btn.textContent = "✅";
-        setTimeout(() => btn.textContent = "📋", 2000);
-    });
+function openAcquiring() {
+    document.getElementById('acquiring-overlay').classList.remove('hidden');
+    document.getElementById('acq-step-1').classList.remove('hidden');
+    document.getElementById('acq-step-2').classList.add('hidden');
 }
 
-function finishOrder() {
-    document.getElementById('checkout-main-content').classList.add('hidden');
-    document.getElementById('final-success-block').classList.remove('hidden');
+function closeAcquiring() {
+    document.getElementById('acquiring-overlay').classList.add('hidden');
+}
+
+function startFakeProcessing() {
+    document.getElementById('acq-step-1').classList.add('hidden');
+    document.getElementById('acq-step-2').classList.remove('hidden');
+    
+    const statusText = document.getElementById('acq-status-text');
+    statusText.textContent = "Связь с банком...";
+
+    setTimeout(() => { statusText.textContent = "Обработка транзакции..."; }, 1500);
+    setTimeout(() => { statusText.textContent = "Подтверждение..."; }, 3000);
+
+    setTimeout(() => {
+        closeAcquiring();
+        generatedOrderNumber = Math.floor(1000 + Math.random() * 9000);
+        document.getElementById('final-order-number').textContent = `#${generatedOrderNumber}`;
+        document.getElementById('checkout-main-content').classList.add('hidden');
+        document.getElementById('final-success-block').classList.remove('hidden');
+    }, 4500);
 }
 
 function initStaticEventListeners() {
     document.getElementById('close-modal-btn')?.addEventListener('click', () => {
         document.getElementById('booking-modal-overlay').classList.add('hidden');
-    });
-
-    document.getElementById('show-sbp-instruction-btn')?.addEventListener('click', () => {
-        generatedOrderNumber = Math.floor(1000 + Math.random() * 9000);
-        document.getElementById('order-number-display').textContent = `#${generatedOrderNumber}`;
-        document.getElementById('order-number-comment').textContent = generatedOrderNumber;
-        document.getElementById('final-order-number').textContent = `#${generatedOrderNumber}`;
-        
-        document.getElementById('initial-pay-btn-container').classList.add('hidden');
-        document.getElementById('payment-instruction-block').classList.remove('hidden');
-        document.getElementById('payment-instruction-block').scrollIntoView({ behavior: 'smooth', block: 'end' });
     });
 }
