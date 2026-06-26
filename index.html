@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Сеть кинотеатров «КИНОСФЕРА»</title>
-    <!-- Сброс кэша -->
-    <link rel="stylesheet" href="css.css?v=13.0">
+    <link rel="stylesheet" href="css.css?v=14.0">
 </head>
 <body>
 
@@ -31,7 +30,6 @@
         <div id="upcoming-movies-grid" class="movies-ultimate-grid"></div>
     </main>
 
-    <!-- Модалки Города и Логина -->
     <div id="modal-city" class="overlay-modal hidden">
         <div class="mini-modal-content">
             <h3>Выберите город</h3>
@@ -49,19 +47,17 @@
     <div id="modal-login" class="overlay-modal hidden">
         <div class="mini-modal-content auth-box-fields">
             <h3>Вход в профиль</h3>
-            <input type="text" id="global-login-field" placeholder="Логин или Телефон" autocomplete="off">
+            <input type="tel" id="global-login-phone" placeholder="Номер телефона" autocomplete="off">
             <input type="password" id="global-pass-field" placeholder="Пароль" autocomplete="off">
             <button id="global-submit-login" class="action-accent-btn" style="width: 100%; margin-top: 10px;">Войти</button>
             <button class="nav-btn-back close-mini-modal" style="width: 100%; margin-top: 15px;">Закрыть</button>
         </div>
     </div>
 
-    <!-- ФЛОУ БРОНИРОВАНИЯ -->
     <div id="booking-modal-overlay" class="booking-modal-overlay hidden">
         <div class="modal-content-wrapper flow-wrapper">
             <button id="close-modal-btn" class="close-modal-btn">✕</button>
 
-            <!-- ШАГ 0: ДЕТАЛИ -->
             <div id="step-details-container" class="step-container hidden">
                 <div class="movie-details-layout">
                     <div class="details-poster-col">
@@ -91,7 +87,6 @@
                 </div>
             </div>
 
-            <!-- ШАГ 1: КИНОТЕАТРЫ И СЕАНСЫ -->
             <div id="step-sessions-container" class="step-container hidden">
                 <div class="flow-header">
                     <button class="nav-btn-back" onclick="goToStep('step-details-container')">← Назад</button>
@@ -111,7 +106,6 @@
                 </div>
             </div>
 
-            <!-- ШАГ 2: ЗАЛ -->
             <div id="step-hall-container" class="step-container hidden">
                 <div class="flow-header">
                     <button class="nav-btn-back" onclick="goToStep('step-sessions-container')">← Назад</button>
@@ -138,7 +132,6 @@
                 </div>
             </div>
 
-            <!-- ШАГ 3: БАР -->
             <div id="step-services-container" class="step-container hidden">
                 <div class="flow-header">
                     <button class="nav-btn-back" onclick="goToStep('step-hall-container')">← Зал</button>
@@ -154,7 +147,6 @@
                 </div>
             </div>
 
-            <!-- ШАГ 4: ЧЕК И ИНСТРУКЦИЯ СБП -->
             <div id="step-checkout-container" class="step-container hidden">
                 <div id="checkout-main-content">
                     <div class="flow-header">
@@ -183,13 +175,19 @@
                         <div class="receipt-total">ИТОГО К ОПЛАТЕ: <span id="receipt-total-sum">0 ₽</span></div>
                     </div>
 
+                    <div class="checkout-phone-block" style="margin-top: 25px; margin-bottom: 5px;">
+                        <label for="checkout-phone" style="display: block; margin-bottom: 8px; color: #fff; font-size: 14px; font-weight: 500;">
+                            Номер телефона для получения СМС с билетами:
+                        </label>
+                        <input type="tel" id="checkout-phone" placeholder="+7 (999) 123-45-67" style="width: 100%; background: #131118; border: 1px solid #444; color: white; padding: 14px; border-radius: 10px; font-size: 15px; box-sizing: border-box; outline: none;">
+                    </div>
+
                     <div class="step-navigation-buttons" id="initial-pay-btn-container" style="margin-top: 20px;">
                         <button class="nav-btn-back" onclick="goToStep('step-services-container')">← Изменить заказ</button>
                         <button class="action-accent-btn" onclick="openAcquiring()">Перейти к оплате</button>
                     </div>
                 </div>
 
-                <!-- Экран успеха -->
                 <div id="final-success-block" class="final-success-banner hidden">
                     <div class="success-icon">🎫</div>
                     <h2>Заказ <span id="final-order-number" style="color:var(--accent);">#0000</span> успешно оплачен!</h2>
@@ -200,7 +198,6 @@
         </div>
     </div>
 
-    <!-- ИМИТАЦИЯ ПЛАТЕЖНОГО ШЛЮЗА (ЭКВАЙРИНГ) -->
     <div id="acquiring-overlay" class="overlay-modal hidden" style="z-index: 3000;">
         <div class="acquiring-modal">
             <div id="acq-step-1">
@@ -229,6 +226,6 @@
         </div>
     </div>
 
-    <script src="main.js?v=13.0"></script>
+    <script src="main.js?v=14.0"></script>
 </body>
 </html>
