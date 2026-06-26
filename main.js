@@ -1,14 +1,12 @@
 /**
- * main.js — Система "КИНОСФЕРА" (Выбор города, адреса и генерация сеансов)
+ * main.js — Система "КИНОСФЕРА" (Валидация телефона и авторизация)
  */
 
 const SYSTEM_TODAY = new Date();
 SYSTEM_TODAY.setHours(0, 0, 0, 0);
 
-// Глобальное состояние города
 let currentCity = "Москва";
 
-// База кинотеатров по городам
 const CINEMAS_BY_CITY = {
     "Москва": [
         "«Пионер» (Новоданиловская наб., 6, корп. 1)",
@@ -145,6 +143,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// ФУНКЦИЯ ПРОВЕРКИ СТАНДАРТА МОБИЛЬНОГО ТЕЛЕФОНА РФ
+function validateRussianPhone(phone) {
+    const regex = /^(\+7|8)?[\s\-]?\(?[9][0-9]{2}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$/;
+    return regex.test(phone);
+}
+
 function renderCatalog() {
     const todayGrid = document.getElementById('movies-grid');
     const upcomingGrid = document.getElementById('upcoming-movies-grid');
@@ -240,8 +244,6 @@ function initGlobalModals() {
             currentCity = e.target.dataset.city;
             if(cityBtn) cityBtn.textContent = `г. ${currentCity} ▼`;
             cityModal.classList.add('hidden');
-            
-            // Если мы находимся в модалке бронирования, обновляем список кинотеатров
             if (!document.getElementById('booking-modal-overlay').classList.contains('hidden')) {
                 renderCinemas();
             }
@@ -251,13 +253,32 @@ function initGlobalModals() {
     const loginBtn = document.getElementById('btn-profile-login');
     const loginModal = document.getElementById('modal-login');
     loginBtn?.addEventListener('click', () => loginModal.classList.remove('hidden'));
+    
+    // ВХОД С ПРОВЕРКОЙ ТЕЛЕФОНА И ПАРОЛЯ
     document.getElementById('global-submit-login')?.addEventListener('click', () => {
-        const field = document.getElementById('global-login-field');
-        if(field && field.value.length > 2) {
-            if(loginBtn) loginBtn.textContent = "Профиль";
-            loginModal.classList.add('hidden');
-        } else { alert('Введите данные'); }
+        const phoneField = document.getElementById('global-login-phone');
+        const passField = document.getElementById('global-pass-field');
+        
+        const phoneVal = phoneField ? phoneField.value.trim() : "";
+        const passVal = passField ? passField.value.trim() : "";
+
+        if(!phoneVal || !passVal) {
+            alert('Пожалуйста, заполните все поля!');
+            return;
+        }
+        if (!validateRussianPhone(phoneVal)) {
+            alert('Неверный формат номера телефона для входа!');
+            return;
+        }
+        if (passVal.length < 4) {
+            alert('Пароль должен быть не короче 4 символов!');
+            return;
+        }
+
+        if(loginBtn) loginBtn.textContent = "Профиль";
+        loginModal.classList.add('hidden');
     });
+
     document.querySelectorAll('.close-mini-modal').forEach(btn => {
         btn.addEventListener('click', (e) => e.target.closest('.overlay-modal').classList.add('hidden'));
     });
@@ -312,6 +333,9 @@ function openBookingModal(id) {
     document.getElementById('checkout-main-content').classList.remove('hidden');
     document.getElementById('final-success-block').classList.add('hidden');
     document.getElementById('initial-pay-btn-container').classList.remove('hidden');
+    
+    const phoneInput = document.getElementById('checkout-phone');
+    if(phoneInput) phoneInput.value = ""; // Очищаем инпут телефона при новом открытии
 
     document.querySelectorAll('.step-container').forEach(el => el.classList.add('hidden'));
     document.getElementById('step-details-container').classList.remove('hidden');
@@ -325,11 +349,7 @@ function selectDate(dateStr, btnElement) {
     currentOrder.selectedDate = dateStr;
     document.querySelectorAll('.date-tab').forEach(b => b.classList.remove('active'));
     btnElement.classList.add('active');
-    
-    // Если кинотеатр уже выбран, генерируем для него новые сеансы на новую дату
-    if (currentOrder.selectedCinema) {
-        generateRealisticSessions();
-    }
+    if (currentOrder.selectedCinema) { generateRealisticSessions(); }
 }
 
 function renderCinemas() {
@@ -337,7 +357,6 @@ function renderCinemas() {
     if(!container) return;
     container.innerHTML = '';
     document.getElementById('current-city-display').textContent = currentCity;
-    
     const cinemas = CINEMAS_BY_CITY[currentCity] || CINEMAS_BY_CITY["Москва"];
     
     cinemas.forEach(address => {
@@ -368,14 +387,12 @@ function generateRealisticSessions() {
     if (!sessionsGrid) return;
     sessionsGrid.innerHTML = '';
     
-    // Генерируем случайное правдоподобное количество сеансов (от 3 до 6)
     const count = Math.floor(Math.random() * 4) + 3;
     let startHour = 9; 
     
     for(let i = 0; i < count; i++) {
-        startHour += Math.floor(Math.random() * 2) + 1; // шаг в 1-2 часа
+        startHour += Math.floor(Math.random() * 2) + 1;
         if (startHour > 23) break;
-        
         let mins = Math.random() > 0.5 ? "00" : (Math.random() > 0.5 ? "15" : "45");
         const timeStr = `${startHour}:${mins}`;
         
@@ -384,11 +401,11 @@ function generateRealisticSessions() {
         btn.textContent = timeStr;
         btn.onclick = () => selectTime(timeStr);
         sessionsGrid.appendChild(btn);
-    }
+    });
 }
 
 function selectTime(timeStr) {
-    if (!currentOrder.selectedDate || !currentOrder.selectedCinema) { alert("Пожалуйста, сначала выберите дату и кинотеатр!"); return; }
+    if (!currentOrder.selectedDate) { alert("Пожалуйста, сначала выберите дату!"); return; }
     currentOrder.selectedTime = timeStr;
     goToStep('step-hall-container');
 }
@@ -410,7 +427,7 @@ function goToStep(stepId) {
 
     if (stepId === 'step-checkout-container') {
         document.getElementById('receipt-datetime').textContent = `${currentOrder.selectedDate} / ${currentOrder.selectedTime}`;
-        document.getElementById('receipt-cinema').textContent = currentOrder.selectedCinema;
+        document.getElementById('receipt-cinema').textContent = `${currentCity}, ${currentOrder.selectedCinema}`;
     }
 }
 
@@ -445,6 +462,7 @@ function handleSeatClick(el, id, row, col) {
     updateCheckoutSummary();
 }
 
+UX/UI zoom функций
 function zoomHall(delta) {
     currentHallZoom += delta;
     if (currentHallZoom < 0.4) currentHallZoom = 0.4;
@@ -456,6 +474,7 @@ function applyZoom() {
     if (wrapper) wrapper.style.transform = `scale(${currentHallZoom})`;
 }
 
+Бар логика
 function renderBarTabs() {
     const tabsContainer = document.getElementById('bar-category-tabs');
     if (!tabsContainer) return;
@@ -519,7 +538,7 @@ function updateServiceUI(itemId) {
         flavorVal = flavorSelect.options[flavorSelect.selectedIndex].value;
         if (!imgUrl) imgUrl = flavorSelect.options[flavorSelect.selectedIndex].getAttribute('data-img'); 
     }
-    const imgEl = document.getElementById(`img-${itemId}`);
+    const imgEl = document.getElementById('img-' + itemId);
     if (imgEl && imgUrl) imgEl.src = imgUrl;
 
     const fullId = `${sizeSelect.value}${flavorVal ? '_' + flavorVal : ''}`;
@@ -582,7 +601,25 @@ function updateCheckoutSummary() {
     }
 }
 
+// ОБЯЗАТЕЛЬНАЯ ВАЛИДАЦИЯ НОМЕРА ПЕРЕД ОПЛАТОЙ
 function openAcquiring() {
+    const phoneInput = document.getElementById('checkout-phone');
+    const phoneValue = phoneInput ? phoneInput.value.trim() : "";
+
+    if (!phoneValue) {
+        alert("Пожалуйста, введите номер телефона для отправки электронных билетов!");
+        if (phoneInput) phoneInput.focus();
+        return;
+    }
+
+    if (!validateRussianPhone(phoneValue)) {
+        alert("Неверный формат номера мобильного телефона! Введите номер в российском стандарте (например: +79991234567 или 89991234567).");
+        if (phoneInput) phoneInput.focus();
+        return;
+    }
+
+    currentOrder.userPhone = phoneValue;
+
     document.getElementById('acquiring-overlay').classList.remove('hidden');
     document.getElementById('acq-step-1').classList.remove('hidden');
     document.getElementById('acq-step-2').classList.add('hidden');
@@ -600,7 +637,7 @@ function startFakeProcessing() {
     statusText.textContent = "Связь с банком...";
 
     setTimeout(() => { statusText.textContent = "Обработка транзакции..."; }, 1500);
-    setTimeout(() => { statusText.textContent = "Подтверждение..."; }, 3000);
+    setTimeout(() => { statusText.textContent = "Подтверждение платежа..."; }, 3000);
 
     setTimeout(() => {
         closeAcquiring();
