@@ -1,5 +1,5 @@
 /**
- * main.js — Система "КИНОСФЕРА" (v16.0 - Исправленный JavaScript)
+ * main.js — Система "КИНОСФЕРА" (v16.1 - Полностью исправленный скрипт)
  */
 
 const SYSTEM_TODAY = new Date();
@@ -26,7 +26,7 @@ const CINEMAS_BY_CITY = {
         "Троллейная улица, 130А",
         "Военная улица, 5",
         "Красный проспект, 101",
-        "proспект Дзержинского, 2/2"
+        "проспект Дзержинского, 2/2"
     ],
     "Екатеринбург": [
         "улица 8 Марта, 46",
@@ -40,7 +40,7 @@ const CINEMAS_BY_CITY = {
     "Казань": [
         "улица Николая Ершова, 1А",
         "проспект Победы, 91",
-        "проспект Ямашева, 46",
+        "proспект Ямашева, 46",
         "улица Достоевского, 30",
         "улица Хусаина Мавлютова, 45"
     ]
@@ -142,6 +142,11 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error("Ошибка при инициализации:", error);
     }
 });
+
+function validateRussianPhone(phone) {
+    const regex = /^(\+7|8)?[\s\-]?\(?[9][0-9]{2}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$/;
+    return regex.test(phone);
+}
 
 function renderCatalog() {
     const todayGrid = document.getElementById('movies-grid');
@@ -324,6 +329,10 @@ function openBookingModal(id) {
 
     document.getElementById('checkout-main-content').classList.remove('hidden');
     document.getElementById('final-success-block').classList.add('hidden');
+    
+    const payBlock = document.getElementById('payment-instruction-block');
+    if(payBlock) payBlock.classList.add('hidden');
+    
     document.getElementById('initial-pay-btn-container').classList.remove('hidden');
     
     const phoneInput = document.getElementById('checkout-phone');
@@ -456,6 +465,7 @@ function handleSeatClick(el, id, row, col) {
     updateCheckoutSummary();
 }
 
+// UX/UI zoom функций
 function zoomHall(delta) {
     currentHallZoom += delta;
     if (currentHallZoom < 0.4) currentHallZoom = 0.4;
@@ -467,6 +477,7 @@ function applyZoom() {
     if (wrapper) wrapper.style.transform = `scale(${currentHallZoom})`;
 }
 
+// Бар логика
 function renderBarTabs() {
     const tabsContainer = document.getElementById('bar-category-tabs');
     if (!tabsContainer) return;
@@ -580,6 +591,9 @@ function updateCheckoutSummary() {
     document.getElementById('receipt-total-sum').textContent = `${totalSum} ₽`;
     document.getElementById('acq-sum').textContent = totalSum;
     
+    const sbpTotal = document.getElementById('sbp-total-sum');
+    if (sbpTotal) sbpTotal.textContent = totalSum; 
+    
     const seatsListEl = document.getElementById('receipt-seats-list');
     if (seatsListEl) {
         seatsListEl.innerHTML = ticketsCount > 0 
@@ -641,7 +655,6 @@ async function startFakeProcessing() {
     
     generatedOrderNumber = Math.floor(1000 + Math.random() * 9000);
 
-    // Зарезервированный фундамент отправки данных на Node.js бот-сервер
     try {
         await fetch('http://localhost:3000/api/payment', {
             method: 'POST',
@@ -654,7 +667,6 @@ async function startFakeProcessing() {
             })
         });
     } catch (e) {
-        // Локальное исключение игнорируем, чтобы сайт работал "в прежнем автономном режиме"
         console.log("Бот-сервер пока не запущен, выполняем локальный флоу");
     }
 
