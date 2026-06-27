@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Сеть кинотеатров «КИНОСФЕРА»</title>
-    <link rel="stylesheet" href="css.css?v=16.0">
+    <link rel="stylesheet" href="css.css?v=17.0">
 </head>
 <body>
 
@@ -191,46 +191,46 @@
                         <button class="nav-btn-back" onclick="goToStep('step-services-container')">← Изменить заказ</button>
                         <button class="action-accent-btn" onclick="openAcquiring()">Перейти к оплате</button>
                     </div>
+
+                    <div id="payment-instruction-block" class="payment-instruction-banner hidden">
+                        <div class="payment-header">
+                            <h3>Оплата заказа <span id="order-number-display" style="color:var(--accent);">#0000</span></h3>
+                            <p>Для моментального получения билетов переведите итоговую сумму по Системе быстрых платежей (СБП).</p>
+                        </div>
+                        <div class="payment-details-box">
+                            <div class="payment-row">
+                                <span>Сумма к переводу:</span>
+                                <strong class="payment-sum"><span id="sbp-total-sum">0</span> ₽</strong>
+                            </div>
+                            <div class="payment-row">
+                                <span>Банк получателя:</span>
+                                <strong>Озон Банк (Ozon)</strong>
+                            </div>
+                            <div class="payment-row">
+                                <span>Номер телефона:</span>
+                                <div class="copy-box">
+                                    <strong id="phone-to-copy">+7 (919) 638-28-53</strong>
+                                    <button class="copy-btn" onclick="copyPhone()" id="copy-btn-icon">📋</button>
+                                </div>
+                            </div>
+                            <div class="payment-warning">
+                                ⚠️ В комментарии к переводу ОБЯЗАТЕЛЬНО укажите номер: <b id="order-number-comment">0000</b>
+                            </div>
+                        </div>
+                        <button class="action-accent-btn full-width-btn" style="background: #28a745;" onclick="finishOrder()">Я перевел деньги ✅</button>
+                    </div>
                 </div>
 
                 <div id="final-success-block" class="final-success-banner hidden">
                     <div class="success-icon">🎫</div>
-                    <h2>Заказ <span id="final-order-number" style="color:var(--accent);">#0000</span> успешно оплачен!</h2>
-                    <p>Билеты и электронный чек отправлены вам по СМС. Приятного просмотра!</p>
+                    <h2>Заказ <span id="final-order-number" style="color:var(--accent);">#0000</span> успешно оформлен!</h2>
+                    <p>Мы проверяем поступление средств. Электронные билеты и чек придут в ваш профиль и по SMS в течение 2-5 минут. Приятного просмотра!</p>
                     <button class="nav-btn-back" style="margin-top:20px; border: 1px solid #444; padding: 10px 20px; border-radius: 8px;" onclick="location.reload()">Вернуться на главную</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="acquiring-overlay" class="overlay-modal hidden" style="z-index: 3000;">
-        <div class="acquiring-modal">
-            <div id="acq-step-1">
-                <div class="acq-header">
-                    <div>Оплата заказа</div>
-                    <div style="font-size:24px; font-weight:bold;"><span id="acq-sum">0</span> ₽</div>
-                </div>
-                <div class="acq-body">
-                    <p style="color:#888; font-size:14px; text-align:center; margin-bottom: 20px;">Выберите способ оплаты</p>
-                    <button class="acq-method-btn sbp-btn" onclick="startFakeProcessing()">
-                        <span style="font-size:20px;">⚡</span> Оплатить по СБП
-                    </button>
-                    <button class="acq-method-btn card-btn" onclick="startFakeProcessing()">
-                        Оплатить картой
-                    </button>
-                </div>
-                <button class="acq-cancel" onclick="closeAcquiring()">Отмена</button>
-            </div>
-            <div id="acq-step-2" class="hidden">
-                <div class="acq-loader-container">
-                    <div class="spinner"></div>
-                    <h3 id="acq-status-text">Связь с банком...</h3>
-                    <p style="color:#777; font-size:13px; margin-top:10px;">Пожалуйста, не закрывайте окно</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="main.js?v=16.0"></script>
+    <script src="main.js?v=17.0"></script>
 </body>
 </html>
