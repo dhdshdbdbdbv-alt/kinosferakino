@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Сеть кинотеатров «КИНОСФЕРА»</title>
-    <link rel="stylesheet" href="css.css?v=14.0">
+    <link rel="stylesheet" href="css.css?v=16.0">
 </head>
 <body>
 
@@ -175,11 +175,16 @@
                         <div class="receipt-total">ИТОГО К ОПЛАТЕ: <span id="receipt-total-sum">0 ₽</span></div>
                     </div>
 
-                    <div class="checkout-phone-block" style="margin-top: 25px; margin-bottom: 5px;">
-                        <label for="checkout-phone" style="display: block; margin-bottom: 8px; color: #fff; font-size: 14px; font-weight: 500;">
+                    <div class="checkout-phone-block" style="margin-top: 25px; margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 8px; color: #fff; font-size: 14px; font-weight: 500;">
                             Номер телефона для получения СМС с билетами:
                         </label>
-                        <input type="tel" id="checkout-phone" placeholder="+7 (999) 123-45-67" style="width: 100%; background: #131118; border: 1px solid #444; color: white; padding: 14px; border-radius: 10px; font-size: 15px; box-sizing: border-box; outline: none;">
+                        <input type="tel" id="checkout-phone" placeholder="+7 (999) 123-45-67" style="width: 100%; background: #131118; border: 1px solid #444; color: white; padding: 14px; border-radius: 10px; font-size: 15px; box-sizing: border-box; outline: none; margin-bottom: 15px;">
+                        
+                        <label style="display: block; margin-bottom: 8px; color: #fff; font-size: 14px; font-weight: 500;">
+                            Придумайте пароль для доступа к билетам в ЛК:
+                        </label>
+                        <input type="password" id="checkout-password" placeholder="Минимум 4 символа" style="width: 100%; background: #131118; border: 1px solid #444; color: white; padding: 14px; border-radius: 10px; font-size: 15px; box-sizing: border-box; outline: none;">
                     </div>
 
                     <div class="step-navigation-buttons" id="initial-pay-btn-container" style="margin-top: 20px;">
@@ -191,7 +196,7 @@
                 <div id="final-success-block" class="final-success-banner hidden">
                     <div class="success-icon">🎫</div>
                     <h2>Заказ <span id="final-order-number" style="color:var(--accent);">#0000</span> успешно оплачен!</h2>
-                    <p>Билеты и чек отправлены вам по SMS и доступны в личном кабинете. Приятного просмотра!</p>
+                    <p>Билеты и электронный чек отправлены вам по СМС. Приятного просмотра!</p>
                     <button class="nav-btn-back" style="margin-top:20px; border: 1px solid #444; padding: 10px 20px; border-radius: 8px;" onclick="location.reload()">Вернуться на главную</button>
                 </div>
             </div>
@@ -226,6 +231,6 @@
         </div>
     </div>
 
-    <script src="main.js?v=14.0"></script>
+    <script src="main.js?v=16.0"></script>
 </body>
 </html>
