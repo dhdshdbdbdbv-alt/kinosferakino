@@ -1,5 +1,5 @@
 /**
- * main.js — Система "КИНОСФЕРА" (Валидация телефона и авторизация)
+ * main.js — Система "КИНОСФЕРА" (Исправленная версия v15.0)
  */
 
 const SYSTEM_TODAY = new Date();
@@ -120,6 +120,7 @@ let currentHallZoom = 1;
 let activeBarTab = "cat_combo";
 let generatedOrderNumber = "0000";
 
+// Привязка функций к window для HTML onclick
 window.goToStep = goToStep;
 window.zoomHall = zoomHall;
 window.switchBarTab = switchBarTab;
@@ -129,8 +130,8 @@ window.selectDate = selectDate;
 window.selectCinema = selectCinema;
 window.selectTime = selectTime;
 window.openAcquiring = openAcquiring;
-window.closeAcquiring = closeAcquiring;
-window.startFakeProcessing = startFakeProcessing;
+window.copyPhone = copyPhone;
+window.finishOrder = finishOrder;
 
 document.addEventListener('DOMContentLoaded', () => {
     try {
@@ -139,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
         initGlobalModals();
         initStaticEventListeners();
     } catch (error) {
-        console.error(error);
+        console.error("Ошибка при инициализации:", error);
     }
 });
 
@@ -332,6 +333,10 @@ function openBookingModal(id) {
 
     document.getElementById('checkout-main-content').classList.remove('hidden');
     document.getElementById('final-success-block').classList.add('hidden');
+    
+    const payBlock = document.getElementById('payment-instruction-block');
+    if(payBlock) payBlock.classList.add('hidden');
+    
     document.getElementById('initial-pay-btn-container').classList.remove('hidden');
     
     const phoneInput = document.getElementById('checkout-phone');
@@ -382,6 +387,7 @@ function selectCinema(address, btn) {
     document.getElementById('sessions-block').scrollIntoView({ behavior: 'smooth', block: 'end' });
 }
 
+// ВОТ ТУТ БЫЛА ОШИБКА, ИЗ-ЗА КОТОРОЙ ЛОМАЛСЯ ВЕСЬ КОД - СЕЙЧАС ИСПРАВЛЕНО
 function generateRealisticSessions() {
     const sessionsGrid = document.getElementById('dynamic-sessions-grid');
     if (!sessionsGrid) return;
@@ -401,7 +407,7 @@ function generateRealisticSessions() {
         btn.textContent = timeStr;
         btn.onclick = () => selectTime(timeStr);
         sessionsGrid.appendChild(btn);
-    });
+    }
 }
 
 function selectTime(timeStr) {
@@ -462,7 +468,6 @@ function handleSeatClick(el, id, row, col) {
     updateCheckoutSummary();
 }
 
-UX/UI zoom функций
 function zoomHall(delta) {
     currentHallZoom += delta;
     if (currentHallZoom < 0.4) currentHallZoom = 0.4;
@@ -474,7 +479,6 @@ function applyZoom() {
     if (wrapper) wrapper.style.transform = `scale(${currentHallZoom})`;
 }
 
-Бар логика
 function renderBarTabs() {
     const tabsContainer = document.getElementById('bar-category-tabs');
     if (!tabsContainer) return;
@@ -538,7 +542,7 @@ function updateServiceUI(itemId) {
         flavorVal = flavorSelect.options[flavorSelect.selectedIndex].value;
         if (!imgUrl) imgUrl = flavorSelect.options[flavorSelect.selectedIndex].getAttribute('data-img'); 
     }
-    const imgEl = document.getElementById('img-' + itemId);
+    const imgEl = document.getElementById(`img-${itemId}`);
     if (imgEl && imgUrl) imgEl.src = imgUrl;
 
     const fullId = `${sizeSelect.value}${flavorVal ? '_' + flavorVal : ''}`;
@@ -586,7 +590,9 @@ function updateCheckoutSummary() {
 
     document.getElementById('receipt-seats-count').textContent = ticketsCount;
     document.getElementById('receipt-total-sum').textContent = `${totalSum} ₽`;
-    document.getElementById('acq-sum').textContent = totalSum;
+    
+    const sbpTotal = document.getElementById('sbp-total-sum');
+    if (sbpTotal) sbpTotal.textContent = totalSum; 
     
     const seatsListEl = document.getElementById('receipt-seats-list');
     if (seatsListEl) {
@@ -601,7 +607,7 @@ function updateCheckoutSummary() {
     }
 }
 
-// ОБЯЗАТЕЛЬНАЯ ВАЛИДАЦИЯ НОМЕРА ПЕРЕД ОПЛАТОЙ
+// ОБЯЗАТЕЛЬНАЯ ВАЛИДАЦИЯ НОМЕРА ПЕРЕД ОПЛАТОЙ ПО СБП
 function openAcquiring() {
     const phoneInput = document.getElementById('checkout-phone');
     const phoneValue = phoneInput ? phoneInput.value.trim() : "";
@@ -620,32 +626,39 @@ function openAcquiring() {
 
     currentOrder.userPhone = phoneValue;
 
-    document.getElementById('acquiring-overlay').classList.remove('hidden');
-    document.getElementById('acq-step-1').classList.remove('hidden');
-    document.getElementById('acq-step-2').classList.add('hidden');
-}
-
-function closeAcquiring() {
-    document.getElementById('acquiring-overlay').classList.add('hidden');
-}
-
-function startFakeProcessing() {
-    document.getElementById('acq-step-1').classList.add('hidden');
-    document.getElementById('acq-step-2').classList.remove('hidden');
+    // Генерируем номер заказа и показываем блок с инструкцией СБП
+    generatedOrderNumber = Math.floor(1000 + Math.random() * 9000);
+    const numDisplay = document.getElementById('order-number-display');
+    const numComment = document.getElementById('order-number-comment');
+    const finalNum = document.getElementById('final-order-number');
     
-    const statusText = document.getElementById('acq-status-text');
-    statusText.textContent = "Связь с банком...";
+    if(numDisplay) numDisplay.textContent = `#${generatedOrderNumber}`;
+    if(numComment) numComment.textContent = generatedOrderNumber;
+    if(finalNum) finalNum.textContent = `#${generatedOrderNumber}`;
+    
+    document.getElementById('initial-pay-btn-container').classList.add('hidden');
+    
+    const payBlock = document.getElementById('payment-instruction-block');
+    if(payBlock) {
+        payBlock.classList.remove('hidden');
+        payBlock.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
+}
 
-    setTimeout(() => { statusText.textContent = "Обработка транзакции..."; }, 1500);
-    setTimeout(() => { statusText.textContent = "Подтверждение платежа..."; }, 3000);
+function copyPhone() {
+    const phone = "+79196382853";
+    navigator.clipboard.writeText(phone).then(() => {
+        const btn = document.getElementById('copy-btn-icon');
+        if(btn) {
+            btn.textContent = "✅";
+            setTimeout(() => btn.textContent = "📋", 2000);
+        }
+    }).catch(err => console.error('Ошибка копирования', err));
+}
 
-    setTimeout(() => {
-        closeAcquiring();
-        generatedOrderNumber = Math.floor(1000 + Math.random() * 9000);
-        document.getElementById('final-order-number').textContent = `#${generatedOrderNumber}`;
-        document.getElementById('checkout-main-content').classList.add('hidden');
-        document.getElementById('final-success-block').classList.remove('hidden');
-    }, 4500);
+function finishOrder() {
+    document.getElementById('checkout-main-content').classList.add('hidden');
+    document.getElementById('final-success-block').classList.remove('hidden');
 }
 
 function initStaticEventListeners() {
