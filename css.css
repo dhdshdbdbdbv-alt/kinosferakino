@@ -143,6 +143,7 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ro
 .action-accent-btn:hover { background: #b80710; }
 .full-width-btn { flex: 1; text-align: center; }
 
+/* ЧЕК */
 .receipt-paper { background: #e0e0e0; color: #111; padding: 25px; border-radius: 8px; font-family: monospace; position: relative; margin-bottom: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
 .receipt-paper::before { content: ''; position: absolute; top: -5px; left: 0; right: 0; height: 10px; background: repeating-linear-gradient(45deg, transparent, transparent 5px, #e0e0e0 5px, #e0e0e0 10px); }
 .receipt-title { text-align: center; margin: 0 0 15px 0; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; }
@@ -152,25 +153,28 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ro
 .receipt-sub-row { font-size: 13px; color: #444; margin-bottom: 10px; padding-left: 10px; line-height: 1.5; }
 .receipt-total { font-size: 20px; font-weight: bold; text-align: right; }
 
-.acquiring-modal { background: #fff; width: 100%; max-width: 400px; border-radius: 16px; overflow: hidden; color: #000; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-.acq-header { background: #f8f9fa; padding: 20px; text-align: center; border-bottom: 1px solid #eee; }
-.acq-body { padding: 25px 20px; display: flex; flex-direction: column; gap: 15px; }
-.acq-method-btn { padding: 15px; border-radius: 10px; border: 1px solid #ddd; background: white; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; }
-.acq-method-btn:hover { border-color: #000; }
-.sbp-btn { background: #000; color: white; border-color: #000; }
-.sbp-btn:hover { background: #222; }
-.acq-cancel { width: 100%; padding: 15px; background: none; border: none; border-top: 1px solid #eee; color: #888; cursor: pointer; font-size: 14px; }
-.acq-cancel:hover { background: #f8f9fa; color: #000; }
-.acq-loader-container { padding: 50px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-.spinner { width: 50px; height: 50px; border: 4px solid #f3f3f3; border-top: 4px solid #000; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
-@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+/* ИНСТРУКЦИЯ СБП */
+.payment-instruction-banner { background: #1c1822; border: 1px solid var(--accent); padding: 25px; border-radius: 12px; margin-top: 20px; animation: fadeIn 0.3s ease; }
+.payment-header h3 { margin: 0 0 10px 0; color: #fff; font-size: 20px;}
+.payment-header p { color: #aaa; font-size: 14px; margin: 0 0 20px 0; line-height: 1.4; }
+.payment-details-box { background: #131118; padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #2a2535; }
+.payment-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 15px; flex-wrap: wrap; gap: 10px;}
+.payment-row:last-child { margin-bottom: 0; }
+.payment-row span { color: #8e8e93; }
+.payment-sum { font-size: 22px; color: var(--accent); }
+.copy-box { display: flex; align-items: center; gap: 10px; }
+.copy-btn { background: #2a2535; border: 1px solid #444; color: white; border-radius: 6px; padding: 6px 10px; cursor: pointer; transition: 0.2s; font-size: 14px;}
+.copy-btn:hover { background: var(--accent); color: #000; border-color: var(--accent); }
+.payment-warning { margin-top: 15px; padding-top: 15px; border-top: 1px dashed #444; font-size: 13px; color: #ffcc00; line-height: 1.5; }
 
+/* ФИНАЛЬНЫЙ УСПЕХ */
 .final-success-banner { text-align: center; padding: 40px 20px; animation: fadeIn 0.4s ease; }
 .success-icon { font-size: 60px; margin-bottom: 20px; display: inline-block; animation: bounce 1s ease; }
 @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-20px);} 60% {transform: translateY(-10px);} }
 .final-success-banner h2 { color: #28a745; margin-bottom: 15px; font-size: 26px;}
 .final-success-banner p { color: #ccc; line-height: 1.6; margin-bottom: 30px; font-size: 15px;}
 
+/* МОБИЛЬНАЯ АДАПТАЦИЯ */
 @media (max-width: 900px) {
     .promo-banner { max-width: 90vw; height: 250px; }
     .promo-poster { display: none; } 
@@ -196,6 +200,8 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ro
     .service-img-box { width: 100px; height: 120px; align-self: center; }
     .service-selects { max-width: 100%; }
     .service-controls { justify-content: space-between; }
+    .payment-row { flex-direction: column; align-items: flex-start; gap: 5px; }
+    .copy-box { width: 100%; justify-content: space-between; }
 }
 
 @media (max-width: 480px) {
