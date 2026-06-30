@@ -385,18 +385,17 @@ function selectCinema(address, btn) {
     document.getElementById('sessions-block').scrollIntoView({ behavior: 'smooth', block: 'end' });
 }
 
-function generateRealisticSessions() {
-    // Простая хэш-функция: превращает любую строку в уникальное число
+// === НОВЫЕ ФУНКЦИИ ХЭШИРОВАНИЯ И ГЕНЕРАЦИИ СЕАНСОВ ===
+
 function getHash(str) {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
         hash = (hash << 5) - hash + str.charCodeAt(i);
-        hash |= 0; // Конвертация в 32-битное целое
+        hash |= 0; 
     }
     return Math.abs(hash);
 }
 
-// Псевдослучайный генератор на основе сида (аналог связки srand/rand)
 function seededRandom(seed) {
     const x = Math.sin(seed) * 10000;
     return x - Math.floor(x);
@@ -407,38 +406,27 @@ function generateRealisticSessions() {
     if (!sessionsGrid) return;
     sessionsGrid.innerHTML = '';
 
-    // Если нет кинотеатра или даты, прерываем
     if (!currentOrder.selectedDate || !currentOrder.selectedCinema) return;
 
-    // Формируем уникальный ключ сессии: "IDфильма_Дата_Кинотеатр"
     const uniqueString = `${currentOrder.movieId}_${currentOrder.selectedDate}_${currentOrder.selectedCinema}`;
-    
-    // Получаем числовой сид из строки
     let currentSeed = getHash(uniqueString);
 
-    // Генерируем количество сеансов от 3 до 7
     const count = Math.floor(seededRandom(currentSeed++) * 5) + 3;
-    
-    // Определяем время начала первого сеанса (с 8 до 10 утра)
     let startHour = 8 + Math.floor(seededRandom(currentSeed++) * 3); 
 
     for (let i = 0; i < count; i++) {
-        // Добавляем промежуток между сеансами (от 1 до 3 часов)
         if (i > 0) {
             startHour += Math.floor(seededRandom(currentSeed++) * 3) + 1;
         }
         
-        // Ограничиваем расписание полуночью
         if (startHour > 23) break;
 
-        // Генерируем фиксированные "красивые" минуты (00, 15, 30, 45)
         const minRand = seededRandom(currentSeed++);
         let mins = "00";
         if (minRand > 0.75) mins = "45";
         else if (minRand > 0.50) mins = "30";
         else if (minRand > 0.25) mins = "15";
 
-        // Форматируем часы, чтобы всегда было две цифры, если нужно (по желанию, здесь просто 9:00, 10:15)
         const timeStr = `${startHour}:${mins}`;
 
         const btn = document.createElement('button');
@@ -448,6 +436,8 @@ function generateRealisticSessions() {
         sessionsGrid.appendChild(btn);
     }
 }
+
+// =======================================================
 
 function selectTime(timeStr) {
     if (!currentOrder.selectedDate) { alert("Пожалуйста, сначала выберите дату!"); return; }
@@ -513,6 +503,7 @@ function zoomHall(delta) {
     if (currentHallZoom > 1.5) currentHallZoom = 1.5;
     applyZoom();
 }
+
 function applyZoom() {
     const wrapper = document.getElementById('hall-wrapper');
     if (wrapper) wrapper.style.transform = `scale(${currentHallZoom})`;
@@ -646,7 +637,6 @@ function updateCheckoutSummary() {
     }
 }
 
-// === ОТКРЫТИЕ ИНСТРУКЦИИ ОПЛАТЫ ПО СБП ===
 function openAcquiring() {
     const phoneInput = document.getElementById('checkout-phone');
     const passInput = document.getElementById('checkout-password');
@@ -675,7 +665,6 @@ function openAcquiring() {
     currentOrder.userPhone = phoneValue;
     currentOrder.userPassword = passValue;
 
-    // Генерируем номер заказа
     generatedOrderNumber = Math.floor(1000 + Math.random() * 9000);
     const numDisplay = document.getElementById('order-number-display');
     const numComment = document.getElementById('order-number-comment');
@@ -685,7 +674,6 @@ function openAcquiring() {
     if(numComment) numComment.textContent = generatedOrderNumber;
     if(finalNum) finalNum.textContent = `#${generatedOrderNumber}`;
     
-    // Прячем первичную кнопку и показываем блок с инструкцией СБП
     document.getElementById('initial-pay-btn-container').classList.add('hidden');
     
     const payBlock = document.getElementById('payment-instruction-block');
@@ -694,8 +682,6 @@ function openAcquiring() {
         payBlock.scrollIntoView({ behavior: 'smooth', block: 'end' });
     }
 
-    // Отправка данных на твой будущий бэкенд (бот)
-    // Обернуто в try/catch, чтобы не ломать сайт, если сервера еще нет
     try {
         const totalSumText = document.getElementById('receipt-total-sum').textContent.replace(' ₽', '');
         fetch('http://localhost:3000/api/payment', {
