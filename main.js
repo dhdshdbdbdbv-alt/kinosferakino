@@ -386,19 +386,61 @@ function selectCinema(address, btn) {
 }
 
 function generateRealisticSessions() {
+    // Простая хэш-функция: превращает любую строку в уникальное число
+function getHash(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        hash = (hash << 5) - hash + str.charCodeAt(i);
+        hash |= 0; // Конвертация в 32-битное целое
+    }
+    return Math.abs(hash);
+}
+
+// Псевдослучайный генератор на основе сида (аналог связки srand/rand)
+function seededRandom(seed) {
+    const x = Math.sin(seed) * 10000;
+    return x - Math.floor(x);
+}
+
+function generateRealisticSessions() {
     const sessionsGrid = document.getElementById('dynamic-sessions-grid');
     if (!sessionsGrid) return;
     sessionsGrid.innerHTML = '';
+
+    // Если нет кинотеатра или даты, прерываем
+    if (!currentOrder.selectedDate || !currentOrder.selectedCinema) return;
+
+    // Формируем уникальный ключ сессии: "IDфильма_Дата_Кинотеатр"
+    const uniqueString = `${currentOrder.movieId}_${currentOrder.selectedDate}_${currentOrder.selectedCinema}`;
     
-    const count = Math.floor(Math.random() * 4) + 3;
-    let startHour = 9; 
+    // Получаем числовой сид из строки
+    let currentSeed = getHash(uniqueString);
+
+    // Генерируем количество сеансов от 3 до 7
+    const count = Math.floor(seededRandom(currentSeed++) * 5) + 3;
     
-    for(let i = 0; i < count; i++) {
-        startHour += Math.floor(Math.random() * 2) + 1;
-        if (startHour > 23) break;
-        let mins = Math.random() > 0.5 ? "00" : (Math.random() > 0.5 ? "15" : "45");
-        const timeStr = `${startHour}:${mins}`;
+    // Определяем время начала первого сеанса (с 8 до 10 утра)
+    let startHour = 8 + Math.floor(seededRandom(currentSeed++) * 3); 
+
+    for (let i = 0; i < count; i++) {
+        // Добавляем промежуток между сеансами (от 1 до 3 часов)
+        if (i > 0) {
+            startHour += Math.floor(seededRandom(currentSeed++) * 3) + 1;
+        }
         
+        // Ограничиваем расписание полуночью
+        if (startHour > 23) break;
+
+        // Генерируем фиксированные "красивые" минуты (00, 15, 30, 45)
+        const minRand = seededRandom(currentSeed++);
+        let mins = "00";
+        if (minRand > 0.75) mins = "45";
+        else if (minRand > 0.50) mins = "30";
+        else if (minRand > 0.25) mins = "15";
+
+        // Форматируем часы, чтобы всегда было две цифры, если нужно (по желанию, здесь просто 9:00, 10:15)
+        const timeStr = `${startHour}:${mins}`;
+
         const btn = document.createElement('button');
         btn.className = 'session-btn';
         btn.textContent = timeStr;
