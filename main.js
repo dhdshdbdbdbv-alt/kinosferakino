@@ -69,7 +69,6 @@ const moviesData = [
     { id: 18, title: "Чудесный мир", poster: "wondaryworld.jpg", genre: "Приключения", age: "12+", price: 500, isUpcoming: false, country: "США", director: "Стивен Спилберг", cast: "Том Холланд", desc: "Подростки находят портал в параллельную экосистему." },
     { id: 19, title: "Молодые и влюбленные", poster: "young-and-loved.jpg", genre: "Мелодрама", age: "16+", price: 450, isUpcoming: false, country: "Франция", director: "Селин Сьямма", cast: "Адель Энель", desc: "Трогательная мелодрама о первой любви." },
 
-    // ОБНОВЛЕННЫЕ ДАТЫ (Будущие даты относительно июня 2026)
     { id: 101, title: "Бизнес ночью", poster: "buisnesatnight.jpg", genre: "Триллер", age: "18+", price: 600, isUpcoming: true, releaseDate: "2026-07-25", country: "США", director: "Дэвид Финчер", cast: "Кристиан Бэйл", desc: "Когда закон засыпает, просыпаются настоящие деньги." },
     { id: 102, title: "Цыпленок: Пух и прах", poster: "chickenpuhandprah.jpg", genre: "Анимация", age: "6+", price: 450, isUpcoming: true, releaseDate: "2026-07-18", country: "Великобритания", director: "Питер Лорд", cast: "Саймон Пегг", desc: "Самое дерзкое ограбление курятника века." },
     { id: 103, title: "Колония", poster: "colony(2026).jpg", genre: "Фантастика", age: "16+", price: 700, isUpcoming: true, releaseDate: "2026-08-02", country: "США", director: "Дени Вильнев", cast: "Оскар Айзек", desc: "Экспедиция на Марс находит то, что лучше было не тревожить." },
@@ -376,29 +375,10 @@ function renderCinemas() {
     currentOrder.selectedTime = null;
 }
 
-function selectCinema(address, btn) {
-    currentOrder.selectedCinema = address;
-    document.querySelectorAll('.cinema-select-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    
-    generateRealisticSessions();
-    document.getElementById('sessions-block').classList.remove('hidden');
-    document.getElementById('sessions-block').scrollIntoView({ behavior: 'smooth', block: 'end' });
-}
-
-// === НОВАЯ ЛОГИКА ГЕНЕРАЦИИ РЕАЛИСТИЧНЫХ СЕАНСОВ ===
-
 const REALISTIC_SCHEDULES = {
-    // Мультфильмы и семейное кино (утро и день)
     'family_kids': ['09:00', '11:15', '13:30', '15:45', '18:00'], 
-    
-    // Блокбастеры и популярное кино (частые сеансы весь день)
     'blockbuster': ['10:30', '13:20', '16:10', '19:00', '21:50', '00:30'], 
-    
-    // Драмы, детективы и авторское кино (редкие сеансы)
     'drama_indie': ['12:15', '16:40', '20:10'], 
-    
-    // Хорроры и триллеры (преимущественно вечер и ночь)
     'night_thriller': ['19:30', '21:45', '23:55'] 
 };
 
@@ -409,28 +389,23 @@ function generateRealisticSessions() {
 
     if (!currentOrder.selectedDate || !currentOrder.selectedCinema) return;
 
-    // Находим текущий фильм, чтобы подобрать правильный шаблон
     const movie = moviesData.find(m => m.id === currentOrder.movieId);
     let schedule = [];
 
     if (movie) {
-        // Подбираем расписание на основе жанра и возраста
         if (movie.genre.includes("Анимация") || movie.age === "6+") {
             schedule = REALISTIC_SCHEDULES['family_kids'];
         } else if (movie.genre.includes("Хоррор") || movie.genre.includes("Триллер") || movie.genre.includes("Катастрофа")) {
             schedule = REALISTIC_SCHEDULES['night_thriller'];
         } else if (movie.price >= 600) {
-            // Дорогие билеты обычно у громких премьер-блокбастеров
             schedule = REALISTIC_SCHEDULES['blockbuster'];
         } else {
-            // Стандартное расписание для всех остальных
             schedule = REALISTIC_SCHEDULES['drama_indie'];
         }
     } else {
-        schedule = REALISTIC_SCHEDULES['drama_indie']; // Фолбэк
+        schedule = REALISTIC_SCHEDULES['drama_indie'];
     }
 
-    // Отрисовываем фиксированные кнопки сеансов
     schedule.forEach(timeStr => {
         const btn = document.createElement('button');
         btn.className = 'session-btn';
@@ -439,8 +414,6 @@ function generateRealisticSessions() {
         sessionsGrid.appendChild(btn);
     });
 }
-
-// =======================================================
 
 function selectTime(timeStr) {
     if (!currentOrder.selectedDate) { alert("Пожалуйста, сначала выберите дату!"); return; }
@@ -469,10 +442,36 @@ function goToStep(stepId) {
     }
 }
 
+// === ОБНОВЛЕННЫЙ АЛГОРИТМ ГЕНЕРАЦИИ ДЕФИЦИТА МЕСТ ===
 function renderSeats() {
     const container = document.getElementById('dynamic-hall-grid');
     if (!container) return;
     container.innerHTML = '';
+    
+    // 1. Случайное число свободных мест от 4 до 8
+    const totalFree = Math.floor(Math.random() * 5) + 4;
+    const freeSeats = new Set();
+
+    // 2. Гарантируем 2 места рядом в центре (ряды 5-7, места 7-11)
+    const centerRow = Math.floor(Math.random() * 3) + 5;
+    const centerCol = Math.floor(Math.random() * 4) + 7;
+    freeSeats.add(`${centerRow}-${centerCol}`);
+    freeSeats.add(`${centerRow}-${centerCol + 1}`);
+
+    // 3. Распределяем остальные свободные места рандомно
+    let remainingFree = totalFree - 2;
+    while (remainingFree > 0) {
+        const r = Math.floor(Math.random() * 10) + 1;
+        const c = Math.floor(Math.random() * 18) + 1;
+        const seatKey = `${r}-${c}`;
+        // Проверяем, чтобы не совпало с уже добавленными
+        if (!freeSeats.has(seatKey)) {
+            freeSeats.add(seatKey);
+            remainingFree--;
+        }
+    }
+
+    // 4. Отрисовка зала с применением фильтра
     let seatNumber = 1;
     for (let r = 0; r < 10; r++) {
         const rowDiv = document.createElement('div');
@@ -484,13 +483,22 @@ function renderSeats() {
             seat.textContent = c + 1;
             const currentSeatId = seatNumber++; 
             if (c === 9) seat.style.marginLeft = '20px'; 
-            if (Math.random() < 0.20) { seat.classList.add('occupied'); } 
-            else { seat.onclick = () => handleSeatClick(seat, currentSeatId, r+1, c+1); }
+            
+            const seatKey = `${r + 1}-${c + 1}`;
+            
+            // Если место не находится в нашем Set свободных мест - делаем его занятым
+            if (!freeSeats.has(seatKey)) {
+                seat.classList.add('occupied');
+            } else {
+                seat.onclick = () => handleSeatClick(seat, currentSeatId, r + 1, c + 1);
+            }
+            
             rowDiv.appendChild(seat);
         }
         container.appendChild(rowDiv);
     }
 }
+// ====================================================
 
 function handleSeatClick(el, id, row, col) {
     if (el.classList.contains('occupied')) return;
