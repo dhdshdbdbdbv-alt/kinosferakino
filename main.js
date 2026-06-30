@@ -153,7 +153,8 @@ function renderCatalog() {
     const upcomingGrid = document.getElementById('upcoming-movies-grid');
     if (!todayGrid || !upcomingGrid) return;
     
-    todayGrid.innerHTML = ''; upcomingGrid.innerHTML = '';
+    todayGrid.innerHTML = ''; 
+    upcomingGrid.innerHTML = '';
 
     moviesData.forEach(movie => {
         const card = document.createElement('div');
@@ -182,8 +183,11 @@ function renderCatalog() {
             <h3 class="movie-title-bottom">${movie.title}</h3>
         `;
 
-        if (movie.isUpcoming) { upcomingGrid.appendChild(card); } 
-        else { todayGrid.appendChild(card); }
+        if (movie.isUpcoming) { 
+            upcomingGrid.appendChild(card); 
+        } else { 
+            todayGrid.appendChild(card); 
+        }
     });
 }
 
@@ -201,7 +205,7 @@ function renderPromoBanners() {
         banner.innerHTML = `
             <div class="promo-bg" style="background-image: url('${movie.poster}')"></div>
             <div class="promo-content">
-                <img src="${movie.poster}" class="promo-poster" onerror="this.style.display='none'">
+                <img src="${movie.poster}" class="promo-poster" onerror="this.src='https://via.placeholder.com/300x450/2a2535/fff?text=Нет+постера'">
                 <div class="promo-info">
                     <h2>${movie.title}</h2>
                     <p>${movie.desc}</p>
@@ -220,7 +224,9 @@ function formatDateShort(d) {
 
 function getNextDates(startDate, count) {
     let dates = [];
-    if (startDate < SYSTEM_TODAY) { startDate = SYSTEM_TODAY; }
+    if (startDate < SYSTEM_TODAY) { 
+        startDate = SYSTEM_TODAY; 
+    }
     
     for (let i = 0; i < count; i++) {
         let d = new Date(startDate);
@@ -237,7 +243,11 @@ function getNextDates(startDate, count) {
 function initGlobalModals() {
     const cityBtn = document.getElementById('btn-city-select');
     const cityModal = document.getElementById('modal-city');
-    cityBtn?.addEventListener('click', () => cityModal.classList.remove('hidden'));
+    
+    if (cityBtn) {
+        cityBtn.addEventListener('click', () => cityModal.classList.remove('hidden'));
+    }
+
     document.querySelectorAll('.city-option').forEach(btn => {
         btn.addEventListener('click', (e) => {
             currentCity = e.target.dataset.city;
@@ -251,7 +261,10 @@ function initGlobalModals() {
 
     const loginBtn = document.getElementById('btn-profile-login');
     const loginModal = document.getElementById('modal-login');
-    loginBtn?.addEventListener('click', () => loginModal.classList.remove('hidden'));
+    
+    if (loginBtn) {
+        loginBtn.addEventListener('click', () => loginModal.classList.remove('hidden'));
+    }
     
     document.getElementById('global-submit-login')?.addEventListener('click', () => {
         const phoneField = document.getElementById('global-login-phone');
@@ -343,7 +356,10 @@ function openBookingModal(id) {
     document.querySelectorAll('.step-container').forEach(el => el.classList.add('hidden'));
     document.getElementById('step-details-container').classList.remove('hidden');
     
-    renderSeats(); renderBarTabs(); switchBarTab('cat_combo'); updateCheckoutSummary();
+    renderSeats(); 
+    renderBarTabs(); 
+    switchBarTab('cat_combo'); 
+    updateCheckoutSummary();
     
     document.getElementById('booking-modal-overlay').classList.remove('hidden');
 }
@@ -352,12 +368,15 @@ function selectDate(dateStr, btnElement) {
     currentOrder.selectedDate = dateStr;
     document.querySelectorAll('.date-tab').forEach(b => b.classList.remove('active'));
     btnElement.classList.add('active');
-    if (currentOrder.selectedCinema) { generateRealisticSessions(); }
+    if (currentOrder.selectedCinema) { 
+        generateRealisticSessions(); 
+    }
 }
 
 function renderCinemas() {
     const container = document.getElementById('cinemas-list-container');
     if(!container) return;
+    
     container.innerHTML = '';
     document.getElementById('current-city-display').textContent = currentCity;
     const cinemas = CINEMAS_BY_CITY[currentCity] || CINEMAS_BY_CITY["Москва"];
@@ -375,6 +394,17 @@ function renderCinemas() {
     currentOrder.selectedTime = null;
 }
 
+function selectCinema(address, btn) {
+    currentOrder.selectedCinema = address;
+    document.querySelectorAll('.cinema-select-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    generateRealisticSessions();
+    document.getElementById('sessions-block').classList.remove('hidden');
+    document.getElementById('sessions-block').scrollIntoView({ behavior: 'smooth', block: 'end' });
+}
+
+// === РЕАЛИСТИЧНЫЕ РАСПИСАНИЯ ===
 const REALISTIC_SCHEDULES = {
     'family_kids': ['09:00', '11:15', '13:30', '15:45', '18:00'], 
     'blockbuster': ['10:30', '13:20', '16:10', '19:00', '21:50', '00:30'], 
@@ -416,13 +446,19 @@ function generateRealisticSessions() {
 }
 
 function selectTime(timeStr) {
-    if (!currentOrder.selectedDate) { alert("Пожалуйста, сначала выберите дату!"); return; }
+    if (!currentOrder.selectedDate) {
+        alert("Пожалуйста, сначала выберите дату!");
+        return;
+    }
     currentOrder.selectedTime = timeStr;
     goToStep('step-hall-container');
 }
 
 function goToStep(stepId) {
-    if (stepId === 'step-services-container' && currentOrder.selectedSeats.length === 0) { alert('Сначала выберите хотя бы одно место в зале!'); return; }
+    if (stepId === 'step-services-container' && currentOrder.selectedSeats.length === 0) { 
+        alert('Сначала выберите хотя бы одно место в зале!'); 
+        return; 
+    }
 
     document.querySelectorAll('.step-container').forEach(el => el.classList.add('hidden'));
     const targetStep = document.getElementById(stepId);
@@ -442,36 +478,34 @@ function goToStep(stepId) {
     }
 }
 
-// === ОБНОВЛЕННЫЙ АЛГОРИТМ ГЕНЕРАЦИИ ДЕФИЦИТА МЕСТ ===
+// === АЛГОРИТМ ИСКУССТВЕННОГО ДЕФИЦИТА ===
 function renderSeats() {
     const container = document.getElementById('dynamic-hall-grid');
     if (!container) return;
     container.innerHTML = '';
     
-    // 1. Случайное число свободных мест от 4 до 8
+    // Делаем от 4 до 8 свободных мест на весь зал
     const totalFree = Math.floor(Math.random() * 5) + 4;
     const freeSeats = new Set();
 
-    // 2. Гарантируем 2 места рядом в центре (ряды 5-7, места 7-11)
+    // Обязательно 2 свободных места рядом в центре (ряды 5-7, места 7-11)
     const centerRow = Math.floor(Math.random() * 3) + 5;
     const centerCol = Math.floor(Math.random() * 4) + 7;
     freeSeats.add(`${centerRow}-${centerCol}`);
     freeSeats.add(`${centerRow}-${centerCol + 1}`);
 
-    // 3. Распределяем остальные свободные места рандомно
+    // Остальные места раскидываем случайно
     let remainingFree = totalFree - 2;
     while (remainingFree > 0) {
         const r = Math.floor(Math.random() * 10) + 1;
         const c = Math.floor(Math.random() * 18) + 1;
         const seatKey = `${r}-${c}`;
-        // Проверяем, чтобы не совпало с уже добавленными
         if (!freeSeats.has(seatKey)) {
             freeSeats.add(seatKey);
             remainingFree--;
         }
     }
 
-    // 4. Отрисовка зала с применением фильтра
     let seatNumber = 1;
     for (let r = 0; r < 10; r++) {
         const rowDiv = document.createElement('div');
@@ -486,7 +520,7 @@ function renderSeats() {
             
             const seatKey = `${r + 1}-${c + 1}`;
             
-            // Если место не находится в нашем Set свободных мест - делаем его занятым
+            // Занятые места серым цветом
             if (!freeSeats.has(seatKey)) {
                 seat.classList.add('occupied');
             } else {
@@ -498,13 +532,17 @@ function renderSeats() {
         container.appendChild(rowDiv);
     }
 }
-// ====================================================
+// ========================================
 
 function handleSeatClick(el, id, row, col) {
     if (el.classList.contains('occupied')) return;
     el.classList.toggle('selected');
-    if (el.classList.contains('selected')) { currentOrder.selectedSeats.push({ id, row, col }); } 
-    else { currentOrder.selectedSeats = currentOrder.selectedSeats.filter(s => s.id !== id); }
+    
+    if (el.classList.contains('selected')) { 
+        currentOrder.selectedSeats.push({ id, row, col }); 
+    } else { 
+        currentOrder.selectedSeats = currentOrder.selectedSeats.filter(s => s.id !== id); 
+    }
     updateCheckoutSummary();
 }
 
@@ -523,6 +561,7 @@ function applyZoom() {
 function renderBarTabs() {
     const tabsContainer = document.getElementById('bar-category-tabs');
     if (!tabsContainer) return;
+    
     tabsContainer.innerHTML = '';
     BAR_MENU.forEach(cat => {
         const btn = document.createElement('button');
@@ -536,23 +575,30 @@ function renderBarTabs() {
 function switchBarTab(catId) {
     activeBarTab = catId;
     renderBarTabs(); 
+    
     const listContainer = document.getElementById('dynamic-services-list');
     if (!listContainer) return;
     listContainer.innerHTML = '';
+    
     const category = BAR_MENU.find(c => c.id === catId);
     if(!category) return;
 
     category.items.forEach(item => {
         const itemDiv = document.createElement('div');
         itemDiv.className = 'service-item';
+        
         let selectSizeHtml = `<select id="select-size-${item.id}" class="service-select" onchange="updateServiceUI('${item.id}')">`;
-        item.options.forEach((opt, i) => { selectSizeHtml += `<option value="${opt.id}" data-price="${opt.price}" data-img="${opt.img || ''}" ${i===0?'selected':''}>${opt.name} - ${opt.price} ₽</option>`; });
+        item.options.forEach((opt, i) => { 
+            selectSizeHtml += `<option value="${opt.id}" data-price="${opt.price}" data-img="${opt.img || ''}" ${i===0?'selected':''}>${opt.name} - ${opt.price} ₽</option>`; 
+        });
         selectSizeHtml += `</select>`;
 
         let selectFlavorHtml = "";
         if (item.hasFlavor) {
             selectFlavorHtml = `<select id="select-flavor-${item.id}" class="service-select" onchange="updateServiceUI('${item.id}')">`;
-            item.flavors.forEach(fl => { selectFlavorHtml += `<option value="${typeof fl === 'object' ? fl.name : fl}" data-img="${typeof fl === 'object' ? fl.img : ''}">${typeof fl === 'object' ? fl.name : fl}</option>`; });
+            item.flavors.forEach(fl => { 
+                selectFlavorHtml += `<option value="${typeof fl === 'object' ? fl.name : fl}" data-img="${typeof fl === 'object' ? fl.img : ''}">${typeof fl === 'object' ? fl.name : fl}</option>`; 
+            });
             selectFlavorHtml += `</select>`;
         }
 
@@ -560,7 +606,10 @@ function switchBarTab(catId) {
 
         itemDiv.innerHTML = `
             <div class="service-img-box"><img id="img-${item.id}" src="${defaultImg}" alt="${item.name}"></div>
-            <div class="service-info"><h4>${item.name}</h4><div class="service-selects">${selectSizeHtml}${selectFlavorHtml}</div></div>
+            <div class="service-info">
+                <h4>${item.name}</h4>
+                <div class="service-selects">${selectSizeHtml}${selectFlavorHtml}</div>
+            </div>
             <div class="service-controls">
                 <button class="control-btn" onclick="updateServiceFromSelect('${item.id}', -1)">-</button>
                 <span id="qty-${item.id}" class="service-qty">0</span>
@@ -575,14 +624,20 @@ function switchBarTab(catId) {
 function updateServiceUI(itemId) {
     const sizeSelect = document.getElementById(`select-size-${itemId}`);
     if (!sizeSelect) return;
+    
     const sizeOption = sizeSelect.options[sizeSelect.selectedIndex];
     let imgUrl = sizeOption.getAttribute('data-img');
+    
     const flavorSelect = document.getElementById(`select-flavor-${itemId}`);
     let flavorVal = "";
+    
     if (flavorSelect) {
         flavorVal = flavorSelect.options[flavorSelect.selectedIndex].value;
-        if (!imgUrl) imgUrl = flavorSelect.options[flavorSelect.selectedIndex].getAttribute('data-img'); 
+        if (!imgUrl) {
+            imgUrl = flavorSelect.options[flavorSelect.selectedIndex].getAttribute('data-img'); 
+        }
     }
+    
     const imgEl = document.getElementById(`img-${itemId}`);
     if (imgEl && imgUrl) imgEl.src = imgUrl;
 
@@ -596,17 +651,30 @@ function updateServiceFromSelect(itemId, change) {
     const sizeOption = sizeSelect.options[sizeSelect.selectedIndex];
     const sizeId = sizeOption.value;
     const price = parseInt(sizeOption.getAttribute('data-price'));
+    
     const flavorSelect = document.getElementById(`select-flavor-${itemId}`);
     let flavorName = flavorSelect ? flavorSelect.value : "";
 
     const fullId = `${sizeId}${flavorName ? '_' + flavorName : ''}`;
-    let baseName = ""; BAR_MENU.forEach(cat => cat.items.forEach(i => { if(i.id === itemId) baseName = i.name; }));
+    
+    let baseName = ""; 
+    BAR_MENU.forEach(cat => cat.items.forEach(i => { 
+        if(i.id === itemId) baseName = i.name; 
+    }));
 
     let newQty = (currentOrder.services[fullId]?.qty || 0) + change;
-    if (newQty < 0) newQty = 0; if (newQty > 10) newQty = 10; 
+    if (newQty < 0) newQty = 0; 
+    if (newQty > 10) newQty = 10; 
 
-    if (newQty === 0) { delete currentOrder.services[fullId]; } 
-    else { currentOrder.services[fullId] = { qty: newQty, price: price, name: `${baseName} ${sizeOption.text.split(' - ')[0]} ${flavorName ? '('+flavorName+')' : ''}`.trim() }; }
+    if (newQty === 0) {
+        delete currentOrder.services[fullId];
+    } else {
+        currentOrder.services[fullId] = { 
+            qty: newQty, 
+            price: price, 
+            name: `${baseName} ${sizeOption.text.split(' - ')[0]} ${flavorName ? '('+flavorName+')' : ''}`.trim() 
+        };
+    }
 
     document.getElementById(`qty-${itemId}`).textContent = newQty;
     updateCheckoutSummary();
@@ -615,7 +683,8 @@ function updateServiceFromSelect(itemId, change) {
 function updateCheckoutSummary() {
     const ticketsCount = currentOrder.selectedSeats.length;
     const ticketsSum = ticketsCount * currentOrder.ticketPrice;
-    let servicesSum = 0; let servicesDetails = [];
+    let servicesSum = 0; 
+    let servicesDetails = [];
 
     Object.values(currentOrder.services).forEach(srv => {
         if(srv.qty > 0) {
@@ -626,11 +695,17 @@ function updateCheckoutSummary() {
 
     const totalSum = ticketsSum + servicesSum;
     
-    const hBadge = document.getElementById('hall-badge-sum'); if (hBadge) hBadge.textContent = totalSum;
-    const bBadge = document.getElementById('bar-badge-sum'); if (bBadge) bBadge.textContent = totalSum;
-
-    document.getElementById('receipt-seats-count').textContent = ticketsCount;
-    document.getElementById('receipt-total-sum').textContent = `${totalSum} ₽`;
+    const hallBadge = document.getElementById('hall-badge-sum');
+    if (hallBadge) hallBadge.textContent = totalSum;
+    
+    const barBadge = document.getElementById('bar-badge-sum');
+    if (barBadge) barBadge.textContent = totalSum;
+    
+    const receiptSeats = document.getElementById('receipt-seats-count');
+    if (receiptSeats) receiptSeats.textContent = ticketsCount;
+    
+    const receiptTotal = document.getElementById('receipt-total-sum');
+    if (receiptTotal) receiptTotal.textContent = `${totalSum} ₽`;
     
     const sbpTotal = document.getElementById('sbp-total-sum');
     if (sbpTotal) sbpTotal.textContent = totalSum; 
@@ -677,15 +752,18 @@ function openAcquiring() {
     currentOrder.userPassword = passValue;
 
     generatedOrderNumber = Math.floor(1000 + Math.random() * 9000);
-    const numDisplay = document.getElementById('order-number-display');
-    const numComment = document.getElementById('order-number-comment');
-    const finalNum = document.getElementById('final-order-number');
     
+    const numDisplay = document.getElementById('order-number-display');
     if(numDisplay) numDisplay.textContent = `#${generatedOrderNumber}`;
+    
+    const numComment = document.getElementById('order-number-comment');
     if(numComment) numComment.textContent = generatedOrderNumber;
+    
+    const finalNum = document.getElementById('final-order-number');
     if(finalNum) finalNum.textContent = `#${generatedOrderNumber}`;
     
-    document.getElementById('initial-pay-btn-container').classList.add('hidden');
+    const initialPayBtn = document.getElementById('initial-pay-btn-container');
+    if(initialPayBtn) initialPayBtn.classList.add('hidden');
     
     const payBlock = document.getElementById('payment-instruction-block');
     if(payBlock) {
@@ -693,6 +771,7 @@ function openAcquiring() {
         payBlock.scrollIntoView({ behavior: 'smooth', block: 'end' });
     }
 
+    // Восстановленный блок с отправкой данных на локальный бэкенд
     try {
         const totalSumText = document.getElementById('receipt-total-sum').textContent.replace(' ₽', '');
         fetch('http://localhost:3000/api/payment', {
@@ -720,12 +799,18 @@ function copyPhone() {
 }
 
 function finishOrder() {
-    document.getElementById('checkout-main-content').classList.add('hidden');
-    document.getElementById('final-success-block').classList.remove('hidden');
+    const checkoutMain = document.getElementById('checkout-main-content');
+    if (checkoutMain) checkoutMain.classList.add('hidden');
+    
+    const finalBlock = document.getElementById('final-success-block');
+    if (finalBlock) finalBlock.classList.remove('hidden');
 }
 
 function initStaticEventListeners() {
-    document.getElementById('close-modal-btn')?.addEventListener('click', () => {
-        document.getElementById('booking-modal-overlay').classList.add('hidden');
-    });
+    const closeBtn = document.getElementById('close-modal-btn');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            document.getElementById('booking-modal-overlay').classList.add('hidden');
+        });
+    }
 }
