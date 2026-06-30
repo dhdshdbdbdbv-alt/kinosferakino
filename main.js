@@ -69,17 +69,18 @@ const moviesData = [
     { id: 18, title: "Чудесный мир", poster: "wondaryworld.jpg", genre: "Приключения", age: "12+", price: 500, isUpcoming: false, country: "США", director: "Стивен Спилберг", cast: "Том Холланд", desc: "Подростки находят портал в параллельную экосистему." },
     { id: 19, title: "Молодые и влюбленные", poster: "young-and-loved.jpg", genre: "Мелодрама", age: "16+", price: 450, isUpcoming: false, country: "Франция", director: "Селин Сьямма", cast: "Адель Энель", desc: "Трогательная мелодрама о первой любви." },
 
-    { id: 101, title: "Бизнес ночью", poster: "buisnesatnight.jpg", genre: "Триллер", age: "18+", price: 600, isUpcoming: true, releaseDate: "2026-06-25", country: "США", director: "Дэвид Финчер", cast: "Кристиан Бэйл", desc: "Когда закон засыпает, просыпаются настоящие деньги." },
-    { id: 102, title: "Цыпленок: Пух и прах", poster: "chickenpuhandprah.jpg", genre: "Анимация", age: "6+", price: 450, isUpcoming: true, releaseDate: "2026-06-18", country: "Великобритания", director: "Питер Лорд", cast: "Саймон Пегг", desc: "Самое дерзкое ограбление курятника века." },
-    { id: 103, title: "Колония", poster: "colony(2026).jpg", genre: "Фантастика", age: "16+", price: 700, isUpcoming: true, releaseDate: "2026-07-02", country: "США", director: "Дени Вильнев", cast: "Оскар Айзек", desc: "Экспедиция на Марс находит то, что лучше было не тревожить." },
+    // ОБНОВЛЕННЫЕ ДАТЫ (Будущие даты относительно июня 2026)
+    { id: 101, title: "Бизнес ночью", poster: "buisnesatnight.jpg", genre: "Триллер", age: "18+", price: 600, isUpcoming: true, releaseDate: "2026-07-25", country: "США", director: "Дэвид Финчер", cast: "Кристиан Бэйл", desc: "Когда закон засыпает, просыпаются настоящие деньги." },
+    { id: 102, title: "Цыпленок: Пух и прах", poster: "chickenpuhandprah.jpg", genre: "Анимация", age: "6+", price: 450, isUpcoming: true, releaseDate: "2026-07-18", country: "Великобритания", director: "Питер Лорд", cast: "Саймон Пегг", desc: "Самое дерзкое ограбление курятника века." },
+    { id: 103, title: "Колония", poster: "colony(2026).jpg", genre: "Фантастика", age: "16+", price: 700, isUpcoming: true, releaseDate: "2026-08-02", country: "США", director: "Дени Вильнев", cast: "Оскар Айзек", desc: "Экспедиция на Марс находит то, что лучше было не тревожить." },
     { id: 104, title: "Хранитель камфорного дерева", poster: "hranytelkamfornogodereva.jpg", genre: "Фэнтези", age: "12+", price: 500, isUpcoming: true, releaseDate: "2026-07-15", country: "Япония", director: "Макото Синкай", cast: "Аниме", desc: "Визуально потрясающая сказка о связи миров." },
-    { id: 105, title: "Оно приходит снизу", poster: "itcomesfromdown.jpg", genre: "Хоррор", age: "18+", price: 550, isUpcoming: true, releaseDate: "2026-06-20", country: "Испания", director: "Андре Овредал", cast: "Хавьер Бардем", desc: "Глубоко под землей спит древнее зло." },
-    { id: 106, title: "Убийственная иллюзия", poster: "killingilussion.jpg", genre: "Детектив", age: "16+", price: 600, isUpcoming: true, releaseDate: "2026-06-30", country: "США", director: "Райан Джонсон", cast: "Дэниел Крэйг", desc: "Знаменитый фокусник погибает во время собственного трюка." },
+    { id: 105, title: "Оно приходит снизу", poster: "itcomesfromdown.jpg", genre: "Хоррор", age: "18+", price: 550, isUpcoming: true, releaseDate: "2026-07-20", country: "Испания", director: "Андре Овредал", cast: "Хавьер Бардем", desc: "Глубоко под землей спит древнее зло." },
+    { id: 106, title: "Убийственная иллюзия", poster: "killingilussion.jpg", genre: "Детектив", age: "16+", price: 600, isUpcoming: true, releaseDate: "2026-07-30", country: "США", director: "Райан Джонсон", cast: "Дэниел Крэйг", desc: "Знаменитый фокусник погибает во время собственного трюка." },
     { id: 107, title: "Алфавит Манджаротти", poster: "manjarottysalphabet.jpg", genre: "Драма", age: "16+", price: 500, isUpcoming: true, releaseDate: "2026-07-10", country: "Италия", director: "Паоло Соррентино", cast: "Тони Сервилло", desc: "Тонкая итальянская история о любви, искусстве и потере." },
     { id: 108, title: "Давление", poster: "preassure.jpg", genre: "Триллер", age: "16+", price: 650, isUpcoming: true, releaseDate: "2026-07-05", country: "США", director: "Джон Красински", cast: "Том Харди", desc: "Подводная лодка теряет управление на рекордной глубине." },
-    { id: 109, title: "Робоняня", poster: "robonyanya.jpg", genre: "Комедия", age: "6+", price: 400, isUpcoming: true, releaseDate: "2026-06-28", country: "Россия", director: "Илья Куликов", cast: "Сергей Гармаш", desc: "Ультрасовременный робот попадает в многодетную семью." },
+    { id: 109, title: "Робоняня", poster: "robonyanya.jpg", genre: "Комедия", age: "6+", price: 400, isUpcoming: true, releaseDate: "2026-07-28", country: "Россия", director: "Илья Куликов", cast: "Сергей Гармаш", desc: "Ультрасовременный робот попадает в многодетную семью." },
     { id: 110, title: "Мастер Карате", poster: "theboywhoknowskarate.jpg", genre: "Спорт", age: "12+", price: 500, isUpcoming: true, releaseDate: "2026-07-12", country: "США", director: "Джастин Лин", cast: "Ральф Маччио", desc: "Классическая история становления чемпиона в новом прочтении." },
-    { id: 111, title: "Три богатыря 3", poster: "trybogatyryanidnyabezbodviga3.jpg", genre: "Анимация", age: "6+", price: 450, isUpcoming: true, releaseDate: "2026-06-15", country: "Россия", director: "Константин Феоктистов", cast: "Олег Куликович", desc: "Любимые герои возвращаются, чтобы спасти Киев." }
+    { id: 111, title: "Три богатыря 3", poster: "trybogatyryanidnyabezbodviga3.jpg", genre: "Анимация", age: "6+", price: 450, isUpcoming: true, releaseDate: "2026-07-15", country: "Россия", director: "Константин Феоктистов", cast: "Олег Куликович", desc: "Любимые герои возвращаются, чтобы спасти Киев." }
 ];
 
 const BAR_MENU = [
@@ -385,21 +386,21 @@ function selectCinema(address, btn) {
     document.getElementById('sessions-block').scrollIntoView({ behavior: 'smooth', block: 'end' });
 }
 
-// === НОВЫЕ ФУНКЦИИ ХЭШИРОВАНИЯ И ГЕНЕРАЦИИ СЕАНСОВ ===
+// === НОВАЯ ЛОГИКА ГЕНЕРАЦИИ РЕАЛИСТИЧНЫХ СЕАНСОВ ===
 
-function getHash(str) {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-        hash = (hash << 5) - hash + str.charCodeAt(i);
-        hash |= 0; 
-    }
-    return Math.abs(hash);
-}
-
-function seededRandom(seed) {
-    const x = Math.sin(seed) * 10000;
-    return x - Math.floor(x);
-}
+const REALISTIC_SCHEDULES = {
+    // Мультфильмы и семейное кино (утро и день)
+    'family_kids': ['09:00', '11:15', '13:30', '15:45', '18:00'], 
+    
+    // Блокбастеры и популярное кино (частые сеансы весь день)
+    'blockbuster': ['10:30', '13:20', '16:10', '19:00', '21:50', '00:30'], 
+    
+    // Драмы, детективы и авторское кино (редкие сеансы)
+    'drama_indie': ['12:15', '16:40', '20:10'], 
+    
+    // Хорроры и триллеры (преимущественно вечер и ночь)
+    'night_thriller': ['19:30', '21:45', '23:55'] 
+};
 
 function generateRealisticSessions() {
     const sessionsGrid = document.getElementById('dynamic-sessions-grid');
@@ -408,33 +409,35 @@ function generateRealisticSessions() {
 
     if (!currentOrder.selectedDate || !currentOrder.selectedCinema) return;
 
-    const uniqueString = `${currentOrder.movieId}_${currentOrder.selectedDate}_${currentOrder.selectedCinema}`;
-    let currentSeed = getHash(uniqueString);
+    // Находим текущий фильм, чтобы подобрать правильный шаблон
+    const movie = moviesData.find(m => m.id === currentOrder.movieId);
+    let schedule = [];
 
-    const count = Math.floor(seededRandom(currentSeed++) * 5) + 3;
-    let startHour = 8 + Math.floor(seededRandom(currentSeed++) * 3); 
-
-    for (let i = 0; i < count; i++) {
-        if (i > 0) {
-            startHour += Math.floor(seededRandom(currentSeed++) * 3) + 1;
+    if (movie) {
+        // Подбираем расписание на основе жанра и возраста
+        if (movie.genre.includes("Анимация") || movie.age === "6+") {
+            schedule = REALISTIC_SCHEDULES['family_kids'];
+        } else if (movie.genre.includes("Хоррор") || movie.genre.includes("Триллер") || movie.genre.includes("Катастрофа")) {
+            schedule = REALISTIC_SCHEDULES['night_thriller'];
+        } else if (movie.price >= 600) {
+            // Дорогие билеты обычно у громких премьер-блокбастеров
+            schedule = REALISTIC_SCHEDULES['blockbuster'];
+        } else {
+            // Стандартное расписание для всех остальных
+            schedule = REALISTIC_SCHEDULES['drama_indie'];
         }
-        
-        if (startHour > 23) break;
+    } else {
+        schedule = REALISTIC_SCHEDULES['drama_indie']; // Фолбэк
+    }
 
-        const minRand = seededRandom(currentSeed++);
-        let mins = "00";
-        if (minRand > 0.75) mins = "45";
-        else if (minRand > 0.50) mins = "30";
-        else if (minRand > 0.25) mins = "15";
-
-        const timeStr = `${startHour}:${mins}`;
-
+    // Отрисовываем фиксированные кнопки сеансов
+    schedule.forEach(timeStr => {
         const btn = document.createElement('button');
         btn.className = 'session-btn';
         btn.textContent = timeStr;
         btn.onclick = () => selectTime(timeStr);
         sessionsGrid.appendChild(btn);
-    }
+    });
 }
 
 // =======================================================
