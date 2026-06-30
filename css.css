@@ -119,7 +119,14 @@ body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ro
 .seat { width: 32px; height: 32px; background: var(--seat-free); border-radius: 6px 6px 4px 4px; display: flex; justify-content: center; align-items: center; font-size: 11px; color: #888; cursor: pointer; box-shadow: inset 0 -3px 0 rgba(0,0,0,0.4); font-weight: bold; transition: background 0.1s; }
 .seat:hover:not(.occupied) { background: #444; color: white; }
 .seat.selected { background: var(--seat-selected); color: #000; font-weight: bold; box-shadow: 0 0 10px var(--seat-selected); }
-.seat.occupied { background: var(--seat-occupied); color: transparent; box-shadow: none; cursor: not-allowed; }
+
+/* ИСПРАВЛЕННОЕ ОТОБРАЖЕНИЕ ЗАНЯТЫХ МЕСТ */
+.seat.occupied { 
+    background: #222222; 
+    color: #555555; 
+    box-shadow: inset 0 -3px 0 rgba(0,0,0,0.2); 
+    cursor: not-allowed; 
+}
 
 .services-list-container { max-height: 400px; overflow-y: auto; margin-bottom: 20px; padding-right: 5px; }
 .services-list-container::-webkit-scrollbar { width: 4px; }
