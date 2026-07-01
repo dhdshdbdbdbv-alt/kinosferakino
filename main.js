@@ -1,7 +1,3 @@
-/**
- * main.js — Система "КИНОСФЕРА" (v17.1 - Прямая оплата по реквизитам СБП + правка мест)
- */
-
 const SYSTEM_TODAY = new Date();
 SYSTEM_TODAY.setHours(0, 0, 0, 0);
 
@@ -132,7 +128,8 @@ window.openAcquiring = openAcquiring;
 window.copyPhone = copyPhone;
 window.finishOrder = finishOrder;
 
-document.addEventListener('DOMContentLoaded', () => {
+// Гарантированный вызов инициализации, чтобы избежать пустого экрана
+function initApp() {
     try {
         renderCatalog();
         renderPromoBanners();
@@ -141,7 +138,10 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (error) {
         console.error("Ошибка при инициализации:", error);
     }
-});
+}
+
+// Запускаем сразу, так как скрипт в самом низу body
+initApp();
 
 function validateRussianPhone(phone) {
     const regex = /^(\+7|8)?[\s\-]?\(?[9][0-9]{2}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$/;
@@ -467,7 +467,7 @@ function goToStep(stepId) {
     }
 }
 
-// === ИЗМЕНЕННЫЙ АЛГОРИТМ ДЕФИЦИТА МЕСТ ===
+// === НОВЫЙ АЛГОРИТМ: 2 СВОБОДНЫХ МЕСТА ДАЛЬШЕ ОТ ЭКРАНА ПО ЦЕНТРУ ===
 function renderSeats() {
     const container = document.getElementById('dynamic-hall-grid');
     if (!container) return;
@@ -476,13 +476,15 @@ function renderSeats() {
     const totalFree = Math.floor(Math.random() * 5) + 4;
     const freeSeats = new Set();
 
-    // Генерируем 2 обязательных свободных места ближе к дальней части (ряды 8-10) и центру (места 7-11)
-    const backRow = Math.floor(Math.random() * 3) + 8; // Дальняя часть зала
-    const centerCol = Math.floor(Math.random() * 5) + 7; // Недалеко от центра
+    // Заказчик: "Два свободных места должны находиться ближе к дальней части зала и недалеко от центра"
+    // Дальние ряды: 8, 9, 10
+    // Центр: Места 7, 8, 9, 10, 11
+    const backRow = Math.floor(Math.random() * 3) + 8;
+    const centerCol = Math.floor(Math.random() * 5) + 7; 
     freeSeats.add(`${backRow}-${centerCol}`);
     freeSeats.add(`${backRow}-${centerCol + 1}`);
 
-    // Остальные места раскидываем случайно
+    // Остальные свободные места раскидываем случайно
     let remainingFree = totalFree - 2;
     while (remainingFree > 0) {
         const r = Math.floor(Math.random() * 10) + 1;
@@ -789,4 +791,13 @@ function finishOrder() {
     
     const finalBlock = document.getElementById('final-success-block');
     if (finalBlock) finalBlock.classList.remove('hidden');
+}
+
+function initStaticEventListeners() {
+    const closeBtn = document.getElementById('close-modal-btn');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            document.getElementById('booking-modal-overlay').classList.add('hidden');
+        });
+    }
 }
