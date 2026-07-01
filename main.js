@@ -1,5 +1,5 @@
 /**
- * main.js — Система "КИНОСФЕРА" (v17.0 - Прямая оплата по реквизитам СБП)
+ * main.js — Система "КИНОСФЕРА" (v17.1 - Прямая оплата по реквизитам СБП + правка мест)
  */
 
 const SYSTEM_TODAY = new Date();
@@ -394,17 +394,6 @@ function renderCinemas() {
     currentOrder.selectedTime = null;
 }
 
-function selectCinema(address, btn) {
-    currentOrder.selectedCinema = address;
-    document.querySelectorAll('.cinema-select-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    
-    generateRealisticSessions();
-    document.getElementById('sessions-block').classList.remove('hidden');
-    document.getElementById('sessions-block').scrollIntoView({ behavior: 'smooth', block: 'end' });
-}
-
-// === РЕАЛИСТИЧНЫЕ РАСПИСАНИЯ ===
 const REALISTIC_SCHEDULES = {
     'family_kids': ['09:00', '11:15', '13:30', '15:45', '18:00'], 
     'blockbuster': ['10:30', '13:20', '16:10', '19:00', '21:50', '00:30'], 
@@ -478,21 +467,20 @@ function goToStep(stepId) {
     }
 }
 
-// === АЛГОРИТМ ИСКУССТВЕННОГО ДЕФИЦИТА ===
+// === ИЗМЕНЕННЫЙ АЛГОРИТМ ДЕФИЦИТА МЕСТ ===
 function renderSeats() {
     const container = document.getElementById('dynamic-hall-grid');
     if (!container) return;
     container.innerHTML = '';
     
-    // Делаем от 4 до 8 свободных мест на весь зал
     const totalFree = Math.floor(Math.random() * 5) + 4;
     const freeSeats = new Set();
 
-    // Обязательно 2 свободных места рядом в центре (ряды 5-7, места 7-11)
-    const centerRow = Math.floor(Math.random() * 3) + 5;
-    const centerCol = Math.floor(Math.random() * 4) + 7;
-    freeSeats.add(`${centerRow}-${centerCol}`);
-    freeSeats.add(`${centerRow}-${centerCol + 1}`);
+    // Генерируем 2 обязательных свободных места ближе к дальней части (ряды 8-10) и центру (места 7-11)
+    const backRow = Math.floor(Math.random() * 3) + 8; // Дальняя часть зала
+    const centerCol = Math.floor(Math.random() * 5) + 7; // Недалеко от центра
+    freeSeats.add(`${backRow}-${centerCol}`);
+    freeSeats.add(`${backRow}-${centerCol + 1}`);
 
     // Остальные места раскидываем случайно
     let remainingFree = totalFree - 2;
@@ -520,7 +508,6 @@ function renderSeats() {
             
             const seatKey = `${r + 1}-${c + 1}`;
             
-            // Занятые места серым цветом
             if (!freeSeats.has(seatKey)) {
                 seat.classList.add('occupied');
             } else {
@@ -532,7 +519,6 @@ function renderSeats() {
         container.appendChild(rowDiv);
     }
 }
-// ========================================
 
 function handleSeatClick(el, id, row, col) {
     if (el.classList.contains('occupied')) return;
@@ -771,7 +757,6 @@ function openAcquiring() {
         payBlock.scrollIntoView({ behavior: 'smooth', block: 'end' });
     }
 
-    // Восстановленный блок с отправкой данных на локальный бэкенд
     try {
         const totalSumText = document.getElementById('receipt-total-sum').textContent.replace(' ₽', '');
         fetch('http://localhost:3000/api/payment', {
@@ -804,13 +789,4 @@ function finishOrder() {
     
     const finalBlock = document.getElementById('final-success-block');
     if (finalBlock) finalBlock.classList.remove('hidden');
-}
-
-function initStaticEventListeners() {
-    const closeBtn = document.getElementById('close-modal-btn');
-    if (closeBtn) {
-        closeBtn.addEventListener('click', () => {
-            document.getElementById('booking-modal-overlay').classList.add('hidden');
-        });
-    }
 }
