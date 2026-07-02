@@ -1,3 +1,7 @@
+/**
+ * main.js — Система "КИНОСФЕРА" (v17.0 - Прямая оплата по реквизитам СБП)
+ */
+
 const SYSTEM_TODAY = new Date();
 SYSTEM_TODAY.setHours(0, 0, 0, 0);
 
@@ -128,8 +132,7 @@ window.openAcquiring = openAcquiring;
 window.copyPhone = copyPhone;
 window.finishOrder = finishOrder;
 
-// Гарантированный вызов инициализации, чтобы избежать пустого экрана
-function initApp() {
+document.addEventListener('DOMContentLoaded', () => {
     try {
         renderCatalog();
         renderPromoBanners();
@@ -138,10 +141,7 @@ function initApp() {
     } catch (error) {
         console.error("Ошибка при инициализации:", error);
     }
-}
-
-// Запускаем сразу, так как скрипт в самом низу body
-initApp();
+});
 
 function validateRussianPhone(phone) {
     const regex = /^(\+7|8)?[\s\-]?\(?[9][0-9]{2}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$/;
@@ -394,6 +394,17 @@ function renderCinemas() {
     currentOrder.selectedTime = null;
 }
 
+function selectCinema(address, btn) {
+    currentOrder.selectedCinema = address;
+    document.querySelectorAll('.cinema-select-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    generateRealisticSessions();
+    document.getElementById('sessions-block').classList.remove('hidden');
+    document.getElementById('sessions-block').scrollIntoView({ behavior: 'smooth', block: 'end' });
+}
+
+// === РЕАЛИСТИЧНЫЕ РАСПИСАНИЯ ===
 const REALISTIC_SCHEDULES = {
     'family_kids': ['09:00', '11:15', '13:30', '15:45', '18:00'], 
     'blockbuster': ['10:30', '13:20', '16:10', '19:00', '21:50', '00:30'], 
@@ -467,24 +478,23 @@ function goToStep(stepId) {
     }
 }
 
-// === НОВЫЙ АЛГОРИТМ: 2 СВОБОДНЫХ МЕСТА ДАЛЬШЕ ОТ ЭКРАНА ПО ЦЕНТРУ ===
+// === АЛГОРИТМ ИСКУССТВЕННОГО ДЕФИЦИТА ===
 function renderSeats() {
     const container = document.getElementById('dynamic-hall-grid');
     if (!container) return;
     container.innerHTML = '';
     
+    // Делаем от 4 до 8 свободных мест на весь зал
     const totalFree = Math.floor(Math.random() * 5) + 4;
     const freeSeats = new Set();
 
-    // Заказчик: "Два свободных места должны находиться ближе к дальней части зала и недалеко от центра"
-    // Дальние ряды: 8, 9, 10
-    // Центр: Места 7, 8, 9, 10, 11
-    const backRow = Math.floor(Math.random() * 3) + 8;
-    const centerCol = Math.floor(Math.random() * 5) + 7; 
-    freeSeats.add(`${backRow}-${centerCol}`);
-    freeSeats.add(`${backRow}-${centerCol + 1}`);
+    // Обязательно 2 свободных места рядом ближе к дальней части зала и недалеко от центра (ряды 8-10, места 8-10)
+    const centerRow = Math.floor(Math.random() * 3) + 8;
+    const centerCol = Math.floor(Math.random() * 3) + 8;
+    freeSeats.add(`${centerRow}-${centerCol}`);
+    freeSeats.add(`${centerRow}-${centerCol + 1}`);
 
-    // Остальные свободные места раскидываем случайно
+    // Остальные места раскидываем случайно
     let remainingFree = totalFree - 2;
     while (remainingFree > 0) {
         const r = Math.floor(Math.random() * 10) + 1;
@@ -510,6 +520,7 @@ function renderSeats() {
             
             const seatKey = `${r + 1}-${c + 1}`;
             
+            // Занятые места серым цветом
             if (!freeSeats.has(seatKey)) {
                 seat.classList.add('occupied');
             } else {
@@ -521,6 +532,7 @@ function renderSeats() {
         container.appendChild(rowDiv);
     }
 }
+// ========================================
 
 function handleSeatClick(el, id, row, col) {
     if (el.classList.contains('occupied')) return;
